@@ -1,0 +1,1 @@
+./runGammaJets.csh provaGammaJets_v1 1 `pwd`/jsonFiles/190456-201229-Prompt.json 1 
