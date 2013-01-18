@@ -43,6 +43,23 @@ private:
 
   bool  PhotonMITPreSelection( int photon_index, int vertex_index, bool electronVeto) ;
 
+  bool muTightId(int iMu);
+  std::vector<int> sortMuonsByPt(std::vector<int> muons);
+
+  std::pair<bool,bool> eleCutId2012(int iEle);
+  double get03EleEffectiveAreas(float eta);
+  bool eleMvaId2012_Hww(int iEle);
+  bool eleMvaId2012_Hzz(int iEle);
+  bool trainTrigPresel(int iEle);
+  std::vector<int> sortElectronsByPt(std::vector<int> electrons);
+
+  double eleDzPV(int iele, int iPV);
+  double eleDxyPV(int iele, int iPV);
+  double muonDzPV(int imu, int iPV);
+  double muonDxyPV(int imu, int iPV);
+  double trackDzPV(TVector3 PVPos, TVector3 trackVPos, TVector3 trackMom);
+  double trackDxyPV(TVector3 PVPos, TVector3 trackVPos, TVector3 trackMom);  
+
   //photon category functions (r9 and eta)
   int PhotonCategory(int photonindex) { 
     return PhotonR9Category(photonindex) + 2*PhotonEtaCategory(photonindex);
@@ -85,7 +102,10 @@ private:
   Float_t betajet[10];
   Float_t betastarjet[10];
   Float_t rmsjet[10];
+  Int_t matchingMu[10];
+  Int_t matchingEle[10];
 
+  Float_t dRGenphot1;
   Float_t ptphot1;
   Float_t deltaRToTrackphot1;
   Float_t etaphot1;
@@ -108,11 +128,19 @@ private:
   Float_t pid_pfIsoNeutrals04phot1;
   Int_t   pid_hasMatchedConvphot1;
   Int_t   pid_hasMatchedPromptElephot1;
+  Float_t pid_deltaRToTrackphot1;
 
   Int_t vtxId;
   Float_t vtxPos_x;
   Float_t vtxPos_y;
   Float_t vtxPos_z;
+
+  Int_t oneLooseIsoMu;
+  Int_t oneTightIsoMu;
+  Int_t oneWP80Ele;
+  Int_t oneWP90Ele;
+  Int_t oneHwwEle;
+  Int_t oneHzzEle;
 
    // int nFiredHLT;
    std::vector<std::string>*  aHLTNames;
