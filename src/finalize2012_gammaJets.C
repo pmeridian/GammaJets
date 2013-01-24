@@ -67,50 +67,50 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   if(int_exp_2012>0){
     
     // box samples                                                                                              
-    mc_2012[0] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_DiPhotonBox_Pt-10To25_8TeV-pythia6.root");
-    mc_2012[1] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_DiPhotonBox_Pt-25To250_8TeV-pythia6.root");
-    mc_2012[2] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_DiPhotonBox_Pt-250ToInf_8TeV-pythia6.root");
+    mc_2012[0] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_DiPhotonBox_Pt-10To25_8TeV-pythia6.root");
+    mc_2012[1] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_DiPhotonBox_Pt-25To250_8TeV-pythia6.root");
+    mc_2012[2] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_DiPhotonBox_Pt-250ToInf_8TeV-pythia6.root");
 
     // diphoton jets samples 
-    mc_2012[3] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_DiPhotonJets_8TeV-madgraph-tarball-v2.root");
+    mc_2012[3] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_DiPhotonJets_8TeV-madgraph-tarball-v2.root");
 
     // qcd
-    mc_2012[4] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_QCD_Pt-40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
-    mc_2012[5] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_QCD_Pt-30to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
+    mc_2012[4] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_QCD_Pt-40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
+    mc_2012[5] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_QCD_Pt-30to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
 
     // drell yan samples 
-    mc_2012[6] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball.root");
+    mc_2012[6] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball.root");
 
     // W+gamma, W->lnu 
-    mc_2012[7] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WGToLNuG_TuneZ2star_8TeV-madgraph-tauola.root");
+    mc_2012[7] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WGToLNuG_TuneZ2star_8TeV-madgraph-tauola.root");
 
     // Z+gamma, Z->ll
-    mc_2012[8]  = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_ZG_Inclusive_8TeV-madgraph.root");
+    mc_2012[8]  = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_ZG_Inclusive_8TeV-madgraph.root");
 
     // W-gg                
-    mc_2012[9]  = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WmGG_cmkuo.root");
+    mc_2012[9]  = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WmGG_cmkuo.root");
     // W+ gg               
-    mc_2012[10] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WpGG-cmkuo.root");
+    mc_2012[10] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WpGG-cmkuo.root");
     // Zgg                 
-    mc_2012[11] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_ZGG-cmkuo.root");
+    mc_2012[11] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_ZGG-cmkuo.root");
     // ttgg                
-    mc_2012[12] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_TTbarGG_0Jet_S1-cmkuo.root");
+    mc_2012[12] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_TTbarGG_0Jet_S1-cmkuo.root");
 
     // TTjets                                                                                              
-    mc_2012[13] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_TTJets_TuneZ2star_8TeV-madgraph-tauola.root");
+    mc_2012[13] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_TTJets_TuneZ2star_8TeV-madgraph-tauola.root");
     // Wjets                                                                                                      
-    mc_2012[14] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WJetsToLNu_TuneZ2Star_8TeV-madgraph.root");
+    mc_2012[14] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WJetsToLNu_TuneZ2Star_8TeV-madgraph.root");
 
     // WW                                                                                                                
-    mc_2012[15] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WW_TuneZ2star_8TeV_pythia6_tauola.root");
+    mc_2012[15] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WW_TuneZ2star_8TeV_pythia6_tauola.root");
     // WZ                                                                                                                
-    mc_2012[16] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_WZ_TuneZ2star_8TeV_pythia6_tauola.root");
+    mc_2012[16] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_WZ_TuneZ2star_8TeV_pythia6_tauola.root");
     // ZZ
-    mc_2012[17] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_ZZ_TuneZ2star_8TeV_pythia6_tauola.root");
+    mc_2012[17] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_ZZ_TuneZ2star_8TeV_pythia6_tauola.root");
 
     // gjet samples 
-    mc_2012[18] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
-    mc_2012[19] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v1/merged/redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
+    mc_2012[18] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
+    mc_2012[19] = TFile::Open(redntpDir+"/redntp.52xv5_lisbon.provaGammaJets_v3/merged/redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6.root");
   }
   
   // k factors - same scale factors for 7 TeV and 8 TeV
@@ -171,10 +171,10 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   vardata->Sumw2();
 
   TH1D* var_mc_2012[20];     // 20 = MC samples we have 
-  TH1D* var[9];              // 9  = number of species
+  TH1D* var[7];              // 7  = number of species
   TH1D* var2[2];             // 2  = signal and backgrounds
 
-  for (int i=0; i<9; i++) {
+  for (int i=0; i<7; i++) {
     sprintf(name,"%s%d","var",i);
     var[i] = new TH1D(name,name,nbin,min,max);
     var[i]->Sumw2();          
@@ -249,13 +249,13 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   // scale control sample
   // double num_data = vardata->Integral();
 
-  for (int j=0; j<9; j++){   
+  for (int j=0; j<7; j++){   
     int offset(0);
     if(j>0) offset = 1;    // to add gamma+jets contributions up 
-    if(j>1) offset = 3;    // to add dibosons contribuions up
-    if(j>2) offset = 4;    // to add Wj+ttj contribuions up
-    if(j>3) offset = 7;    // to add Wgg,Zgg,ttgg contributions up  
-    if(j>7) offset = 8;    // to add QCD contributions up  
+    if(j>1) offset = 3;    // to add dibosons contributions up
+    if(j>2) offset = 4;    // to add Wj+ttj contributions up
+    if(j>3) offset = 9;    // to add Wg, Zg, Wgg, Zgg, ttgg contributions up  
+    if(j>5) offset = 10;   // to add QCD contributions up  
     for (int k=0 ; k<20-j-offset; k++){   
       if(int_exp_2012>0) var[j]->Add(var_mc_2012[k]);
     }	
@@ -272,7 +272,7 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   // final plots
   char ytitle[100];
   sprintf(ytitle,"%s%d%s","N_{ev}/",int(int_exp_2012),"pb^{-1}");
-  for(int i=0; i<9; i++){
+  for(int i=0; i<7; i++){
     var[i]->SetTitle("");
     var[i]->SetStats(0);
     var[i]->SetTitleOffset(1.25,"Y");
@@ -291,8 +291,6 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
     var2[i]->SetLineWidth(2);
   }
 
-
-  
   TLegendEntry *legge;
   TLegend *leg;
   leg = new TLegend(0.6,0.6,0.85,0.85);
@@ -300,33 +298,27 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   leg->SetFillColor(0);
   legge = leg->AddEntry(var[0], "gamma+jets", "f");
   legge = leg->AddEntry(var[1], "VV", "f");
-  legge = leg->AddEntry(var[2], "Wjets,ttjets", "f");
-  legge = leg->AddEntry(var[3], "W,Z,ttgg", "f");
-  legge = leg->AddEntry(var[4], "Zgamma", "f");
-  legge = leg->AddEntry(var[5], "Wgamma", "f");  
-  legge = leg->AddEntry(var[6], "DY", "f");
-  legge = leg->AddEntry(var[7], "QCD", "f");
-  legge = leg->AddEntry(var[8], "di-gamma", "f");
+  legge = leg->AddEntry(var[2], "Wjets, ttjets", "f");
+  legge = leg->AddEntry(var[3], "V+gg,tt+gg,V+g", "f");
+  legge = leg->AddEntry(var[4], "DY", "f");
+  legge = leg->AddEntry(var[5], "QCD", "f");
+  legge = leg->AddEntry(var[6], "di-gamma", "f");
 
   // mc only plot: data vs background
-  var[0]->SetFillColor(kYellow);
+  var[0]->SetFillColor(kGreen-9);
   var[0]->Draw("hist");
-  var[1]->SetFillColor(6);
+  var[1]->SetFillColor(kRed-3);
   var[1]->Draw("samehist");
-  var[2]->SetFillColor(2);
+  var[2]->SetFillColor(kCyan-7);
   var[2]->Draw("samehist");
-  var[3]->SetFillColor(38);
+  var[3]->SetFillColor(kPink-2);
   var[3]->Draw("samehist");
-  var[4]->SetFillColor(46);
+  var[4]->SetFillColor(kYellow-9);
   var[4]->Draw("samehist");
-  var[5]->SetFillColor(16);
+  var[5]->SetFillColor(kBlue-9);
   var[5]->Draw("samehist");
-  var[6]->SetFillColor(4);
+  var[6]->SetFillColor(kMagenta-9);
   var[6]->Draw("samehist");
-  var[7]->SetFillColor(3);   
-  var[7]->Draw("samehist");
-  var[8]->SetFillColor(64);  
-  var[8]->Draw("samehist");
 
   leg->Draw();
   sprintf(name,"%s%s%s","results_gammaJ/mc_",variableData.c_str(),".png");
@@ -383,7 +375,7 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
     vardata->SetMaximum(themax*1.1);
   
   vardata->SetMinimum(0.000001);
-  for(int ii=0; ii<9; ii++) var[ii]->SetMinimum(0.000001);
+  for(int ii=0; ii<7; ii++) var[ii]->SetMinimum(0.000001);
   var[0]->Draw("samehist");
   var[1]->Draw("samehist");
   var[2]->Draw("samehist");
@@ -391,8 +383,6 @@ vector <double> finalize2012_gammaJets(double int_exp_2012, double pt1=50, int e
   var[4]->Draw("samehist");
   var[5]->Draw("samehist");
   var[6]->Draw("samehist");
-  var[7]->Draw("samehist");
-  var[8]->Draw("samehist");
   leg->Draw();
   vardata->Draw("pesame");
   gPad->RedrawAxis();
