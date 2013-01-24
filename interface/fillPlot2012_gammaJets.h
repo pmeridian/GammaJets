@@ -46,6 +46,12 @@ public :
    Float_t         gen_pt_gamma1;
    Float_t         gen_eta_gamma1;
    Float_t         gen_phi_gamma1;
+   Int_t           oneLooseIsoMu;
+   Int_t           oneTightIsoMu;
+   Int_t           oneWP80Ele;
+   Int_t           oneWP90Ele;
+   Int_t           oneHwwEle;
+   Int_t           oneHzzEle;
    Int_t           njets;
    Float_t         ecorrjet[9];   //[njets] 
    Float_t         ptjet[9];   //[njets] 
@@ -55,28 +61,33 @@ public :
    Float_t         betajet[9];   //[njets] 
    Float_t         betastarjet[9];   //[njets] 
    Float_t         rmsjet[9];   //[njets]   
-   Float_t         ptphot1;
-   Float_t         etaphot1;
-   Float_t         phiphot1;
-   Float_t         etascphot1;
-   Float_t         E1phot1;
-   Float_t         E9phot1;
-   Float_t         r9phot1;
-   Float_t         deltaRToTrackphot1;
-   Int_t           pid_haspixelseedphot1;
-   Float_t         pid_HoverEphot1;
-   Float_t         pid_sigmaIeIephot1;
-   Float_t         pid_hlwTrack04phot1;
-   Float_t         pid_jurECAL04phot1;
-   Float_t         pid_twrHCAL04phot1;
-   Int_t           pid_hasMatchedConvphot1;
-   Int_t           pid_hasMatchedPromptElephot1;
-   Float_t         pid_pfIsoCharged03phot1;
-   Float_t         pid_pfIsoPhotons03phot1;
-   Float_t         pid_pfIsoNeutrals03phot1;
-   Float_t         pid_pfIsoCharged04phot1;
-   Float_t         pid_pfIsoPhotons04phot1;
-   Float_t         pid_pfIsoNeutrals04phot1;
+   Int_t           matchingMu[9];   //[njets]                                                                                      
+   Int_t           matchingEle[9];   //[njets]                                                                                     
+   Int_t           ngammas;
+   Float_t         dRGenphot[9];
+   Float_t         ptphot[9];
+   Float_t         etaphot[9];
+   Float_t         phiphot[9];
+   Float_t         etascphot[9];
+   Float_t         E1phot[9];
+   Float_t         E9phot[9];
+   Float_t         r9phot[9];
+   Float_t         deltaRToTrackphot[9];
+   Int_t           pid_haspixelseedphot[9];
+   Float_t         pid_HoverEphot[9];
+   Float_t         pid_sigmaIeIephot[9];
+   Float_t         pid_hlwTrack04phot[9];
+   Float_t         pid_jurECAL04phot[9];
+   Float_t         pid_twrHCAL04phot[9];
+   Int_t           pid_hasMatchedConvphot[9];
+   Int_t           pid_hasMatchedPromptElephot[9];
+   Float_t         pid_pfIsoCharged03phot[9];
+   Float_t         pid_pfIsoPhotons03phot[9];
+   Float_t         pid_pfIsoNeutrals03phot[9];
+   Float_t         pid_pfIsoCharged04phot[9];
+   Float_t         pid_pfIsoPhotons04phot[9];
+   Float_t         pid_pfIsoNeutrals04phot[9];
+   Float_t         pid_deltaRToTrackphot[9];
    Int_t           vtxId;
    Float_t         vtxPos_x;
    Float_t         vtxPos_y;
@@ -96,6 +107,12 @@ public :
    TBranch        *b_gen_pt_gamma1;   //! 
    TBranch        *b_gen_eta_gamma1;   //! 
    TBranch        *b_gen_phi_gamma1;   //! 
+   TBranch        *b_oneLooseIsoMu;   //!                                                                                          
+   TBranch        *b_oneTightIsoMu;   //!                                                                                          
+   TBranch        *b_oneWP80Ele;   //!                                                                                             
+   TBranch        *b_oneWP90Ele;   //!                                                                                             
+   TBranch        *b_oneHwwEle;   //!                                                                                              
+   TBranch        *b_oneHzzEle;   //!  
    TBranch        *b_njets;   //! 
    TBranch        *b_ecorrjet;   //! 
    TBranch        *b_ptjet;   //! 
@@ -105,28 +122,33 @@ public :
    TBranch        *b_betajet;   //!
    TBranch        *b_betastarjet;   //! 
    TBranch        *b_rmsjet;   //! 
-   TBranch        *b_ptphot1;   //! 
-   TBranch        *b_etaphot1;   //! 
-   TBranch        *b_phiphot1;   //! 
-   TBranch        *b_etascphot1;   //! 
-   TBranch        *b_E1phot1;   //! 
-   TBranch        *b_E9phot1;   //! 
-   TBranch        *b_r9phot1;   //! 
-   TBranch        *b_deltaRToTrackphot1;   //! 
-   TBranch        *b_pid_haspixelseedphot1;   //! 
-   TBranch        *b_pid_HoverEphot1;   //! 
-   TBranch        *b_pid_sigmaIeIephot1;   //! 
-   TBranch        *b_pid_hlwTrack04phot1;   //! 
-   TBranch        *b_pid_jurECAL04phot1;   //! 
-   TBranch        *b_pid_twrHCAL04phot1;   //! 
-   TBranch        *b_pid_hasMatchedConvphot1;   //! 
-   TBranch        *b_pid_hasMatchedPromptElephot1;   //! 
-   TBranch        *b_pid_pfIsoCharged03phot1;   //! 
-   TBranch        *b_pid_pfIsoPhotons03phot1;   //! 
-   TBranch        *b_pid_pfIsoNeutrals03phot1;   //! 
-   TBranch        *b_pid_pfIsoCharged04phot1;   //! 
-   TBranch        *b_pid_pfIsoPhotons04phot1;   //! 
-   TBranch        *b_pid_pfIsoNeutrals04phot1;   //! 
+   TBranch        *b_matchingMu;   //!                                                                                             
+   TBranch        *b_matchingEle;   //!                                                                                            
+   TBranch        *b_ngammas;   //!
+   TBranch        *b_dRGenphot;   //! 
+   TBranch        *b_ptphot;   //! 
+   TBranch        *b_etaphot;   //! 
+   TBranch        *b_phiphot;   //! 
+   TBranch        *b_etascphot;   //! 
+   TBranch        *b_E1phot;   //! 
+   TBranch        *b_E9phot;   //! 
+   TBranch        *b_r9phot;   //! 
+   TBranch        *b_deltaRToTrackphot;   //! 
+   TBranch        *b_pid_haspixelseedphot;   //! 
+   TBranch        *b_pid_HoverEphot;   //! 
+   TBranch        *b_pid_sigmaIeIephot;   //! 
+   TBranch        *b_pid_hlwTrack04phot;   //! 
+   TBranch        *b_pid_jurECAL04phot;   //! 
+   TBranch        *b_pid_twrHCAL04phot;   //! 
+   TBranch        *b_pid_hasMatchedConvphot;   //! 
+   TBranch        *b_pid_hasMatchedPromptElephot;   //! 
+   TBranch        *b_pid_pfIsoCharged03phot;   //! 
+   TBranch        *b_pid_pfIsoPhotons03phot;   //! 
+   TBranch        *b_pid_pfIsoNeutrals03phot;   //! 
+   TBranch        *b_pid_pfIsoCharged04phot;   //! 
+   TBranch        *b_pid_pfIsoPhotons04phot;   //! 
+   TBranch        *b_pid_pfIsoNeutrals04phot;   //! 
+   TBranch        *b_pid_deltaRToTrackphot;   //!    
    TBranch        *b_vtxId;   //! 
    TBranch        *b_vtxPos_x;   //!
    TBranch        *b_vtxPos_y;   //! 
@@ -222,6 +244,12 @@ void fillPlot2012_gammaJets::Init(TTree *tree)
    fChain->SetBranchAddress("gen_pt_gamma1", &gen_pt_gamma1, &b_gen_pt_gamma1);
    fChain->SetBranchAddress("gen_eta_gamma1", &gen_eta_gamma1, &b_gen_eta_gamma1);
    fChain->SetBranchAddress("gen_phi_gamma1", &gen_phi_gamma1, &b_gen_phi_gamma1);
+   fChain->SetBranchAddress("oneLooseIsoMu", &oneLooseIsoMu, &b_oneLooseIsoMu);
+   fChain->SetBranchAddress("oneTightIsoMu", &oneTightIsoMu, &b_oneTightIsoMu);
+   fChain->SetBranchAddress("oneWP80Ele", &oneWP80Ele, &b_oneWP80Ele);
+   fChain->SetBranchAddress("oneWP90Ele", &oneWP90Ele, &b_oneWP90Ele);
+   fChain->SetBranchAddress("oneHwwEle", &oneHwwEle, &b_oneHwwEle);
+   fChain->SetBranchAddress("oneHzzEle", &oneHzzEle, &b_oneHzzEle);
    fChain->SetBranchAddress("njets", &njets, &b_njets);
    fChain->SetBranchAddress("ecorrjet", ecorrjet, &b_ecorrjet);
    fChain->SetBranchAddress("ptjet", ptjet, &b_ptjet);
@@ -231,28 +259,33 @@ void fillPlot2012_gammaJets::Init(TTree *tree)
    fChain->SetBranchAddress("betajet", betajet, &b_betajet);
    fChain->SetBranchAddress("betastarjet", betastarjet, &b_betastarjet);
    fChain->SetBranchAddress("rmsjet", rmsjet, &b_rmsjet);
-   fChain->SetBranchAddress("ptphot1", &ptphot1, &b_ptphot1);
-   fChain->SetBranchAddress("etaphot1", &etaphot1, &b_etaphot1);
-   fChain->SetBranchAddress("phiphot1", &phiphot1, &b_phiphot1);
-   fChain->SetBranchAddress("etascphot1", &etascphot1, &b_etascphot1);
-   fChain->SetBranchAddress("E1phot1", &E1phot1, &b_E1phot1);
-   fChain->SetBranchAddress("E9phot1", &E9phot1, &b_E9phot1);
-   fChain->SetBranchAddress("r9phot1", &r9phot1, &b_r9phot1);
-   fChain->SetBranchAddress("deltaRToTrackphot1", &deltaRToTrackphot1, &b_deltaRToTrackphot1);
-   fChain->SetBranchAddress("pid_haspixelseedphot1", &pid_haspixelseedphot1, &b_pid_haspixelseedphot1);
-   fChain->SetBranchAddress("pid_HoverEphot1", &pid_HoverEphot1, &b_pid_HoverEphot1);
-   fChain->SetBranchAddress("pid_sigmaIeIephot1", &pid_sigmaIeIephot1, &b_pid_sigmaIeIephot1);
-   fChain->SetBranchAddress("pid_hlwTrack04phot1", &pid_hlwTrack04phot1, &b_pid_hlwTrack04phot1);
-   fChain->SetBranchAddress("pid_jurECAL04phot1", &pid_jurECAL04phot1, &b_pid_jurECAL04phot1);
-   fChain->SetBranchAddress("pid_twrHCAL04phot1", &pid_twrHCAL04phot1, &b_pid_twrHCAL04phot1);
-   fChain->SetBranchAddress("pid_hasMatchedConvphot1", &pid_hasMatchedConvphot1, &b_pid_hasMatchedConvphot1);
-   fChain->SetBranchAddress("pid_hasMatchedPromptElephot1", &pid_hasMatchedPromptElephot1, &b_pid_hasMatchedPromptElephot1);
-   fChain->SetBranchAddress("pid_pfIsoCharged03phot1", &pid_pfIsoCharged03phot1, &b_pid_pfIsoCharged03phot1);
-   fChain->SetBranchAddress("pid_pfIsoPhotons03phot1", &pid_pfIsoPhotons03phot1, &b_pid_pfIsoPhotons03phot1);
-   fChain->SetBranchAddress("pid_pfIsoNeutrals03phot1", &pid_pfIsoNeutrals03phot1, &b_pid_pfIsoNeutrals03phot1);
-   fChain->SetBranchAddress("pid_pfIsoCharged04phot1", &pid_pfIsoCharged04phot1, &b_pid_pfIsoCharged04phot1);
-   fChain->SetBranchAddress("pid_pfIsoPhotons04phot1", &pid_pfIsoPhotons04phot1, &b_pid_pfIsoPhotons04phot1);
-   fChain->SetBranchAddress("pid_pfIsoNeutrals04phot1", &pid_pfIsoNeutrals04phot1, &b_pid_pfIsoNeutrals04phot1);
+   fChain->SetBranchAddress("matchingMu", matchingMu, &b_matchingMu);
+   fChain->SetBranchAddress("matchingEle", matchingEle, &b_matchingEle);
+   fChain->SetBranchAddress("ngammas", &ngammas, &b_ngammas);
+   fChain->SetBranchAddress("dRGenphot", dRGenphot, &b_dRGenphot);
+   fChain->SetBranchAddress("ptphot", ptphot, &b_ptphot);
+   fChain->SetBranchAddress("etaphot", etaphot, &b_etaphot);
+   fChain->SetBranchAddress("phiphot", phiphot, &b_phiphot);
+   fChain->SetBranchAddress("etascphot", etascphot, &b_etascphot);
+   fChain->SetBranchAddress("E1phot", E1phot, &b_E1phot);
+   fChain->SetBranchAddress("E9phot", E9phot, &b_E9phot);
+   fChain->SetBranchAddress("r9phot", r9phot, &b_r9phot);
+   fChain->SetBranchAddress("deltaRToTrackphot", deltaRToTrackphot, &b_deltaRToTrackphot);
+   fChain->SetBranchAddress("pid_haspixelseedphot", pid_haspixelseedphot, &b_pid_haspixelseedphot);
+   fChain->SetBranchAddress("pid_HoverEphot", pid_HoverEphot, &b_pid_HoverEphot);
+   fChain->SetBranchAddress("pid_sigmaIeIephot", pid_sigmaIeIephot, &b_pid_sigmaIeIephot);
+   fChain->SetBranchAddress("pid_hlwTrack04phot", pid_hlwTrack04phot, &b_pid_hlwTrack04phot);
+   fChain->SetBranchAddress("pid_jurECAL04phot", pid_jurECAL04phot, &b_pid_jurECAL04phot);
+   fChain->SetBranchAddress("pid_twrHCAL04phot", pid_twrHCAL04phot, &b_pid_twrHCAL04phot);
+   fChain->SetBranchAddress("pid_hasMatchedConvphot", pid_hasMatchedConvphot, &b_pid_hasMatchedConvphot);
+   fChain->SetBranchAddress("pid_hasMatchedPromptElephot", pid_hasMatchedPromptElephot, &b_pid_hasMatchedPromptElephot);
+   fChain->SetBranchAddress("pid_pfIsoCharged03phot", pid_pfIsoCharged03phot, &b_pid_pfIsoCharged03phot);
+   fChain->SetBranchAddress("pid_pfIsoPhotons03phot", pid_pfIsoPhotons03phot, &b_pid_pfIsoPhotons03phot);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals03phot", pid_pfIsoNeutrals03phot, &b_pid_pfIsoNeutrals03phot);
+   fChain->SetBranchAddress("pid_pfIsoCharged04phot", pid_pfIsoCharged04phot, &b_pid_pfIsoCharged04phot);
+   fChain->SetBranchAddress("pid_pfIsoPhotons04phot", pid_pfIsoPhotons04phot, &b_pid_pfIsoPhotons04phot);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals04phot", pid_pfIsoNeutrals04phot, &b_pid_pfIsoNeutrals04phot);
+   fChain->SetBranchAddress("pid_deltaRToTrackphot", pid_deltaRToTrackphot, &b_pid_deltaRToTrackphot);
    fChain->SetBranchAddress("vtxId", &vtxId, &b_vtxId);
    fChain->SetBranchAddress("vtxPos_x", &vtxPos_x, &b_vtxPos_x);
    fChain->SetBranchAddress("vtxPos_y", &vtxPos_y, &b_vtxPos_y);
