@@ -83,17 +83,20 @@ void GammaJetsSelection::Loop() {
   // Output tree initialization
   ana_tree = new TTree ("AnaTree","Reduced tree for final analysis") ;
   // general
-  ana_tree->Branch("run",&runRN,"run/I");
+  ana_tree->Branch("run",  &runRN,  "run/I");
   ana_tree->Branch("event",&eventRN,"event/I");
-  ana_tree->Branch("nvtx",&nvtx,"nvtx/F");
+  ana_tree->Branch("nvtx", &nvtx,   "nvtx/F");
   ana_tree->Branch("rhoPF",&rhoPFRN,"rhoPF/F");
+  ana_tree->Branch("npu",  &npu,    "npu/I");
   ana_tree->Branch("rhoAllJets",&rhoAllJetsRN,"rhoAllJets/F");
-  ana_tree->Branch("npu",&npu,"npu/I");
-  ana_tree->Branch("pu_weight",&pu_weight,"pu_weight/F");
-  // gen level
+  ana_tree->Branch("pu_weight", &pu_weight,   "pu_weight/F");
+  // gen level gammas
   ana_tree->Branch("gen_pt_gamma1",  &gen_pt_gamma1,  "gen_pt_gamma1/F");
   ana_tree->Branch("gen_eta_gamma1", &gen_eta_gamma1, "gen_eta_gamma1/F");
   ana_tree->Branch("gen_phi_gamma1", &gen_phi_gamma1, "gen_phi_gamma1/F");
+  // gen level leptons
+  ana_tree->Branch("oneGenMuon",     &oneGenMuon,     "oneGenMuon/I");
+  ana_tree->Branch("oneGenEle",      &oneGenEle,      "oneGenEle/I");
   // muons
   ana_tree->Branch("oneLooseIsoMu",  &oneLooseIsoMu,  "oneLooseIsoMu/I");
   ana_tree->Branch("oneTightIsoMu",  &oneTightIsoMu,  "oneTightIsoMu/I");
@@ -115,30 +118,31 @@ void GammaJetsSelection::Loop() {
   ana_tree->Branch("matchingMu",  matchingMu,  "matchingMu[njets]/I");
   ana_tree->Branch("matchingEle", matchingEle, "matchingEle[njets]/I");
   // gammas
-  ana_tree->Branch("dRGenphot1",&dRGenphot1,"dRGenphot1/F");
-  ana_tree->Branch("ptphot1",&ptphot1,"ptphot1/F");
-  ana_tree->Branch("etaphot1",&etaphot1,"etaphot1/F");
-  ana_tree->Branch("phiphot1",&phiphot1,"phiphot1/F");
-  ana_tree->Branch("etascphot1",&etascphot1,"etascphot1/F");
-  ana_tree->Branch("E1phot1",&E1phot1,"E1phot1/F");
-  ana_tree->Branch("E9phot1",&E9phot1,"E9phot1/F");
-  ana_tree->Branch("r9phot1",&r9phot1,"r9phot1/F");
-  ana_tree->Branch("deltaRToTrackphot1",&deltaRToTrackphot1,"deltaRToTrackphot1/F");
-  ana_tree->Branch("pid_haspixelseedphot1",&pid_haspixelseedphot1,"pid_haspixelseedphot1/I");
-  ana_tree->Branch("pid_HoverEphot1",&pid_HoverEphot1,"pid_HoverEphot1/F");
-  ana_tree->Branch("pid_sigmaIeIephot1",&pid_sigmaIeIephot1,"pid_sigmaIeIephot1/F");
-  ana_tree->Branch("pid_hlwTrack04phot1",&pid_hlwTrack04phot1,"pid_hlwTrack04phot1/F");
-  ana_tree->Branch("pid_jurECAL04phot1",&pid_jurECAL04phot1,"pid_jurECAL04phot1/F");
-  ana_tree->Branch("pid_twrHCAL04phot1",&pid_twrHCAL04phot1,"pid_twrHCAL04phot1/F");
-  ana_tree->Branch("pid_hasMatchedConvphot1",&pid_hasMatchedConvphot1,"pid_hasMatchedConvphot1/I");
-  ana_tree->Branch("pid_hasMatchedPromptElephot1",&pid_hasMatchedPromptElephot1,"pid_hasMatchedPromptElephot1/I");
-  ana_tree->Branch("pid_pfIsoCharged03phot1",&pid_pfIsoCharged03phot1,"pid_pfIsoCharged03phot1/F");  
-  ana_tree->Branch("pid_pfIsoPhotons03phot1",&pid_pfIsoPhotons03phot1,"pid_pfIsoPhotons03phot1/F");  
-  ana_tree->Branch("pid_pfIsoNeutrals03phot1",&pid_pfIsoNeutrals03phot1,"pid_pfIsoNeutrals03phot1/F"); 
-  ana_tree->Branch("pid_pfIsoCharged04phot1",&pid_pfIsoCharged04phot1,"pid_pfIsoCharged04phot1/F");  
-  ana_tree->Branch("pid_pfIsoPhotons04phot1",&pid_pfIsoPhotons04phot1,"pid_pfIsoPhotons04phot1/F");  
-  ana_tree->Branch("pid_pfIsoNeutrals04phot1",&pid_pfIsoNeutrals04phot1,"pid_pfIsoNeutrals04phot1/F"); 
-  ana_tree->Branch("pid_deltaRToTrackphot1",&pid_deltaRToTrackphot1,"pid_deltaRToTrackphot1/F");
+  ana_tree->Branch("ngammas",     &ngammas,    "ngammas/I"); 
+  ana_tree->Branch("dRGenphot",   dRGenphot,   "dRGenphot[ngammas]/F");
+  ana_tree->Branch("ptphot",      ptphot,      "ptphot[ngammas]/F");
+  ana_tree->Branch("etaphot",     etaphot,     "etaphot[ngammas]/F");
+  ana_tree->Branch("phiphot",     phiphot,     "phiphot[ngammas]/F");
+  ana_tree->Branch("etascphot",   etascphot,   "etascphot[ngammas]/F");
+  ana_tree->Branch("E1phot",      E1phot,      "E1phot[ngammas]/F");
+  ana_tree->Branch("E9phot",      E9phot,      "E9phot[ngammas]/F");
+  ana_tree->Branch("r9phot",      r9phot,      "r9phot[ngammas]/F");
+  ana_tree->Branch("deltaRToTrackphot",    deltaRToTrackphot,   "deltaRToTrackphot[ngammas]/F");
+  ana_tree->Branch("pid_haspixelseedphot", pid_haspixelseedphot,"pid_haspixelseedphot[ngammas]/I");
+  ana_tree->Branch("pid_HoverEphot",       pid_HoverEphot,      "pid_HoverEphot[ngammas]/F");
+  ana_tree->Branch("pid_sigmaIeIephot",    pid_sigmaIeIephot,   "pid_sigmaIeIephot[ngammas]/F");
+  ana_tree->Branch("pid_hlwTrack04phot",   pid_hlwTrack04phot,  "pid_hlwTrack04phot[ngammas]/F");
+  ana_tree->Branch("pid_jurECAL04phot",    pid_jurECAL04phot,   "pid_jurECAL04phot[ngammas]/F");
+  ana_tree->Branch("pid_twrHCAL04phot",    pid_twrHCAL04phot,   "pid_twrHCAL04phot[ngammas]/F");
+  ana_tree->Branch("pid_hasMatchedConvphot",     pid_hasMatchedConvphot,     "pid_hasMatchedConvphot[ngammas]/I");
+  ana_tree->Branch("pid_hasMatchedPromptElephot",pid_hasMatchedPromptElephot,"pid_hasMatchedPromptElephot[ngammas]/I");
+  ana_tree->Branch("pid_pfIsoCharged03phot",     pid_pfIsoCharged03phot,     "pid_pfIsoCharged03phot[ngammas]/F");  
+  ana_tree->Branch("pid_pfIsoPhotons03phot",     pid_pfIsoPhotons03phot,     "pid_pfIsoPhotons03phot[ngammas]/F");  
+  ana_tree->Branch("pid_pfIsoNeutrals03phot",    pid_pfIsoNeutrals03phot,    "pid_pfIsoNeutrals03phot[ngammas]/F"); 
+  ana_tree->Branch("pid_pfIsoCharged04phot",     pid_pfIsoCharged04phot,     "pid_pfIsoCharged04phot[ngammas]/F");  
+  ana_tree->Branch("pid_pfIsoPhotons04phot",     pid_pfIsoPhotons04phot,     "pid_pfIsoPhotons04phot[ngammas]/F");  
+  ana_tree->Branch("pid_pfIsoNeutrals04phot",    pid_pfIsoNeutrals04phot,    "pid_pfIsoNeutrals04phot[ngammas]/F"); 
+  ana_tree->Branch("pid_deltaRToTrackphot",      pid_deltaRToTrackphot,      "pid_deltaRToTrackphot[ngammas]/F");
   // vtx
   ana_tree->Branch("vtxId",   &vtxId,   "vtxId/I");
   ana_tree->Branch("vtxPos_x",&vtxPos_x,"vtxPos_x/F");
@@ -225,20 +229,29 @@ void GammaJetsSelection::Loop() {
     
     // filling the output tree with gen level info
     vector<int>* genPhotPtr = &firstfourgenphot;
-    int index_phot1;
     if (firstfourgenphot.size()>=1) {
-      index_phot1    = genPhotPtr->at(0);
-      gen_pt_gamma1  = ptMC[index_phot1];
-      gen_eta_gamma1 = etaMC[index_phot1];
-      gen_phi_gamma1 = phiMC[index_phot1];
+      int index_phot1 = genPhotPtr->at(0);
+      gen_pt_gamma1   = ptMC[index_phot1];
+      gen_eta_gamma1  = etaMC[index_phot1];
+      gen_phi_gamma1  = phiMC[index_phot1];
     }
     if (firstfourgenphot.size()==0) {
       gen_pt_gamma1  = -999.;
       gen_eta_gamma1 = -999.;
       gen_phi_gamma1 = -999.;
     }
+
+    // gen level leptons from W or Z
+    oneGenMuon=0; 
+    oneGenEle=0; 
+    for(int i=0; i<nMC; i++) {
+      int moth   = motherIDMC[i];
+      int mothId = pdgIdMC[moth];
+      if( abs(pdgIdMC[i])==13 && statusMC[i]==3 && (abs(mothId)==23 || abs(mothId)==24) ) oneGenMuon=1;
+      if( abs(pdgIdMC[i])==11 && statusMC[i]==3 && (abs(mothId)==23 || abs(mothId)==24) ) oneGenEle=1;
+    }    
     
-    // to be used at analysis level
+    // to be used at analysis level to normalize
     ptphotgen1.Fill(ptMC[firstfourgenphot.at(0)],weight);    
 
 
@@ -246,14 +259,19 @@ void GammaJetsSelection::Loop() {
     // ----------------------------------------------
     // reco level analysis
 
-    // 1) vertex ==> we assume the correct one is vtx0 - chiara
-    vtxId=0;
-    vtxPos_x=vx[0];
-    vtxPos_y=vy[0];
-    vtxPos_z=vz[0];
-    
+    // 0) fired HLT paths
+    aHLTNames   = new std::vector<std::string>;
+    aHLTResults = new std::vector<bool>;
+    aHLTNames   -> clear();
+    aHLTResults -> clear();
+    for (int ii=0; ii<(HLTResults->size()); ii++) {
+      if ((*HLTResults)[ii]) {
+	aHLTNames->push_back((*HLTNames)[ii]);
+	aHLTResults->push_back((*HLTResults)[ii]);
+      }
+    }
 
-    // 2) reco photons
+    // 1) reco photons
     vector<bool> assophot;
     vector<bool> isophot;
     
@@ -295,28 +313,65 @@ void GammaJetsSelection::Loop() {
       else isophot.push_back(0);  
     }
     vector<int> firstfourassphot = firstones(ptPhot,&assophot,4);
-    vector<int> firstfourisophot = firstones(ptPhot,&isophot,4);      
+    vector<int> firsttenisophot  = firstones(ptPhot,&isophot,10);       
 
+
+    // ----------------------------------------------------------------------
+    // reco preselection: at least 1 gamma with pT>30 and in acceptance
+    bool recoPreselection = ( firsttenisophot.at(0)>-1 && ptPhot[firsttenisophot.at(0)]>30 && 
+			      (! ((fabs(etascPhot[firsttenisophot.at(0)])>1.4442 
+				   && (fabs(etascPhot[firsttenisophot.at(0)])<1.566)) || (fabs(etascPhot[firsttenisophot.at(0)])>2.5) ) ) );
+    if(!recoPreselection ) SetAllRecoVarToMinus999();  
+    // ----------------------------------------------------------------------
+
+
+    // 2) various infos 
+    if(recoPreselection ) {
+      nvtx    = nvertex;
+      runRN   = run;
+      eventRN = event;
+      rhoPFRN = rhoPF;
+      rhoAllJetsRN = rhoAllJets;
+    }
+
+    // 3) vertex ==>
+    // we assume that the correct one is vtx0 among the selected ones
+    // if the first vertex is not good we remove the event
+    if(recoPreselection ) {
+      vtxId=0;
+      vtxPos_x=vx[0];
+      vtxPos_y=vy[0];
+      vtxPos_z=vz[0];
+      float rhoVtx=sqrt(vx[0]*vx[0]+vy[0]*vy[0]);
+      if (vndof[0]<4 || fabs(vz[0])>24. || rhoVtx>2.) {
+	vtxId=555;
+	vtxPos_x=555.;
+	vtxPos_y=555.;
+	vtxPos_z=555.;
+      } 
+    }
 
     // 4) muons: to veto events with muons (save tightID + loose and tight isolation WPs)
     //           to clean up jets based on loose isolation
     std::vector<int> _looseIsolMu;
     _looseIsolMu.clear();
-    oneLooseIsoMu=0;
-    oneTightIsoMu=0;
-    for(int iMu=0; iMu<nMuons; iMu++){
-      if (Muon_pt[iMu] < 20.)        continue;  
-      if (fabs(Muon_eta[iMu]) > 2.4) continue;
-      if (!muTightId(iMu))           continue;
-      float absMuIso = Muon_pfiso04_chHad[iMu] + max(0.,Muon_pfiso04_nHad[iMu]+Muon_pfiso04_Phot[iMu]-0.5*Muon_pfiso04_PUPt[iMu]);
-      float relMuIso = absMuIso/Muon_pt[iMu];
-      if (relMuIso<0.20) {
-	_looseIsolMu.push_back(iMu);  
-	oneLooseIsoMu++;
+    if(recoPreselection ) {
+      oneLooseIsoMu=0;
+      oneTightIsoMu=0;
+      for(int iMu=0; iMu<nMuons; iMu++){
+	if (Muon_pt[iMu] < 20.)        continue;  
+	if (fabs(Muon_eta[iMu]) > 2.4) continue;
+	if (!muTightId(iMu))           continue;
+	float absMuIso = Muon_pfiso04_chHad[iMu] + max(0.,Muon_pfiso04_nHad[iMu]+Muon_pfiso04_Phot[iMu]-0.5*Muon_pfiso04_PUPt[iMu]);
+	float relMuIso = absMuIso/Muon_pt[iMu];
+	if (relMuIso<0.20) {
+	  _looseIsolMu.push_back(iMu);  
+	  oneLooseIsoMu++;
+	}
+	if (relMuIso<0.12) oneTightIsoMu++;
       }
-      if (relMuIso<0.12) oneTightIsoMu++;
+      _looseIsolMu = sortMuonsByPt(_looseIsolMu);  
     }
-    _looseIsolMu = sortMuonsByPt(_looseIsolMu);  
     int minLooseIsolMuSize = _looseIsolMu.size();
     if (minLooseIsolMuSize>4) minLooseIsolMuSize = 4;
 
@@ -324,27 +379,29 @@ void GammaJetsSelection::Loop() {
     //               to clean up jets based on HZZ BDT isolation
     std::vector<int> _hzzEle;
     _hzzEle.clear();
-    oneWP80Ele=0;     
-    oneWP90Ele=0;     
-    oneHzzEle=0;      
-    oneHwwEle=0;      
-    for(int iEle=0; iEle<nEle; iEle++){
-      if (electron_pt[iEle] < 20.)            continue;
-      if (fabs(electron_sc_eta[iEle]) > 2.5 ) continue;
-      if (fabs(electron_sc_eta[iEle]) > 1.4442 && fabs(electron_sc_eta[iEle]) < 1.566) continue;
-      bool isWP90 = (eleCutId2012(iEle)).first;
-      bool isWP80 = (eleCutId2012(iEle)).second;
-      bool isHWW  = eleMvaId2012_Hww(iEle);
-      bool isHZZ  = eleMvaId2012_Hzz(iEle);
-      if (isWP90) oneWP90Ele++;
-      if (isWP80) oneWP80Ele++;
-      if (isHWW)  oneHwwEle++;
-      if (isHZZ) {
-	_hzzEle.push_back(iEle);
-	oneHzzEle++;
+    if(recoPreselection ) {
+      oneWP80Ele=0;     
+      oneWP90Ele=0;     
+      oneHzzEle=0;      
+      oneHwwEle=0;      
+      for(int iEle=0; iEle<nEle; iEle++){
+	if (electron_pt[iEle] < 20.)            continue;
+	if (fabs(electron_sc_eta[iEle]) > 2.5 ) continue;
+	if (fabs(electron_sc_eta[iEle]) > 1.4442 && fabs(electron_sc_eta[iEle]) < 1.566) continue;
+	bool isWP90 = (eleCutId2012(iEle)).first;
+	bool isWP80 = (eleCutId2012(iEle)).second;
+	bool isHWW  = eleMvaId2012_Hww(iEle);
+	bool isHZZ  = eleMvaId2012_Hzz(iEle);
+	if (isWP90) oneWP90Ele++;
+	if (isWP80) oneWP80Ele++;
+	if (isHWW)  oneHwwEle++;
+	if (isHZZ) {
+	  _hzzEle.push_back(iEle);
+	  oneHzzEle++;
+	}
       }
+      _hzzEle = sortElectronsByPt(_hzzEle);    
     }
-    _hzzEle = sortElectronsByPt(_hzzEle);    
     int minHzzEleSize = _hzzEle.size();
     if (minHzzEleSize>4) minHzzEleSize = 4;
 
@@ -352,169 +409,176 @@ void GammaJetsSelection::Loop() {
     vector<bool> jetnoassphot;            // jets passing PU Id and not matched with gen-level gammas
     vector<bool> jetgoodnoisophot;        // jets passing PU Id and not matched with reco gammas passing the preselection
     jetnoisophot.clear();                 // jets not matched with reco gammas passing the preselection
+
+    if(recoPreselection ) {	
+      for(int i=0; i<nJet_pfakt5; i++){
+	bool assp(0);
+	bool assi(0);
 	
-    for(int i=0; i<nJet_pfakt5; i++){
-      bool assp(0);
-      bool assi(0);
-      
-      // match jets / photons
-      double DR;
-      DR = sqrt(delta_eta(etaJet_pfakt5[i],etaPhot[firstfourassphot.at(0)])*delta_eta(etaJet_pfakt5[i],etaPhot[firstfourassphot.at(0)]) + 
-		delta_phi(phiJet_pfakt5[i],phiPhot[firstfourassphot.at(0)])*delta_phi(phiJet_pfakt5[i],phiPhot[firstfourassphot.at(0)]) ) ;
-      if( DR < .5 ) assp = 1;   // with gen gammas 
-      
-      DR = sqrt(delta_eta(etaJet_pfakt5[i],etaPhot[firstfourisophot.at(0)])*delta_eta(etaJet_pfakt5[i],etaPhot[firstfourisophot.at(0)]) + 
-		delta_phi(phiJet_pfakt5[i],phiPhot[firstfourisophot.at(0)])*delta_phi(phiJet_pfakt5[i],phiPhot[firstfourisophot.at(0)]) ) ;
-      if( DR < .5 ) assi = 1;   // with preselected gammas
-      
-      // good jets - passing cut based PU ID 
-      bool goodetajet(1);
-      if(TMath::Abs(etaJet_pfakt5[i]) > 4.7) goodetajet = 0;  
-      if(TMath::Abs(etaJet_pfakt5[i]) < 2.5) {
-	if(betaStar_pfakt5[i][0] > 0.2 * log( nvertex - 0.67 ) ) goodetajet = 0;   // chiara: vtx 0
-	if(rmsCandJet_pfakt5[i] > 0.06) goodetajet = 0;
-      } else if(TMath::Abs(etaJet_pfakt5[i]) < 3){
-	if(rmsCandJet_pfakt5[i] > 0.05) goodetajet = 0;
-      } else {
-	if(rmsCandJet_pfakt5[i] > 0.055) goodetajet = 0;
+	// match jets / photons
+	double DR;
+	DR = sqrt(delta_eta(etaJet_pfakt5[i],etaPhot[firstfourassphot.at(0)])*delta_eta(etaJet_pfakt5[i],etaPhot[firstfourassphot.at(0)]) + 
+		  delta_phi(phiJet_pfakt5[i],phiPhot[firstfourassphot.at(0)])*delta_phi(phiJet_pfakt5[i],phiPhot[firstfourassphot.at(0)]) ) ;
+	if( DR < .5 ) assp = 1;   // with gen gammas 
+	
+	DR = sqrt(delta_eta(etaJet_pfakt5[i],etaPhot[firsttenisophot.at(0)])*delta_eta(etaJet_pfakt5[i],etaPhot[firsttenisophot.at(0)]) + 
+		  delta_phi(phiJet_pfakt5[i],phiPhot[firsttenisophot.at(0)])*delta_phi(phiJet_pfakt5[i],phiPhot[firsttenisophot.at(0)]) ) ;
+	if( DR < .5 ) assi = 1;   // with first preselected gamma
+	
+	// good jets - passing cut based PU ID 
+	bool goodetajet(1);
+	if(TMath::Abs(etaJet_pfakt5[i]) > 4.7) goodetajet = 0;  
+	if(TMath::Abs(etaJet_pfakt5[i]) < 2.5) {
+	  if(betaStar_pfakt5[i][0] > 0.2 * log( nvertex - 0.67 ) ) goodetajet = 0;   // chiara: vtx 0
+	  if(rmsCandJet_pfakt5[i] > 0.06) goodetajet = 0;
+	} else if(TMath::Abs(etaJet_pfakt5[i]) < 3){
+	  if(rmsCandJet_pfakt5[i] > 0.05) goodetajet = 0;
+	} else {
+	  if(rmsCandJet_pfakt5[i] > 0.055) goodetajet = 0;
+	}
+	if(!assp && goodetajet) jetnoassphot.push_back(1); 
+	else jetnoassphot.push_back(0);  
+	
+	if(!assi && goodetajet) jetgoodnoisophot.push_back(1); 
+	else jetgoodnoisophot.push_back(0);  
+	
+	if(!assi) jetnoisophot.push_back(1); 
+	else jetnoisophot.push_back(0);  
       }
-      if(!assp && goodetajet) jetnoassphot.push_back(1); 
-      else jetnoassphot.push_back(0);  
-          
-      if(!assi && goodetajet) jetgoodnoisophot.push_back(1); 
-      else jetgoodnoisophot.push_back(0);  
-      
-      if(!assi) jetnoisophot.push_back(1); 
-      else jetnoisophot.push_back(0);  
-    }
-    vector<int> firsttennoisojet = firstones(ptCorrJet_pfakt5,&jetgoodnoisophot,10);      
+      vector<int> firsttennoisojet = firstones(ptCorrJet_pfakt5,&jetgoodnoisophot,10);      
   
-
-
-
-    // saving jet related variables in the tree for the first 10 good jets not matching preselected gammas
-    for( unsigned ijet=0; ijet<10; ++ijet ) {
-      ptjet[ijet]       = -999.;
-      ptcorrjet[ijet]   = -999.;
-      ecorrjet[ijet]    = -999.;
-      etajet[ijet]      = -999.;
-      phijet[ijet]      = -999.;
-      betajet[ijet]     = -999.;
-      betastarjet[ijet] = -999.;
-      rmsjet[ijet]      = -999.;
-      matchingMu[ijet]  = -999;
-      matchingEle[ijet] = -999;
-    }
-	
-    njets=0;
-    for( unsigned ijet=0; ijet<firsttennoisojet.size(); ++ijet ) {
-      if( firsttennoisojet.at(ijet)>=0 ) {
-	
-	if( ptCorrJet_pfakt5[firsttennoisojet.at(ijet)] < 20. ) continue;
-	if( njets >=10 ) continue;
-	
-	// match jets / muons (considering only the first 4 selected loose muons)
-	int assmu = 0;
-	for (int iMu=0; iMu<minLooseIsolMuSize; iMu++) {
-	  int myMu = _looseIsolMu[iMu];
-	  float DR = sqrt(delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],Muon_eta[myMu])*delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],Muon_eta[myMu]) + 
-			  delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],Muon_phi[myMu])*delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],Muon_phi[myMu]));
-	  if( DR < .5 ) assmu = 1;   
-	}
-      
-	// match jets / electrons (considering only the first 4 selected loose electrons)
-	int assele = 0;
-	for (int iEle=0; iEle<minHzzEleSize; iEle++) {
-	  int myEle = _hzzEle[iEle];
-	  float DR = sqrt(delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],electron_eta[myEle])*delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],electron_eta[myEle]) + 
-			  delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],electron_phi[myEle])*delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],electron_phi[myEle]));
-	  if( DR < .5 ) assele = 1;   
-	}
-	
-	ptjet[njets]       = ptJet_pfakt5[firsttennoisojet.at(ijet)];
-	ptcorrjet[njets]   = ptCorrJet_pfakt5[firsttennoisojet.at(ijet)];	  
-	ecorrjet[njets]    = ptcorrjet[njets]/ptjet[njets]*eJet_pfakt5[firsttennoisojet.at(ijet)];
-	etajet[njets]      = etaJet_pfakt5[firsttennoisojet.at(ijet)];
-	phijet[njets]      = phiJet_pfakt5[firsttennoisojet.at(ijet)];
-	betajet[njets]     = beta_pfakt5[firsttennoisojet.at(ijet)][vrankPhotonPairs[0]];
-	betastarjet[njets] = betaStar_pfakt5[firsttennoisojet.at(ijet)][vrankPhotonPairs[0]];
-	rmsjet[njets]      = rmsCandJet_pfakt5[firsttennoisojet.at(ijet)];
-	matchingMu[njets]  = assmu; 
-	matchingEle[njets] = assele; 
-	njets++;
-      } // if good index 
-    } // for firsttennoisojet
-
-
-    // saving the fired HLT paths in the tree
-    aHLTNames   = new std::vector<std::string>;
-    aHLTResults = new std::vector<bool>;
-    aHLTNames   -> clear();
-    aHLTResults -> clear();
-    for (int ii=0; ii<(HLTResults->size()); ii++) {
-      if ((*HLTResults)[ii]) {
-	aHLTNames->push_back((*HLTNames)[ii]);
-	aHLTResults->push_back((*HLTResults)[ii]);
+      // saving jet related variables in the tree for the first 10 good jets not matching preselected gammas
+      for( unsigned ijet=0; ijet<10; ++ijet ) {
+	ptjet[ijet]       = -999.;
+	ptcorrjet[ijet]   = -999.;
+	ecorrjet[ijet]    = -999.;
+	etajet[ijet]      = -999.;
+	phijet[ijet]      = -999.;
+	betajet[ijet]     = -999.;
+	betastarjet[ijet] = -999.;
+	rmsjet[ijet]      = -999.;
+	matchingMu[ijet]  = -999;
+	matchingEle[ijet] = -999;
       }
-    }
-
-
-    // saving gamma related stuffs (and general ones) in the tree for events passing the reco preselection
-    // reco preselection: at least 1 gamma with pT>30 and in acceptance
-    bool recoPreselection = ( firstfourisophot.at(0)>-1 && ptPhot[firstfourisophot.at(0)]>30 && 
-			      (! ((fabs(etascPhot[firstfourisophot.at(0)])>1.4442 && (fabs(etascPhot[firstfourisophot.at(0)])<1.566)) || (fabs(etascPhot[firstfourisophot.at(0)])>2.5) ) ) );
-    
-    if(!recoPreselection ) { 
-      SetAllRecoVarToMinus999();  
-    }
-    else {
       
-      ptphot1    = ptPhot[firstfourisophot.at(0)]; 
-      etaphot1   = etaPhot[firstfourisophot.at(0)];
-      phiphot1   = phiPhot[firstfourisophot.at(0)];
-      etascphot1 = etascPhot[firstfourisophot.at(0)];
-      deltaRToTrackphot1 = pid_deltaRToTrackPhot[firstfourisophot.at(0)];
-      E1phot1 = E1Phot[firstfourisophot.at(0)];
-      E9phot1 = E9Phot[firstfourisophot.at(0)];
-      r9phot1 = E9Phot[firstfourisophot.at(0)]/escRawPhot[firstfourisophot.at(0)];
-      pid_haspixelseedphot1 =  hasPixelSeedPhot[firstfourisophot.at(0)]; 
-      pid_hasMatchedConvphot1 = hasMatchedConvPhot[firstfourisophot.at(0)]; 
-      pid_hasMatchedPromptElephot1 = hasMatchedPromptElePhot[firstfourisophot.at(0)]; 
-      pid_HoverEphot1 =  pid_HoverE[firstfourisophot.at(0)];
-      pid_sigmaIeIephot1  = pid_etawid[firstfourisophot.at(0)];
-      pid_hlwTrack04phot1 = pid_hlwTrack[firstfourisophot.at(0)];
-      pid_jurECAL04phot1  = pid_jurECAL[firstfourisophot.at(0)];
-      pid_twrHCAL04phot1  = pid_twrHCAL[firstfourisophot.at(0)];
-      pid_pfIsoCharged03phot1  = pid_pfIsoCharged03ForCiC[firstfourisophot.at(0)][0];
-      pid_pfIsoPhotons03phot1  = pid_pfIsoPhotons03ForCiC[firstfourisophot.at(0)];
-      pid_pfIsoNeutrals03phot1 = pid_pfIsoNeutrals03ForCiC[firstfourisophot.at(0)];
-      pid_pfIsoCharged04phot1  = pid_pfIsoCharged04ForCiC[firstfourisophot.at(0)][0];
-      pid_pfIsoPhotons04phot1  = pid_pfIsoPhotons04ForCiC[firstfourisophot.at(0)];
-      pid_pfIsoNeutrals04phot1 = pid_pfIsoNeutrals04ForCiC[firstfourisophot.at(0)];
-      pid_deltaRToTrackphot1   = pid_deltaRToTrackPhot[firstfourisophot.at(0)];
-      // matching with gen gammas
-      float theDRminLO=999;
-      for(int i=0; i<nMC; i++) {
-	if(pdgIdMC[i]==22 && statusMC[i]==3){
-	  int myMoth   = motherIDMC[i];
-	  int myMothId = abs(pdgIdMC[myMoth]);
-	  if (myMothId<25) {
-	    float theDR = sqrt(delta_eta(etaphot1,etaMC[i])*delta_eta(etaphot1,etaMC[i]) +
-			       delta_phi(phiphot1,phiMC[i])*delta_phi(phiphot1,phiMC[i]) );
-	    if (theDR<theDRminLO) theDRminLO = theDR;
+      njets=0;
+      for( unsigned ijet=0; ijet<firsttennoisojet.size(); ++ijet ) {
+	if( firsttennoisojet.at(ijet)>=0 ) {
+	  
+	  if( ptCorrJet_pfakt5[firsttennoisojet.at(ijet)] < 20. ) continue;
+	  if( njets >=10 ) continue;
+	  
+	  // match jets / muons (considering only the first 4 selected loose muons)
+	  int assmu = 0;
+	  for (int iMu=0; iMu<minLooseIsolMuSize; iMu++) {
+	    int myMu = _looseIsolMu[iMu];
+	    float DR = sqrt(delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],Muon_eta[myMu])*delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],Muon_eta[myMu]) + 
+			    delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],Muon_phi[myMu])*delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],Muon_phi[myMu]));
+	    if( DR < .5 ) assmu = 1;   
 	  }
-	}
-      }
-      dRGenphot1 = theDRminLO; 
+	  
+	  // match jets / electrons (considering only the first 4 selected loose electrons)
+	  int assele = 0;
+	  for (int iEle=0; iEle<minHzzEleSize; iEle++) {
+	    int myEle = _hzzEle[iEle];
+	    float DR = sqrt(delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],electron_eta[myEle])*delta_eta(etaJet_pfakt5[firsttennoisojet.at(ijet)],electron_eta[myEle]) + 
+			    delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],electron_phi[myEle])*delta_phi(phiJet_pfakt5[firsttennoisojet.at(ijet)],electron_phi[myEle]));
+	    if( DR < .5 ) assele = 1;   
+	  }
+	  
+	  ptjet[njets]       = ptJet_pfakt5[firsttennoisojet.at(ijet)];
+	  ptcorrjet[njets]   = ptCorrJet_pfakt5[firsttennoisojet.at(ijet)];	  
+	  ecorrjet[njets]    = ptcorrjet[njets]/ptjet[njets]*eJet_pfakt5[firsttennoisojet.at(ijet)];
+	  etajet[njets]      = etaJet_pfakt5[firsttennoisojet.at(ijet)];
+	  phijet[njets]      = phiJet_pfakt5[firsttennoisojet.at(ijet)];
+	  betajet[njets]     = beta_pfakt5[firsttennoisojet.at(ijet)][vrankPhotonPairs[0]];
+	  betastarjet[njets] = betaStar_pfakt5[firsttennoisojet.at(ijet)][vrankPhotonPairs[0]];
+	  rmsjet[njets]      = rmsCandJet_pfakt5[firsttennoisojet.at(ijet)];
+	  matchingMu[njets]  = assmu; 
+	  matchingEle[njets] = assele; 
+	  njets++;
+	} // if good index 
+      } // for firsttennoisojet
+    } // preselection
 
-      // others
-      nvtx    = nvertex;
-      runRN   = run;
-      eventRN = event;
-      rhoPFRN = rhoPF;
-      rhoAllJetsRN = rhoAllJets;
-    }
-    
+    // 7) reco preselected gammas
+    if(recoPreselection ) {
+      for( unsigned igamma=0; igamma<10; ++igamma ) {
+	ptphot[igamma]    = -999.;
+	etaphot[igamma]   = -999.;
+	phiphot[igamma]   = -999.;
+	etascphot[igamma] = -999.;
+	deltaRToTrackphot[igamma] = -999.;
+	E1phot[igamma] = -999.;
+	E9phot[igamma] = -999.;
+	r9phot[igamma] = -999.;
+	pid_haspixelseedphot[igamma]   = -999;
+	pid_hasMatchedConvphot[igamma] = -999;
+	pid_hasMatchedPromptElephot[igamma] = -999;
+	pid_HoverEphot[igamma]     = -999.;  
+	pid_sigmaIeIephot[igamma]  = -999.; 
+	pid_hlwTrack04phot[igamma] = -999.; 
+	pid_jurECAL04phot[igamma]  = -999.;
+	pid_twrHCAL04phot[igamma]  = -999.;
+	pid_pfIsoCharged03phot[igamma]  = -999.;
+	pid_pfIsoPhotons03phot[igamma]  = -999.;
+	pid_pfIsoNeutrals03phot[igamma] = -999.;
+	pid_pfIsoCharged04phot[igamma]  = -999.;
+	pid_pfIsoPhotons04phot[igamma]  = -999.;
+	pid_pfIsoNeutrals04phot[igamma] = -999.;
+	pid_deltaRToTrackphot[igamma]   = -999.;
+	dRGenphot[igamma]               = -999.;
+      }
+      
+      ngammas=0;
+      for( unsigned igamma=0; igamma<firsttenisophot.size(); ++igamma ) {
+	if( firsttenisophot.at(igamma)>=0 ) {
+	  if( ngammas >=10 ) continue;
+	  
+	  ptphot[ngammas]    = ptPhot[firsttenisophot.at(igamma)]; 
+	  etaphot[ngammas]   = etaPhot[firsttenisophot.at(igamma)];
+	  phiphot[ngammas]   = phiPhot[firsttenisophot.at(igamma)];
+	  etascphot[ngammas] = etascPhot[firsttenisophot.at(igamma)];
+	  deltaRToTrackphot[ngammas] = pid_deltaRToTrackPhot[firsttenisophot.at(igamma)];
+	  E1phot[ngammas] = E1Phot[firsttenisophot.at(igamma)];
+	  E9phot[ngammas] = E9Phot[firsttenisophot.at(igamma)];
+	  r9phot[ngammas] = E9Phot[firsttenisophot.at(igamma)]/escRawPhot[firsttenisophot.at(igamma)];
+	  pid_haspixelseedphot[ngammas]        = hasPixelSeedPhot[firsttenisophot.at(igamma)]; 
+	  pid_hasMatchedConvphot[ngammas]      = hasMatchedConvPhot[firsttenisophot.at(igamma)]; 
+	  pid_hasMatchedPromptElephot[ngammas] = hasMatchedPromptElePhot[firsttenisophot.at(igamma)]; 
+	  pid_HoverEphot[ngammas]              = pid_HoverE[firsttenisophot.at(igamma)];
+	  pid_sigmaIeIephot[ngammas]  = pid_etawid[firsttenisophot.at(igamma)];
+	  pid_hlwTrack04phot[ngammas] = pid_hlwTrack[firsttenisophot.at(igamma)];
+	  pid_jurECAL04phot[ngammas]  = pid_jurECAL[firsttenisophot.at(igamma)];
+	  pid_twrHCAL04phot[ngammas]  = pid_twrHCAL[firsttenisophot.at(igamma)];
+	  pid_pfIsoCharged03phot[ngammas]  = pid_pfIsoCharged03ForCiC[firsttenisophot.at(igamma)][0];
+	  pid_pfIsoPhotons03phot[ngammas]  = pid_pfIsoPhotons03ForCiC[firsttenisophot.at(igamma)];
+	  pid_pfIsoNeutrals03phot[ngammas] = pid_pfIsoNeutrals03ForCiC[firsttenisophot.at(igamma)];
+	  pid_pfIsoCharged04phot[ngammas]  = pid_pfIsoCharged04ForCiC[firsttenisophot.at(igamma)][0];
+	  pid_pfIsoPhotons04phot[ngammas]  = pid_pfIsoPhotons04ForCiC[firsttenisophot.at(igamma)];
+	  pid_pfIsoNeutrals04phot[ngammas] = pid_pfIsoNeutrals04ForCiC[firsttenisophot.at(igamma)];
+	  pid_deltaRToTrackphot[ngammas]   = pid_deltaRToTrackPhot[firsttenisophot.at(igamma)];
+	  
+	  // matching with gen gammas
+	  float theDRminLO=999;
+	  for(int i=0; i<nMC; i++) {
+	    if(pdgIdMC[i]==22 && statusMC[i]==3){
+	      int myMoth   = motherIDMC[i];
+	      int myMothId = abs(pdgIdMC[myMoth]);
+	      if (myMothId<25) {
+		float theDR = sqrt(delta_eta(etaPhot[firsttenisophot.at(igamma)],etaMC[i])*delta_eta(etaPhot[firsttenisophot.at(igamma)],etaMC[i]) +
+				   delta_phi(phiPhot[firsttenisophot.at(igamma)],phiMC[i])*delta_phi(phiPhot[firsttenisophot.at(igamma)],phiMC[i]) );
+		if (theDR<theDRminLO) theDRminLO = theDR;
+	      }
+	    }
+	  }
+	  dRGenphot[ngammas] = theDRminLO; 
+	  
+	  ngammas++;
+	}  // good gamma
+      }  // loop over 10 preselected gammas
+    } // preselection
+
     if(recoPreselection) ana_tree->Fill();
     
     delete aHLTNames;  
@@ -566,35 +630,12 @@ void GammaJetsSelection::SetPuWeights(std::string puWeightFile)
 
 void GammaJetsSelection::SetAllRecoVarToMinus999() {
 
-  dRGenphot1 = -999.;  
-  ptphot1    = -999.;
-  deltaRToTrackphot1 = -999.;
-  etaphot1   = -999.;
-  phiphot1   = -999.;
-  etascphot1 = -999.;
-  E1phot1    = -999.;
-  E9phot1    = -999.;
-  r9phot1      = -999.;
-  pid_haspixelseedphot1        = -999.;
-  pid_HoverEphot1              = -999.;
-  pid_sigmaIeIephot1  = -999.;
-  pid_hlwTrack04phot1 = -999.;
-  pid_jurECAL04phot1  = -999.;
-  pid_twrHCAL04phot1  = -999.;
-  pid_pfIsoCharged03phot1  = -999.;
-  pid_pfIsoPhotons03phot1  = -999.;
-  pid_pfIsoNeutrals03phot1 = -999.;
-  pid_pfIsoCharged04phot1  = -999.;
-  pid_pfIsoPhotons04phot1  = -999.;
-  pid_pfIsoNeutrals04phot1 = -999.;
-  pid_hasMatchedConvphot1      = -999.; 
-  pid_hasMatchedPromptElephot1 = -999.; 
-  pid_deltaRToTrackphot1 = -999.;
   nvtx    = -999;
   runRN   = -999;
   eventRN = -999;
   rhoPFRN = -999;
   rhoAllJetsRN = -999;
+
   for( unsigned i=0; i<10; ++i ) {
     ptjet[i]       = -999;
     ptcorrjet[i]   = -999;
@@ -607,20 +648,49 @@ void GammaJetsSelection::SetAllRecoVarToMinus999() {
     matchingMu[i]  = -999;
     matchingEle[i] = -999;
   }
- vtxId = -999;
- vtxPos_x = -999;
- vtxPos_y = -999;
- vtxPos_z = -999;
- npu = -999;
- etascphot1 = -999;
- pu_weight = -999;
- weight = -999;
- oneLooseIsoMu = -999;
- oneTightIsoMu = -999;
- oneWP80Ele=-999;
- oneWP90Ele=-999;
- oneHwwEle=-999;
- oneHzzEle=-999;
+
+  for( unsigned i=0; i<10; ++i ) {
+    dRGenphot[i] = -999.;  
+    ptphot[i]    = -999.;
+    deltaRToTrackphot[i] = -999.;
+    etaphot[i]   = -999.;
+    phiphot[i]   = -999.;
+    etascphot[i] = -999.;
+    E1phot[i]    = -999.;
+    E9phot[i]    = -999.;
+    r9phot[i]    = -999.;
+    pid_haspixelseedphot[i] = -999.;
+    pid_HoverEphot[i]       = -999.;
+    pid_sigmaIeIephot[i]  = -999.;
+    pid_hlwTrack04phot[i] = -999.;
+    pid_jurECAL04phot[i]  = -999.;
+    pid_twrHCAL04phot[i]  = -999.;
+    pid_pfIsoCharged03phot[i]  = -999.;
+    pid_pfIsoPhotons03phot[i]  = -999.;
+    pid_pfIsoNeutrals03phot[i] = -999.;
+    pid_pfIsoCharged04phot[i]  = -999.;
+    pid_pfIsoPhotons04phot[i]  = -999.;
+    pid_pfIsoNeutrals04phot[i] = -999.;
+    pid_hasMatchedConvphot[i]      = -999.; 
+    pid_hasMatchedPromptElephot[i] = -999.; 
+    pid_deltaRToTrackphot[i] = -999.;
+  }
+
+  vtxId = -999;
+  vtxPos_x = -999;
+  vtxPos_y = -999;
+  vtxPos_z = -999;
+
+  npu = -999;
+  pu_weight = -999;
+  weight = -999;
+
+  oneLooseIsoMu = -999;
+  oneTightIsoMu = -999;
+  oneWP80Ele=-999;
+  oneWP90Ele=-999;
+  oneHwwEle=-999;
+  oneHzzEle=-999;
 }
 
 bool GammaJetsSelection::PhotonMITPreSelection( int photon_index, int vertex_index, bool electronVeto) {
@@ -774,14 +844,15 @@ bool GammaJetsSelection::eleMvaId2012_Hww(int iEle) {
   isol = theIsolation < electron_pt[iEle]* 0.15;  
 
   // ID
-  float bdt = electron_mvaTrig[iEle];
+  float bdt   = electron_mvaTrig[iEle];
+  float ptele = electron_pt[iEle]; 
   isID = (
-	  ( ptphot1 <= 20 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.00 ) ||
-	  ( ptphot1 <= 20 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.10 ) ||
-	  ( ptphot1 <= 20 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.62 ) ||
-	  ( ptphot1 >  20 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.94 ) ||
-	  ( ptphot1 >  20 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.85 ) ||
-	  ( ptphot1 >  20 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.92 )
+	  ( ptele <= 20 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.00 ) ||
+	  ( ptele <= 20 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.10 ) ||
+	  ( ptele <= 20 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.62 ) ||
+	  ( ptele >  20 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.94 ) ||
+	  ( ptele >  20 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.85 ) ||
+	  ( ptele >  20 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.92 )
 	  );
 
   // conv.rej
@@ -796,6 +867,7 @@ bool GammaJetsSelection::eleMvaId2012_Hww(int iEle) {
 bool GammaJetsSelection::eleMvaId2012_Hzz(int iEle) {
 
   bool minhits;
+  bool matchconv;
   bool d0;
   bool isol, isID;
   
@@ -810,24 +882,26 @@ bool GammaJetsSelection::eleMvaId2012_Hzz(int iEle) {
   isol = theIsolation < electron_pt[iEle]* 0.40;  
 
   // ID
-  float bdt = electron_mvaNonTrig[iEle];
+  float bdt   = electron_mvaNonTrig[iEle];
+  float ptele = electron_pt[iEle]; 
   isID = (
-	  ( ptphot1 <= 10 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.470 ) ||
-	  ( ptphot1 <= 10 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.004 ) ||
-	  ( ptphot1 <= 10 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.295 ) ||
-	  ( ptphot1 >  10 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.500 ) ||
-	  ( ptphot1 >  10 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.120 ) ||
-	  ( ptphot1 >  10 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.600 )
+	  ( ptele <= 10 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.470 ) ||
+	  ( ptele <= 10 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.004 ) ||
+	  ( ptele <= 10 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.295 ) ||
+	  ( ptele >  10 && abseta >= 0.000 && abseta < 0.800 && bdt > 0.500 ) ||
+	  ( ptele >  10 && abseta >= 0.800 && abseta < 1.479 && bdt > 0.120 ) ||
+	  ( ptele >  10 && abseta >= 1.479 && abseta < 2.500 && bdt > 0.600 )
 	  );
   
   // conv.rej
-  minhits = electron_misHits[iEle] <= 1;
+  minhits   = electron_misHits[iEle] <= 1;        
+  matchconv = electron_matchedConv[iEle]==0;    // chiara: questo taglio non c'e' nella selezione Hzz, ma qui abbiamo gamma
   
   // IP cut
   // chiara: the real Hzz uses |SIP|<4, but we don't have the track error...
   d0 = fabs(d0Ele) < 0.05;
 
-  bool isHZZ = minhits && d0 && isol && isID;
+  bool isHZZ = minhits && matchconv && d0 && isol && isID;
   return isHZZ;
 }
 
