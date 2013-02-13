@@ -2,12 +2,12 @@
 #define SingleGammaTree_giulia_h
 
 #include "tree_reader_V8.h"
-#include "PhotonIdCuts.h"
+//#include "PhotonIdCuts.h"
 #include "LeptonIdCuts.h"
 #include "EnergyScaleCorrection.h"
 #include "JetScaleSystematics.h"
-#include "ElectronEffectiveArea.h"
-#include "MassResolution.h"
+//#include "ElectronEffectiveArea.h"
+//#include "MassResolution.h"
 
 #include "TLorentzVector.h"
 

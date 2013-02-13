@@ -78,7 +78,6 @@ int main(int argc, char* argv[]) {
   // find cross section for this list
   float myxsec = CrossSection(listName);
 
-
   // filter for 2gam + jets. this is included in GJets samples but we use dedicated DiPhotonjets-madgraph
   int isGJetQCD = IsGJet(listName);
   
@@ -96,11 +95,11 @@ int main(int argc, char* argv[]) {
   //  tool.photonLevelNewIDMVA_EB=std::string(argv[4]);
   //  tool.photonLevelNewIDMVA_EE=std::string(argv[5]);
 
-  if (argc>4 && std::string(argv[4]) != "-1")
-    tool.SetJsonFile(argv[4]);
+  if (argc>3 && std::string(argv[3]) != "-1") 
+    tool.SetJsonFile(argv[3]);
   
-  if (argc>5 && std::string(argv[5]) != "-1")
-    tool.SetPuWeights(std::string(argv[5]));
+  if (argc>4 && std::string(argv[4]) != "-1") 
+    tool.SetPuWeights(std::string(argv[4]));
   
   /*
   if (argc>8 && std::string(argv[8]) != "-1") {

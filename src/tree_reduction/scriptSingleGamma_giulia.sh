@@ -26,9 +26,9 @@ if [ "$domain" == "cern.ch" ]; then
     cd -
 fi
 echo dir is $CMSSW_BASE file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
-echo ${CMSSW_BASE}/src/Analysis/Higgs/tmp/singlegammaApp_giulia $2 ${filename} #$4 ${8} ${9} $5 $6 $7 
+echo ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 #$4 ${8} ${9} $5 $6 $7 
 
-${CMSSW_BASE}/src/Analysis/Higgs/tmp/singlegammaApp_giulia $2 ${filename} #$4 $8 $9 $5 $6 $7 
+${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 #$4 $8 $9 $5 $6 $7 
 exit_stat=$?
 
 if [ "$domain" == "cern.ch" ]; then

@@ -1,7 +1,7 @@
 #!/bin/tcsh
     
-set data_json    = "`pwd`/jsonFiles/Cert_190456-195396_8TeV_PromptReco_Collisions12_JSON_v2.txt"
-set puweight_53x = "`pwd`/nPU-Summer12_DD3.190456-201678-29Jun_Prompt.observed.root"
+set data_json    = "`pwd`/../../scripts/jsonFiles/ABCD_11DecExcluded.json" 
+set puweight_53x = "`pwd`/../../scripts/puFiles/dataPU-RunABCD.root"
 
 set location = "eth"
 set version  = "v1"
@@ -52,14 +52,16 @@ echo ""
 #foreach class ( 52xv5 52xv5_data )
 #foreach class ( 52xv5 )
 #foreach class ( 52xv5_lisbon )
+#foreach class ( 53xv2 53xv2_data )
 foreach class ( 53xv2 )
+#foreach class ( 53xv2_data )
 #foreach class ( 52xv5_data )
 #foreach class ( 52xv5_lisbon 53xv1_data_lisbon )
 #foreach class ( 53xv1_data_lisbon )
 #    foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
     foreach preseltype ( cicpfloose )
 	if ( "`echo ${class} | grep data`XXX" != "XXX" ) then
-	    set command="./makeSingleGammaTreeNtp_giulia.csh list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 ${energyCorrection}"
+	    set command="./makeSingleGammaTreeNtp_giulia.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 ${energyCorrection}"
 	else 
 	    if ( $puweight !=  -1 ) then
 		if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
@@ -69,7 +71,7 @@ foreach class ( 53xv2 )
 		set puweightFile = -1
 	    endif
 
-	    set command="./makeSingleGammaTreeNtp_giulia.csh list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} -1 ${puweightFile} ${energyCorrection}.MC"
+	    set command="./makeSingleGammaTreeNtp_giulia.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} -1 ${puweightFile} ${energyCorrection}.MC"
 	endif
 	echo ${command}
 	if ( $run == 1 ) then
