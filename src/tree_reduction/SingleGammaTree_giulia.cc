@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 
 
-SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader(tree), jsonFile(0) //, scaleCorrections_(0)
+SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader_V8(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
@@ -333,12 +333,12 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("vtxPos_x",&vtxPos_x,"vtxPos_x/F");
   ana_tree->Branch("vtxPos_y",&vtxPos_y,"vtxPos_y/F");
   ana_tree->Branch("vtxPos_z",&vtxPos_z,"vtxPos_z/F");
-  ana_tree->Branch("allHLTResults",  &aHLTResults);
   */
   ana_tree->Branch("isMatchedPhot", isMatchedPhot, "isMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("deltaRGenReco", deltaRGenReco, "deltaRGenReco[nPhot_gen]/F"  );
 
-
+  // triggering paths                                                                                                                 
+  ana_tree->Branch("firedHLTNames",  &aHLTNames);
 
   /********************************************************
    *                                                      *
@@ -455,38 +455,6 @@ void SingleGammaTree_giulia::Loop() {
     ptphotgen1.Fill(ptMC[firstfourgenphot.at(0)],weight);
     
 
-    // HLT paths
-
-//      for (int ii=0; ii<(HLTResults->size()); ii++) {
-//        std::cout << ii << " " << (*HLTNames)[ii] << " " << (*HLTResults)[ii] << std::endl;
-// // //       if ((*HLTResults)[ii]) {
-// // // 	aHLTNames->push_back((*HLTNames)[ii]);
-// // // 	aHLTResults->push_back((*HLTResults)[ii]);
-// // //       }
-//      }
-
-    //    cout << &((*HLTResults).at(0)) << std::endl;
-    
-    
-//     aHLTNames   = new std::vector<std::string>;
-//     aHLTResults = new std::vector<bool>;
-//     aHLTNames   -> clear();
-//     aHLTResults -> clear();
-//    std::vector<bool>::const_iterator it=results.begin();
-    //    std::cout << *it << std::endl;
-    for (int ii=0; ii<(HLTResults->size()); ii++) {
-      //      cout << "ii = " << ii << endl;
-
-//       cout << (*HLTResults)[ii] << endl;
-//       cout << (*HLTNames)[ii]   << endl;
-      //      if ((*HLTResults)[ii]) {
-      //  aHLTNames->push_back((*HLTNames)[ii]);
-      //  aHLTResults->push_back((*HLTResults)[ii]);
-    }
-    //
-    // }
-
-    
     // skip events where the number of jets, photons, and vertexes is above the maximum allowed value
     if (nPhot>30) {
       cout << "number of photons = " << nPhot << " and above threshold of 30; skipping" << endl;
@@ -506,7 +474,17 @@ void SingleGammaTree_giulia::Loop() {
     }
 
     // reconstructed variables -----------------------------------------
-    
+
+    // firing HLT paths
+    aHLTNames = new std::vector<std::string>;
+    aHLTNames -> clear();
+    for (int ii=0; ii<(HLTResults->size()); ii++) {
+      if ((*HLTResults)[ii]) {
+        aHLTNames->push_back((*HLTNames)[ii]);
+      }
+    }
+
+
     
     /***************************************************
      *                                                 *
@@ -718,7 +696,8 @@ void SingleGammaTree_giulia::Loop() {
       
       ana_tree->Fill();
     }
-        
+   
+    delete aHLTNames;
   }
   ptphotgen1.Write();
   ana_tree->Write();

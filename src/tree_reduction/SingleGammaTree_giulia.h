@@ -385,14 +385,7 @@ private:
    Float_t phimuvloose1, phimuvloose2;
    Float_t enemuvloose1, enemuvloose2;
 
-   // int nFiredHLT;
-   // std::vector<std::string>*  aHLTNames;
-   std::vector<std::string>*  aHLTNames;
-   std::vector<bool>*  aHLTResults;
-
-   // int nHLT;
-   // std::vector<std::string>*  aHLTNames;
-   // std::vector<bool>*  HLTResults;
+   std::vector<std::string>* aHLTNames;
 
    float weight;
 
