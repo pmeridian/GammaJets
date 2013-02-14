@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 
 
-SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader_V8(tree), jsonFile(0) //, scaleCorrections_(0)
+SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
@@ -47,7 +47,7 @@ vector<int> SingleGammaTree_giulia::firstones(Float_t *vec, vector<bool> *asso, 
   for(int j=0; j<number; j++) {
     double maxtemp(-999); 
     int idmaxtemp(-999);
-    
+
     for (int i=0; i<int(asso->size()); i++) {
       bool skip(0);
       for(int ss=0; ss<j; ss++) { 
@@ -69,6 +69,7 @@ vector<int> SingleGammaTree_giulia::firstones(Float_t *vec, vector<bool> *asso, 
 
 void SingleGammaTree_giulia::Loop() {
 
+
   if (fChain == 0) return;
   
   Long64_t nentries = fChain->GetEntriesFast();
@@ -80,6 +81,7 @@ void SingleGammaTree_giulia::Loop() {
     std::cout << "Reading JSON" << jsonFile << std::endl;
     myjson=new JSON(jsonFile);
   }
+
   
 
 
@@ -97,57 +99,57 @@ void SingleGammaTree_giulia::Loop() {
 
 
   int nPhot_presel, nPhot_gen;
-  float ptPhot_presel[nPhot_presel];
-  float ePhot_presel[nPhot_presel];
-  float phiPhot_presel[nPhot_presel];
-  float etaPhot_presel[nPhot_presel];
+  float ptPhot_presel[10];
+  float ePhot_presel[10];
+  float phiPhot_presel[10];
+  float etaPhot_presel[10];
 
-  float deltaRGenReco[nPhot_gen];
-  int isMatchedPhot[nPhot_presel];
+  float deltaRGenReco[10];
+  int isMatchedPhot[10];
 
-  float pid_scetawid_presel[nPhot_presel];
-  float pid_scphiwid_presel[nPhot_presel]; 
-  float sEtaEtaPhot_presel[nPhot_presel];
-  float sEtaPhiPhot_presel[nPhot_presel];
-  float s4RatioPhot_presel[nPhot_presel];
-  float r9Phot_presel[nPhot_presel];
-  float etascPhot_presel[nPhot_presel];
+  float pid_scetawid_presel[10];
+  float pid_scphiwid_presel[10]; 
+  float sEtaEtaPhot_presel[10];
+  float sEtaPhiPhot_presel[10];
+  float s4RatioPhot_presel[10];
+  float r9Phot_presel[10];
+  float etascPhot_presel[10];
 
 
-  float rr_presel[nPhot_presel];
+  float rr_presel[10];
 
   //photon id
-  float pid_lambdaRatio_presel[nPhot_presel];
-  float pid_HoverE_presel[nPhot_presel];
+  float pid_lambdaRatio_presel[10];
+  float pid_HoverE_presel[10];
 
-  float pid_jurECAL03_presel[nPhot_presel];
-  float pid_twrHCAL03_presel[nPhot_presel];
-  float pid_hlwTrack03_presel[nPhot_presel];
+  float pid_jurECAL03_presel[10];
+  float pid_twrHCAL03_presel[10];
+  float pid_hlwTrack03_presel[10];
 
-  float pid_jurECAL04_presel[nPhot_presel];
-  float pid_twrHCAL04_presel[nPhot_presel];
-  float pid_hlwTrack04_presel[nPhot_presel];
+  float pid_jurECAL04_presel[10];
+  float pid_twrHCAL04_presel[10];
+  float pid_hlwTrack04_presel[10];
 
-  float pid_pfIsoCharged01ForCiC_presel[nPhot_presel];
-  float pid_pfIsoCharged02ForCiC_presel[nPhot_presel];
-  float pid_pfIsoCharged03ForCiC_presel[nPhot_presel];
-  float pid_pfIsoCharged04ForCiC_presel[nPhot_presel];
-  float pid_pfIsoCharged05ForCiC_presel[nPhot_presel];
-  float pid_pfIsoCharged06ForCiC_presel[nPhot_presel];
+  float pid_pfIsoCharged01ForCiC_presel[10];
+  float pid_pfIsoCharged02ForCiC_presel[10];
+  float pid_pfIsoCharged03ForCiC_presel[10];
+  float pid_pfIsoCharged04ForCiC_presel[10];
+  float pid_pfIsoCharged05ForCiC_presel[10];
+  float pid_pfIsoCharged06ForCiC_presel[10];
 
-  float pid_pfIsoPhotons01ForCiC_presel[nPhot_presel];
-  float pid_pfIsoPhotons02ForCiC_presel[nPhot_presel];
-  float pid_pfIsoPhotons03ForCiC_presel[nPhot_presel];
-  float pid_pfIsoPhotons04ForCiC_presel[nPhot_presel];
-  float pid_pfIsoPhotons05ForCiC_presel[nPhot_presel];
-  float pid_pfIsoPhotons06ForCiC_presel[nPhot_presel];
+  float pid_pfIsoPhotons01ForCiC_presel[10];
+  float pid_pfIsoPhotons02ForCiC_presel[10];
+  float pid_pfIsoPhotons03ForCiC_presel[10];
+  float pid_pfIsoPhotons04ForCiC_presel[10];
+  float pid_pfIsoPhotons05ForCiC_presel[10];
+  float pid_pfIsoPhotons06ForCiC_presel[10];
   
-  float pid_pfIsoNeutrals01ForCiC_presel[nPhot_presel];
-  float pid_pfIsoNeutrals02ForCiC_presel[nPhot_presel];
-  float pid_pfIsoNeutrals03ForCiC_presel[nPhot_presel];
-  float pid_pfIsoNeutrals04ForCiC_presel[nPhot_presel];
-  float pid_pfIsoNeutrals05ForCiC_presel[nPhot_presel];
-  float pid_pfIsoNeutrals06ForCiC_presel[nPhot_presel];
+  float pid_pfIsoNeutrals01ForCiC_presel[10];
+  float pid_pfIsoNeutrals02ForCiC_presel[10];
+  float pid_pfIsoNeutrals03ForCiC_presel[10];
+  float pid_pfIsoNeutrals04ForCiC_presel[10];
+  float pid_pfIsoNeutrals05ForCiC_presel[10];
+  float pid_pfIsoNeutrals06ForCiC_presel[10];
   
 
   
@@ -172,6 +174,7 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("ptPhot_presel",ptPhot_presel,"ptPhot_presel[nPhot_presel]/F");
   ana_tree->Branch("ePhot_presel",ePhot_presel,"ePhot_presel[nPhot_presel]/F");
   ana_tree->Branch("etascPhot_presel  ",etascPhot_presel  ,"etascPhot_presel[nPhot_presel]/F");
+
 
   /*
   ana_tree->Branch("escPhot  ",&escPhot  ,"escPhot[nPhot]/F");
@@ -335,6 +338,8 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("isMatchedPhot", isMatchedPhot, "isMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("deltaRGenReco", deltaRGenReco, "deltaRGenReco[nPhot_gen]/F"  );
 
+
+
   /********************************************************
    *                                                      *
    *                   INITIALIZATIONS                    *
@@ -365,7 +370,7 @@ void SingleGammaTree_giulia::Loop() {
 
     if (myjson && nMC<=0) 
       if (!myjson->isGoodLS(run,lbn)) continue;
-      
+
     nprocessed++;
     if (nprocessed%1000 == 0) cout << "Events " << nprocessed << " processed; Run " << run << " LS " << lbn << endl;
   
@@ -381,6 +386,7 @@ void SingleGammaTree_giulia::Loop() {
 	   << endl;
       foldname = currfilename;
     }
+
 
       
     /********************************************************
@@ -449,6 +455,36 @@ void SingleGammaTree_giulia::Loop() {
     ptphotgen1.Fill(ptMC[firstfourgenphot.at(0)],weight);
     
 
+    // HLT paths
+
+//      for (int ii=0; ii<(HLTResults->size()); ii++) {
+//        std::cout << ii << " " << (*HLTNames)[ii] << " " << (*HLTResults)[ii] << std::endl;
+// // //       if ((*HLTResults)[ii]) {
+// // // 	aHLTNames->push_back((*HLTNames)[ii]);
+// // // 	aHLTResults->push_back((*HLTResults)[ii]);
+// // //       }
+//      }
+
+    //    cout << &((*HLTResults).at(0)) << std::endl;
+    
+    
+//     aHLTNames   = new std::vector<std::string>;
+//     aHLTResults = new std::vector<bool>;
+//     aHLTNames   -> clear();
+//     aHLTResults -> clear();
+//    std::vector<bool>::const_iterator it=results.begin();
+    //    std::cout << *it << std::endl;
+    for (int ii=0; ii<(HLTResults->size()); ii++) {
+      //      cout << "ii = " << ii << endl;
+
+//       cout << (*HLTResults)[ii] << endl;
+//       cout << (*HLTNames)[ii]   << endl;
+      //      if ((*HLTResults)[ii]) {
+      //  aHLTNames->push_back((*HLTNames)[ii]);
+      //  aHLTResults->push_back((*HLTResults)[ii]);
+    }
+    //
+    // }
 
     
     // skip events where the number of jets, photons, and vertexes is above the maximum allowed value
