@@ -153,7 +153,8 @@ void SingleGammaTree_giulia::Loop() {
   
 
   
-  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis") ;
+  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, train") ;
+  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, 2") ;
   // general
   
   ana_tree->Branch("run",&runRN,"run/I");
@@ -176,164 +177,54 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("etascPhot_presel  ",etascPhot_presel  ,"etascPhot_presel[nPhot_presel]/F");
 
 
-  /*
-  ana_tree->Branch("escPhot  ",&escPhot  ,"escPhot[nPhot]/F");
-  ana_tree->Branch("escRegrPhot  ",&escRegrPhot  ,"escRegrPhot[nPhot]/F");
-  ana_tree->Branch("escRegrPhotError  ",&escRegrPhotError  ,"escRegrPhotError[nPhot]/F");
-  ana_tree->Branch("escPhFixPhot  ",&escPhFixPhot  ,"escPhFixPhot[nPhot]/F");
-  ana_tree->Branch("escPhFixPhotError  ",&escPhFixPhotError  ,"escPhFixPhotError[nPhot]/F");
-  ana_tree->Branch("escRawPhot  ",&escRawPhot  ,"escRawPhot[nPhot]/F");
-  
-  ana_tree->Branch("phisPhot  ",&phiscPhot  ,"phiscPhot[nPhot]/F");
-  ana_tree->Branch("xscPhot  ",&xscPhot  ,"xscPhot[nPhot]/F");
-  ana_tree->Branch("yscPhot  ",&yscPhot  ,"yscPhot[nPhot]/F");
-  ana_tree->Branch("zscPhot  ",&zscPhot  ,"zscPhot[nPhot]/F");
-  ana_tree->Branch("xcaloPhot  ",&xcaloPhot  ,"xcaloPhot[nPhot]/F");
-  ana_tree->Branch("ycaloPhot  ",&ycaloPhot  ,"ycaloPhot[nPhot]/F");
-  ana_tree->Branch("zcaloPhot  ",&zcaloPhot  ,"zcaloPhot[nPhot]/F");
-  ana_tree->Branch("eseedPhot  ",&eseedPhot  ,"eseedPhot[nPhot]/F");
-  */
   ana_tree->Branch("etaPhot_presel",etaPhot_presel,"etaPhot[nPhot_presel]/F");
   ana_tree->Branch("phiPhot_presel",phiPhot_presel,"phiPhot[nPhot_presel]/F");
-  /*  
-  ana_tree->Branch("timePhot",&timePhot,"timePhot[nPhot]/F");
-  ana_tree->Branch("e4SwissCrossPhot",&e4SwissCrossPhot,"e4SwissCrossPhot[nPhot]/F");
-  ana_tree->Branch("hasPixelSeedPhot",&hasPixelSeedPhot,"hasPixelSeedPhot[nPhot]/I");
-  ana_tree->Branch("hasMatchedPromptElePhot",&hasMatchedPromptElePhot,"hasMatchedPromptElePhot[nPhot]/I");
-  ana_tree->Branch("hasMatchedConvPhot",&hasMatchedConvPhot,"hasMatchedConvPhot[nPhot]/I");
-  ana_tree->Branch("isEBPhot",&isEBPhot, "isEBPhot[nPhot]/O");
-  ana_tree->Branch("isEEPhot",&isEEPhot, "isEEPhot[nPhot]/O");
-  ana_tree->Branch("isEBEEGapPhot",&isEBEEGapPhot, "isEBEEGapPhot[nPhot]/O");
 
-  ana_tree->Branch("ntracksConvPhot",nTracksConvPhot,"nTracksConvPhot[nPhot]/I");
-  ana_tree->Branch("isValidVtxConvPhot",isValidVtxConvPhot,"isValidVtxConvPhot[nPhot]/O");
-  ana_tree->Branch("pairInvmassConvPhot",pairInvariantMassConvPhot,"pairInvariantMassConvPhot[nPhot]/F");
-  ana_tree->Branch("pairCotThetaSeperationConvPhot",pairCotThetaSeparationConvPhot,"pairCotThetaSeparationConvPhot[nPhot]/F");
-  ana_tree->Branch("pairmomentumXConvPhot",pairMomentum_xConvPhot,"pairMomentum_xConvPhot[nPhot]/F");
-  ana_tree->Branch("pairmomentumYConvPhot",pairMomentum_yConvPhot,"pairMomentum_yConvPhot[nPhot]/F");
-  ana_tree->Branch("pairmomentumZConvPhot",pairMomentum_zConvPhot,"pairMomentum_zConvPhot[nPhot]/F");
-  ana_tree->Branch("chi2ConvPhot",chi2ConvPhot,"chi2ConvPhot[nPhot]/F");
-  ana_tree->Branch("nDofConvPhot",nDofConvPhot,"nDofConvPhot[nPhot]/F");
-  ana_tree->Branch("eOverPConvPhot",eOverPConvPhot,"eOverPConvPhot[nPhot]/F");
-  ana_tree->Branch("convVxConvPhot",conv_vxConvPhot,"conv_vxConvPhot[nPhot]/F");
-  ana_tree->Branch("convVyConvPhot",conv_vyConvPhot,"conv_vyConvPhot[nPhot]/F");
-  ana_tree->Branch("convVzConvPhot",conv_vzConvPhot,"conv_vzConvPhot[nPhot]/F");
-  ana_tree->Branch("distOfMinimumApproachConvPhot",distOfMinimumApproachConvPhot,"distOfMinimumApproachConvPhot[nPhot]/F");
-  ana_tree->Branch("dPhiTracksAtVtxConvPhot",dPhiTracksAtVtxConvPhot,"dPhiTracksAtVtxConvPhot[nPhot]/F");
-  //   ana_tree->Branch("dPhiTracksAtEcalConvPhot",dPhiTracksAtEcalConvPhot,"dPhiTracksAtEcalConvPhot[nPhot]/F");
-  //   ana_tree->Branch("dEtaTracksAtEcalConvPhot",dEtaTracksAtEcalConvPhot,"dEtaTracksAtEcalConvPhot[nPhot]/F");
-  */
+  ana_tree->Branch("pid_jurECAL03_presel",pid_jurECAL03_presel,"pid_jurECAL03_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_twrHCAL03_presel",pid_twrHCAL03_presel,"pid_twrHCAL03_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_hlwTrack03_presel",pid_hlwTrack03_presel,"pid_hlwTrack03_presel[nPhot_presel]/F");						
+		   																			
+  ana_tree->Branch("pid_jurECAL04_presel",pid_jurECAL04_presel,"pid_jurECAL04_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_twrHCAL04_presel",pid_twrHCAL04_presel,"pid_twrHCAL04_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_hlwTrack04_presel",pid_hlwTrack04_presel,"pid_hlwTrack04_presel[nPhot_presel]/F");						
+		   																			
+  ana_tree->Branch("pid_pfIsoCharged01ForCiC_presel",pid_pfIsoCharged01ForCiC_presel,"pid_pfIsoCharged01ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoCharged02ForCiC_presel",pid_pfIsoCharged02ForCiC_presel,"pid_pfIsoCharged02ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoCharged03ForCiC_presel",pid_pfIsoCharged03ForCiC_presel,"pid_pfIsoCharged03ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoCharged04ForCiC_presel",pid_pfIsoCharged04ForCiC_presel,"pid_pfIsoCharged04ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoCharged05ForCiC_presel",pid_pfIsoCharged05ForCiC_presel,"pid_pfIsoCharged05ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoCharged06ForCiC_presel",pid_pfIsoCharged06ForCiC_presel,"pid_pfIsoCharged06ForCiC_presel[nPhot_presel]/F");		
+		    				    		    											
+  ana_tree->Branch("pid_pfIsoPhotons01ForCiC_presel",pid_pfIsoPhotons01ForCiC_presel,"pid_pfIsoPhotons01ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoPhotons02ForCiC_presel",pid_pfIsoPhotons02ForCiC_presel,"pid_pfIsoPhotons02ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoPhotons03ForCiC_presel",pid_pfIsoPhotons03ForCiC_presel,"pid_pfIsoPhotons03ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoPhotons04ForCiC_presel",pid_pfIsoPhotons04ForCiC_presel,"pid_pfIsoPhotons04ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoPhotons05ForCiC_presel",pid_pfIsoPhotons05ForCiC_presel,"pid_pfIsoPhotons05ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoPhotons06ForCiC_presel",pid_pfIsoPhotons06ForCiC_presel,"pid_pfIsoPhotons06ForCiC_presel[nPhot_presel]/F");		
+		    				    		    											
+  ana_tree->Branch("pid_pfIsoNeutrals01ForCiC_presel",pid_pfIsoNeutrals01ForCiC_presel,"pid_pfIsoNeutrals01ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoNeutrals02ForCiC_presel",pid_pfIsoNeutrals02ForCiC_presel,"pid_pfIsoNeutrals02ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoNeutrals03ForCiC_presel",pid_pfIsoNeutrals03ForCiC_presel,"pid_pfIsoNeutrals03ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoNeutrals04ForCiC_presel",pid_pfIsoNeutrals04ForCiC_presel,"pid_pfIsoNeutrals04ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoNeutrals05ForCiC_presel",pid_pfIsoNeutrals05ForCiC_presel,"pid_pfIsoNeutrals05ForCiC_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoNeutrals06ForCiC_presel",pid_pfIsoNeutrals06ForCiC_presel,"pid_pfIsoNeutrals06ForCiC_presel[nPhot_presel]/F");		
+		   																			
+  ana_tree->Branch("pid_scetawid_presel",pid_scetawid_presel,"pid_scetawid_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_scphiwid_presel",pid_scphiwid_presel,"pid_scphiwid_presel[nPhot_presel]/F");							
+  ana_tree->Branch("pid_lambdaRatio_presel",pid_lambdaRatio_presel,"pid_lambdaRatio_presel[nPhot_presel]/F");						
+  ana_tree->Branch("pid_HoverE_presel",pid_HoverE_presel,"pid_HoverE_presel[nPhot_presel]/F");								
+  																			
+		   																			
+  ana_tree->Branch("sEtaEtaPhot_presel",sEtaEtaPhot_presel,"sEtaEtaPhot_presel[nPhot_presel]/F");							
+  ana_tree->Branch("sEtaPhiPhot_presel",sEtaPhiPhot_presel,"sEtaPhiPhot_presel[nPhot_presel]/F");							
+  ana_tree->Branch("s4RatioPhot_presel",s4RatioPhot_presel,"s4RatrioPhot_presel[nPhot_presel]/F"); //new						
+  ana_tree->Branch("r9Phot_presel",r9Phot_presel,"r9Phot_presel[nPhot_presel]/F"); //new								
+  ana_tree->Branch("rhoAllJets",&rhoAllJets,"rhoAllJets/F");												
+  ana_tree->Branch("rhoPF",&rhoPF,"rhoPF/F");														
+		   																			
+  ana_tree->Branch("rr_presel",rr_presel,"rr_presel[nPhot_presel]/F"); //new                                                                            
 
-  /*
-  // Default photon ID
-  ana_tree->Branch("pid_isEM",&pid_isEM,"pid_isEM[nPhot]/O");
-  ana_tree->Branch("pid_isLoose",&pid_isLoose,"pid_isLoose[nPhot]/O");
-  ana_tree->Branch("pid_isTight",&pid_isTight,"pid_isTight[nPhot]/O");
-  ana_tree->Branch("pid_jurECAL",&pid_jurECAL,"pid_jurECAL[nPhot]/F");
-  ana_tree->Branch("pid_twrHCAL",&pid_twrHCAL,"pid_twrHCAL[nPhot]/F");
-  ana_tree->Branch("pid_HoverE",&pid_HoverE,"pid_HoverE[nPhot]/F");
-  ana_tree->Branch("pid_hlwTrack",&pid_hlwTrack,"pid_hlwTarck[nPhot]/F");
-  ana_tree->Branch("pid_hlwTrackNoDz",&pid_hlwTrackNoDz,"pid_hlwTrackNoDz[nPhot]/F");
-  ana_tree->Branch("pid_hlwTrackForCiC",&pid_hlwTrackForCiC,"pid_hlwTrackBestRank[40][100]/F");
-  ana_tree->Branch("pid_etawid",&pid_etawid,"pid_etawid[nPhot]/F");
-  */
 
-
-
-  ana_tree->Branch("pid_jurECAL03_presel",pid_jurECAL03_presel,"pid_jurECAL03_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_twrHCAL03_presel",pid_twrHCAL03_presel,"pid_twrHCAL03_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_hlwTrack03_presel",pid_hlwTrack03_presel,"pid_hlwTrack03_presel[nPhot_presel]/F");
-
-  ana_tree->Branch("pid_jurECAL04_presel",pid_jurECAL04_presel,"pid_jurECAL04_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_twrHCAL04_presel",pid_twrHCAL04_presel,"pid_twrHCAL04_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_hlwTrack04_presel",pid_hlwTrack04_presel,"pid_hlwTrack04_presel[nPhot_presel]/F");
-
-  ana_tree->Branch("pid_pfIsoCharged01ForCiC_presel",pid_pfIsoCharged01ForCiC_presel,"pid_pfIsoCharged01ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoCharged02ForCiC_presel",pid_pfIsoCharged02ForCiC_presel,"pid_pfIsoCharged02ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoCharged03ForCiC_presel",pid_pfIsoCharged03ForCiC_presel,"pid_pfIsoCharged03ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoCharged04ForCiC_presel",pid_pfIsoCharged04ForCiC_presel,"pid_pfIsoCharged04ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoCharged05ForCiC_presel",pid_pfIsoCharged05ForCiC_presel,"pid_pfIsoCharged05ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoCharged06ForCiC_presel",pid_pfIsoCharged06ForCiC_presel,"pid_pfIsoCharged06ForCiC_presel[nPhot_presel]/F");
-		    				    		    
-  ana_tree->Branch("pid_pfIsoPhotons01ForCiC_presel",pid_pfIsoPhotons01ForCiC_presel,"pid_pfIsoPhotons01ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoPhotons02ForCiC_presel",pid_pfIsoPhotons02ForCiC_presel,"pid_pfIsoPhotons02ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoPhotons03ForCiC_presel",pid_pfIsoPhotons03ForCiC_presel,"pid_pfIsoPhotons03ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoPhotons04ForCiC_presel",pid_pfIsoPhotons04ForCiC_presel,"pid_pfIsoPhotons04ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoPhotons05ForCiC_presel",pid_pfIsoPhotons05ForCiC_presel,"pid_pfIsoPhotons05ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoPhotons06ForCiC_presel",pid_pfIsoPhotons06ForCiC_presel,"pid_pfIsoPhotons06ForCiC_presel[nPhot_presel]/F");
-		    				    		    
-  ana_tree->Branch("pid_pfIsoNeutrals01ForCiC_presel",pid_pfIsoNeutrals01ForCiC_presel,"pid_pfIsoNeutrals01ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoNeutrals02ForCiC_presel",pid_pfIsoNeutrals02ForCiC_presel,"pid_pfIsoNeutrals02ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoNeutrals03ForCiC_presel",pid_pfIsoNeutrals03ForCiC_presel,"pid_pfIsoNeutrals03ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoNeutrals04ForCiC_presel",pid_pfIsoNeutrals04ForCiC_presel,"pid_pfIsoNeutrals04ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoNeutrals05ForCiC_presel",pid_pfIsoNeutrals05ForCiC_presel,"pid_pfIsoNeutrals05ForCiC_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_pfIsoNeutrals06ForCiC_presel",pid_pfIsoNeutrals06ForCiC_presel,"pid_pfIsoNeutrals06ForCiC_presel[nPhot_presel]/F");
-  /*
-
-  ana_tree->Branch("ptiso004Phot",&ptiso004Phot,"ptiso004Phot[nPhot]/F");
-  ana_tree->Branch("ntrkiso004Phot",&ntrkiso004Phot,"ntrkiso004Phot[nPhot]/I");
-  ana_tree->Branch("ptiso035Phot",&ptiso035Phot,"ptiso035Phot[nPhot]/F");
-  ana_tree->Branch("ntrkiso035Phot",&ntrkiso035Phot,"ntrkiso035Phot[nPhot]/I");
-  ana_tree->Branch("ptiso04Phot",&ptiso04Phot,"ptiso04Phot[nPhot]/F");
-  ana_tree->Branch("ntrkiso04Phot",&ntrkiso04Phot,"ntrkiso04Phot[nPhot]/I");
-
-  ana_tree->Branch("hcalovecal04Phot",&hcalovecal04Phot,"hcalovecal04Phot[nPhot]/F"); 
-  ana_tree->Branch("ecaliso04Phot",&ecaliso04Phot,"ecaliso04Phot[nPhot]/F");  
-  */
-  ana_tree->Branch("pid_scetawid_presel",pid_scetawid_presel,"pid_scetawid_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_scphiwid_presel",pid_scphiwid_presel,"pid_scphiwid_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_lambdaRatio_presel",pid_lambdaRatio_presel,"pid_lambdaRatio_presel[nPhot_presel]/F");
-  ana_tree->Branch("pid_HoverE_presel",pid_HoverE_presel,"pid_HoverE_presel[nPhot_presel]/F");
-  
-  /*ana_tree->Branch("pid_esXwidth",&pid_esXwidth,"pid_esXwidth[nPhot]/F");
-  ana_tree->Branch("pid_esYwidth",&pid_esYwidth,"pid_esYwidth[nPhot]/F");
-  
-  ana_tree->Branch("sMajMajPhot",&sMajMajPhot,"sMajMaj2Phot[nPhot]/F");
-  ana_tree->Branch("sMinMinPhot",&sMinMinPhot,"sMinMin2Phot[nPhot]/F");
-  ana_tree->Branch("alphaPhot",&alphaPhot,"alphaPhot[nPhot]/F");
-  */
-
-  ana_tree->Branch("sEtaEtaPhot_presel",sEtaEtaPhot_presel,"sEtaEtaPhot_presel[nPhot_presel]/F");
-  ana_tree->Branch("sEtaPhiPhot_presel",sEtaPhiPhot_presel,"sEtaPhiPhot_presel[nPhot_presel]/F");
-  ana_tree->Branch("s4RatioPhot_presel",s4RatioPhot_presel,"s4RatrioPhot_presel[nPhot_presel]/F"); //new
-  ana_tree->Branch("r9Phot_presel",r9Phot_presel,"r9Phot_presel[nPhot_presel]/F"); //new
-  ana_tree->Branch("rhoAllJets",&rhoAllJets,"rhoAllJets/F");
-  ana_tree->Branch("rhoPF",&rhoPF,"rhoPF/F");
-
-  ana_tree->Branch("rr_presel",rr_presel,"rr_presel[nPhot_presel]/F"); //new
-
-  /*
-  ana_tree->Branch("sPhiPhiPhot",&sPhiPhiPhot,"sPhiPhiPhot[nPhot]/F");
-  ana_tree->Branch("E1Phot",&E1Phot,"E1Phot[nPhot]/F");
-  ana_tree->Branch("E2OverE9Phot",&E2OverE9Phot,"E2OverE9Phot[nPhot]/F");
-  ana_tree->Branch("E4Phot",&E4Phot,"E4Phot[nPhot]/F");  
-  
-  ana_tree->Branch("E25Phot",&E25Phot,"E25Phot[nPhot]/F");
-
-  ana_tree->Branch("ieleassocPhot",&ieleassocPhot,"ieleassocPhot[nPhot]/I");
-  ana_tree->Branch("pid_deltaRToTrackPhot",&pid_deltaRToTrackPhot,"pid_deltaRToTrackPhot[nPhot]/F");
-  ana_tree->Branch("E9Phot",&E9Phot,"E9Phot[nPhot]/F");
-  ana_tree->Branch("nElePhot",&nElePhot,"nElePhot/I");
-  ana_tree->Branch("pid_jurECALElePhot ",&pid_jurECALElePhot ,"pid_jurECALElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_twrHCALElePhot ",&pid_twrHCALElePhot ,"pid_twrHCALElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_HoverEElePhot ",&pid_HoverEElePhot ,"pid_HoverEElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_hlwTrackElePhot ",&pid_hlwTrackElePhot ,"pid_hlwTrackElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_etawidElePhot ",&pid_etawidElePhot ,"pid_etawidElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_dphivtxElePhot ",&pid_dphivtxElePhot ,"pid_dphivtxElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_detavtxElePhot ",&pid_detavtxElePhot ,"pid_detavtxElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_mishitsElePhot ",&pid_mishitsElePhot ,"pid_mishitsElePhot[nElePhot]/I");
-  ana_tree->Branch("pid_distElePhot ",&pid_distElePhot ,"pid_distElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_dcotElePhot ",&pid_dcotElePhot ,"pid_dcotElePhot[nElePhot]/F");
-  ana_tree->Branch("pid_ptElePhot ",&pid_ptElePhot ,"pid_ptElePhot[nElePhot]/F");
-  */
-
-  /*
-  // vtx
-  ana_tree->Branch("vtxId",&vtxId,"vtxId/I");
-  ana_tree->Branch("vtxPos_x",&vtxPos_x,"vtxPos_x/F");
-  ana_tree->Branch("vtxPos_y",&vtxPos_y,"vtxPos_y/F");
-  ana_tree->Branch("vtxPos_z",&vtxPos_z,"vtxPos_z/F");
-  */
   ana_tree->Branch("isMatchedPhot", isMatchedPhot, "isMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("deltaRGenReco", deltaRGenReco, "deltaRGenReco[nPhot_gen]/F"  );
 
@@ -405,17 +296,17 @@ void SingleGammaTree_giulia::Loop() {
         
     for(int i=0; i<nMC; i++) {
       
-      if((pdgIdMC[i] == 22 && statusMC[i] == 3) || 	 
-	 (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 || TMath::Abs(pdgIdMC[motherIDMC[i]])==21 ) )){
+      if((pdgIdMC[i] == 22 && statusMC[i] == 3)
+	 //|| (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 || TMath::Abs(pdgIdMC[motherIDMC[i]])==21 ) )
+	 ){
 
 	photassocMC.push_back(1);	
-
+	
 	nGenPhot++;
 	gen.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
 	genPhot.push_back(gen);
       }
-      else
-	photassocMC.push_back(0);
+      else	photassocMC.push_back(0);
          
       /// if there are photons coming not from a photon or a higgs
       //if(pdgIdMC[i] == 22 && statusMC[i] == 1 && TMath::Abs(pdgIdMC[motherIDMC[i]])<21) nGenPhot++;
@@ -642,13 +533,14 @@ void SingleGammaTree_giulia::Loop() {
 
 
       //matching with gen photon(s)    
-      float deltaRmin(0.3);
-      int i_nPhot_matched(-1);
+
       vector<float> deltaR_gen_reco;
       vector<int> i_reco_matched;
 
 
       for(int i=0; i<nMC; i++){
+	float deltaRmin(0.3);
+	int i_nPhot_matched(-1);
 	if(photassocMC[i]) {
 	  gen.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
 	  for (int j=0; j<nPhot_presel; j++){
@@ -658,15 +550,10 @@ void SingleGammaTree_giulia::Loop() {
 	    }
 	  }
 
-	  //if (i_nPhot_matched >= 0)  {
+	  
 	  deltaR_gen_reco.push_back(deltaRmin);
 	  i_reco_matched.push_back(i_nPhot_matched);
-	  //}
-	  //else {
-	  //   deltaR_gen_reco.push_back(999.);
-	  //i_reco_matched.push_back(-1);
-	  //cout << "NO MATCHING PHOTON!" << endl;	
-	  //}
+	  
 	}
       }
 
@@ -685,7 +572,7 @@ void SingleGammaTree_giulia::Loop() {
 
       for(int i=0;  i<nPhot_presel; i++) isMatchedPhot[i] = 0;
       for(int i=0; i<deltaR_gen_reco.size(); i++) {
-	if (i_nPhot_matched>=0 ) isMatchedPhot[i_reco_matched[i]] = 1;
+	if (i_reco_matched[i]>=0 ) isMatchedPhot[i_reco_matched[i]] = 1;
 	deltaRGenReco[i] = deltaR_gen_reco[i];
       }
       // various
