@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Apr 11 21:12:57 2012 by ROOT version 5.30/02
+// Wed Feb  6 17:13:02 2013 by ROOT version 5.32/00
 // from TTree AnaTree/Reduced tree for final analysis
-// found on file: ../../dati/Hgg/redntp.42xv6b_data.cicloose.regrPho_eCorr_30Nov.v2_jetid/merged/redntp_Photon-Run2011-30Nov2011-v1-DiPhotonSkimOnFly.root
+// found on file: redntp_QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_69.root
 //////////////////////////////////////////////////////////
 
 #ifndef fillPlot2012_gammaJets_h
@@ -13,13 +13,14 @@
 #include <TFile.h>
 #include <TH1D.h>
 #include <TRandom3.h>
+#include <vector>
 
 class fillPlot2012_gammaJets {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
-   //Cuts values                                                                
+   // Cuts values                   
    double ptphot1cut;
    int ebcat;
    int r9cat;
@@ -28,134 +29,126 @@ public :
    std::string writetxt;
    std::string writeRoot;
 
-   // bool for switching on smearing and smearing parameters                    
+   // bool for switching on smearing and smearing parameters 
    bool dopureweight;
-   
-   // vector of pu weights                                                      
+
+   // vector of pu weights 
    std::vector<Double_t> puweights_;
    double weights_[15][15];
-   
+
    // Declaration of leaf types
    Int_t           run;
    Int_t           event;
+   Int_t           lumi;
    Float_t         nvtx;
-   Float_t         rhoPF;
-   Float_t         rhoAllJets;
    Int_t           npu;
+   Int_t           NtotEvents;
+   Float_t         xsection;
+   Float_t         EquivLumi;
+   Int_t           SampleID;
    Float_t         pu_weight;
-   Float_t         gen_pt_gamma1;
-   Float_t         gen_eta_gamma1;
-   Float_t         gen_phi_gamma1;
-   Int_t           oneLooseIsoMu;
-   Int_t           oneTightIsoMu;
-   Int_t           oneWP80Ele;
-   Int_t           oneWP90Ele;
-   Int_t           oneHwwEle;
-   Int_t           oneHzzEle;
-   Int_t           njets;
-   Float_t         ecorrjet[9];   //[njets] 
-   Float_t         ptjet[9];   //[njets] 
-   Float_t         ptcorrjet[9];   //[njets] 
-   Float_t         etajet[9];   //[njets] 
-   Float_t         phijet[9];   //[njets] 
-   Float_t         betajet[9];   //[njets] 
-   Float_t         betastarjet[9];   //[njets] 
-   Float_t         rmsjet[9];   //[njets]   
-   Int_t           matchingMu[9];   //[njets]                                                                                      
-   Int_t           matchingEle[9];   //[njets]                                                                                     
-   Int_t           ngammas;
-   Float_t         dRGenphot[9];
-   Float_t         ptphot[9];
-   Float_t         etaphot[9];
-   Float_t         phiphot[9];
-   Float_t         etascphot[9];
-   Float_t         E1phot[9];
-   Float_t         E9phot[9];
-   Float_t         r9phot[9];
-   Float_t         deltaRToTrackphot[9];
-   Int_t           pid_haspixelseedphot[9];
-   Float_t         pid_HoverEphot[9];
-   Float_t         pid_sigmaIeIephot[9];
-   Float_t         pid_hlwTrack04phot[9];
-   Float_t         pid_jurECAL04phot[9];
-   Float_t         pid_twrHCAL04phot[9];
-   Int_t           pid_hasMatchedConvphot[9];
-   Int_t           pid_hasMatchedPromptElephot[9];
-   Float_t         pid_pfIsoCharged03phot[9];
-   Float_t         pid_pfIsoPhotons03phot[9];
-   Float_t         pid_pfIsoNeutrals03phot[9];
-   Float_t         pid_pfIsoCharged04phot[9];
-   Float_t         pid_pfIsoPhotons04phot[9];
-   Float_t         pid_pfIsoNeutrals04phot[9];
-   Float_t         pid_deltaRToTrackphot[9];
-   Int_t           vtxId;
-   Float_t         vtxPos_x;
-   Float_t         vtxPos_y;
-   Float_t         vtxPos_z;
-   Int_t           nHLT;
-   vector<string>  *allHLTNames;
-   vector<bool>    *allHLTResults;
+   Int_t           nPhot_gen;
+   Int_t           nPhot_presel;
+   Float_t         ptPhot_presel[100];   //[nPhot_presel]
+   Float_t         ePhot_presel[100];   //[nPhot_presel]
+   Float_t         etascPhot_presel  [100];   //[nPhot_presel]
+   Float_t         etaPhot_presel[100];   //[nPhot_presel]
+   Float_t         phiPhot_presel[100];   //[nPhot_presel]
+   Float_t         pid_jurECAL03_presel[100];   //[nPhot_presel]
+   Float_t         pid_twrHCAL03_presel[100];   //[nPhot_presel]
+   Float_t         pid_hlwTrack03_presel[100];   //[nPhot_presel]
+   Float_t         pid_jurECAL04_presel[100];   //[nPhot_presel]
+   Float_t         pid_twrHCAL04_presel[100];   //[nPhot_presel]
+   Float_t         pid_hlwTrack04_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged01ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged02ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged03ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged04ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged05ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoCharged06ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons01ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons02ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons03ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons04ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons05ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoPhotons06ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals01ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals02ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals03ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals04ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals05ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_pfIsoNeutrals06ForCiC_presel[100];   //[nPhot_presel]
+   Float_t         pid_scetawid_presel[100];   //[nPhot_presel]
+   Float_t         pid_scphiwid_presel[100];   //[nPhot_presel]
+   Float_t         pid_lambdaRatio_presel[100];   //[nPhot_presel]
+   Float_t         pid_HoverE_presel[100];   //[nPhot_presel]
+   Float_t         sEtaEtaPhot_presel[100];   //[nPhot_presel]
+   Float_t         sEtaPhiPhot_presel[100];   //[nPhot_presel]
+   Float_t         s4RatioPhot_presel[100];   //[nPhot_presel]
+   Float_t         r9Phot_presel[100];   //[nPhot_presel]
+   Float_t         rhoAllJets;
+   Float_t         rhoPF;
+   Float_t         rr_presel[100];   //[nPhot_presel]
+   Int_t           isMatchedPhot[100];   //[nPhot_presel]
+   Float_t         deltaRGenReco[100];   //[nPhot_gen]
+   vector<string>  *firedHLTNames;
 
    // List of branches
-   TBranch        *b_run;   //! 
-   TBranch        *b_event;   //! 
-   TBranch        *b_nvtx;   //! 
-   TBranch        *b_rhoPF;   //!     
-   TBranch        *b_rhoAllJets;   //! 
-   TBranch        *b_npu;   //! 
-   TBranch        *b_pu_weight;   //! 
-   TBranch        *b_gen_pt_gamma1;   //! 
-   TBranch        *b_gen_eta_gamma1;   //! 
-   TBranch        *b_gen_phi_gamma1;   //! 
-   TBranch        *b_oneLooseIsoMu;   //!                                                                                          
-   TBranch        *b_oneTightIsoMu;   //!                                                                                          
-   TBranch        *b_oneWP80Ele;   //!                                                                                             
-   TBranch        *b_oneWP90Ele;   //!                                                                                             
-   TBranch        *b_oneHwwEle;   //!                                                                                              
-   TBranch        *b_oneHzzEle;   //!  
-   TBranch        *b_njets;   //! 
-   TBranch        *b_ecorrjet;   //! 
-   TBranch        *b_ptjet;   //! 
-   TBranch        *b_ptcorrjet;   //! 
-   TBranch        *b_etajet;   //! 
-   TBranch        *b_phijet;   //! 
-   TBranch        *b_betajet;   //!
-   TBranch        *b_betastarjet;   //! 
-   TBranch        *b_rmsjet;   //! 
-   TBranch        *b_matchingMu;   //!                                                                                             
-   TBranch        *b_matchingEle;   //!                                                                                            
-   TBranch        *b_ngammas;   //!
-   TBranch        *b_dRGenphot;   //! 
-   TBranch        *b_ptphot;   //! 
-   TBranch        *b_etaphot;   //! 
-   TBranch        *b_phiphot;   //! 
-   TBranch        *b_etascphot;   //! 
-   TBranch        *b_E1phot;   //! 
-   TBranch        *b_E9phot;   //! 
-   TBranch        *b_r9phot;   //! 
-   TBranch        *b_deltaRToTrackphot;   //! 
-   TBranch        *b_pid_haspixelseedphot;   //! 
-   TBranch        *b_pid_HoverEphot;   //! 
-   TBranch        *b_pid_sigmaIeIephot;   //! 
-   TBranch        *b_pid_hlwTrack04phot;   //! 
-   TBranch        *b_pid_jurECAL04phot;   //! 
-   TBranch        *b_pid_twrHCAL04phot;   //! 
-   TBranch        *b_pid_hasMatchedConvphot;   //! 
-   TBranch        *b_pid_hasMatchedPromptElephot;   //! 
-   TBranch        *b_pid_pfIsoCharged03phot;   //! 
-   TBranch        *b_pid_pfIsoPhotons03phot;   //! 
-   TBranch        *b_pid_pfIsoNeutrals03phot;   //! 
-   TBranch        *b_pid_pfIsoCharged04phot;   //! 
-   TBranch        *b_pid_pfIsoPhotons04phot;   //! 
-   TBranch        *b_pid_pfIsoNeutrals04phot;   //! 
-   TBranch        *b_pid_deltaRToTrackphot;   //!    
-   TBranch        *b_vtxId;   //! 
-   TBranch        *b_vtxPos_x;   //!
-   TBranch        *b_vtxPos_y;   //! 
-   TBranch        *b_vtxPos_z;   //! 
-   TBranch        *b_nHLT;   //!                                                
-   TBranch        *b_allHLTNames;   //!                                         
-   TBranch        *b_allHLTResults;   //!  
+   TBranch        *b_run;   //!
+   TBranch        *b_event;   //!
+   TBranch        *b_lumi;   //!
+   TBranch        *b_nvtx;   //!
+   TBranch        *b_npu;   //!
+   TBranch        *b_NtotEvents;   //!
+   TBranch        *b_xsection;   //!
+   TBranch        *b_EquivLumi;   //!
+   TBranch        *b_SampleID;   //!
+   TBranch        *b_pu_weight;   //!
+   TBranch        *b_nPhot_gen;   //!
+   TBranch        *b_nPhot_presel;   //!
+   TBranch        *b_ptPhot_presel;   //!
+   TBranch        *b_ePhot_presel;   //!
+   TBranch        *b_etascPhot_presel  ;   //!
+   TBranch        *b_etaPhot_presel;   //!
+   TBranch        *b_phiPhot_presel;   //!
+   TBranch        *b_pid_jurECAL03_presel;   //!
+   TBranch        *b_pid_twrHCAL03_presel;   //!
+   TBranch        *b_pid_hlwTrack03_presel;   //!
+   TBranch        *b_pid_jurECAL04_presel;   //!
+   TBranch        *b_pid_twrHCAL04_presel;   //!
+   TBranch        *b_pid_hlwTrack04_presel;   //!
+   TBranch        *b_pid_pfIsoCharged01ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoCharged02ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoCharged03ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoCharged04ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoCharged05ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoCharged06ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons01ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons02ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons03ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons04ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons05ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoPhotons06ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals01ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals02ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals03ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals04ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals05ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoNeutrals06ForCiC_presel;   //!
+   TBranch        *b_pid_scetawid_presel;   //!
+   TBranch        *b_pid_scphiwid_presel;   //!
+   TBranch        *b_pid_lambdaRatio_presel;   //!
+   TBranch        *b_pid_HoverE_presel;   //!
+   TBranch        *b_sEtaEtaPhot_presel;   //!
+   TBranch        *b_sEtaPhiPhot_presel;   //!
+   TBranch        *b_s4RatioPhot_presel;   //!
+   TBranch        *b_r9Phot_presel;   //!
+   TBranch        *b_rhoAllJets;   //!
+   TBranch        *b_rhoPF;   //!
+   TBranch        *b_rr_presel;   //!
+   TBranch        *b_isMatchedPhot;   //!
+   TBranch        *b_deltaRGenReco;   //!
+   TBranch        *b_firedHLTNames;   //!  
 
    fillPlot2012_gammaJets(TTree *tree=0);
    virtual ~fillPlot2012_gammaJets();
@@ -170,29 +163,35 @@ public :
    virtual void     SetPuWeights(bool isData = 0,std::string file = "");
    virtual void     DoPuReweight();
    virtual Bool_t   Notify();
+
+   bool isHLT_50();
+   bool isHLT_75();
+   bool isHLT_150();
+   int effectiveAreaRegion(float theEta);
 };
 
 #endif
 
 #ifdef fillPlot2012_gammaJets_cxx
-fillPlot2012_gammaJets::fillPlot2012_gammaJets(TTree *tree)
+fillPlot2012_gammaJets::fillPlot2012_gammaJets(TTree *tree) 
 {
-  if (tree == 0) {
-    TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../../dati/Hgg/redntp.42xv6b_data.cicloose.regrPho_eCorr_30Nov.v2_jetid/merged/redntp_Photon-Run2011-30Nov2011-v1-DiPhotonSkimOnFly.root");
-    if (!f || !f->IsOpen()) {
-      f = new TFile("../../dati/Hgg/redntp.42xv6b_data.cicloose.regrPho_eCorr_30Nov.v2_jetid/merged/redntp_Photon-Run2011-30Nov2011-v1-DiPhotonSkimOnFly.root");
-    }
-    f->GetObject("AnaTree",tree);
-  }
-  Init(tree);
-  writetxt = "";
-  writeRoot = "";
-  dopureweight = 0;
+   if (tree == 0) {
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("redntp_QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_69.root");
+      if (!f || !f->IsOpen()) {
+         f = new TFile("redntp_QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_69.root");
+      }
+      f->GetObject("AnaTree",tree);
+
+   }
+   Init(tree);
+   writetxt = "";
+   writeRoot = "";
+   dopureweight = 0;
 }
 
 fillPlot2012_gammaJets::~fillPlot2012_gammaJets()
 {
-  if (!fChain) return;
+   if (!fChain) return;
 }
 
 Int_t fillPlot2012_gammaJets::GetEntry(Long64_t entry)
@@ -216,18 +215,16 @@ Long64_t fillPlot2012_gammaJets::LoadTree(Long64_t entry)
 
 void fillPlot2012_gammaJets::Init(TTree *tree)
 {
-  // The Init() function is called when the selector needs to initialize
-  // a new tree or chain. Typically here the branch addresses and branch
-  // pointers of the tree will be set.
-  // It is normally not necessary to make changes to the generated
-  // code, but the routine can be extended by the user if needed.
-  // Init() will be called many times when running on PROOF
-  // (once per file to be processed).
-  
-  // Set object pointer 
-  allHLTNames = 0;
-  allHLTResults = 0;
+   // The Init() function is called when the selector needs to initialize
+   // a new tree or chain. Typically here the branch addresses and branch
+   // pointers of the tree will be set.
+   // It is normally not necessary to make changes to the generated
+   // code, but the routine can be extended by the user if needed.
+   // Init() will be called many times when running on PROOF
+   // (once per file to be processed).
 
+   // Set object pointer 
+   firedHLTNames = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -236,64 +233,59 @@ void fillPlot2012_gammaJets::Init(TTree *tree)
 
    fChain->SetBranchAddress("run", &run, &b_run);
    fChain->SetBranchAddress("event", &event, &b_event);
+   fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
-   fChain->SetBranchAddress("rhoPF", &rhoPF, &b_rhoPF);
-   fChain->SetBranchAddress("rhoAllJets", &rhoAllJets, &b_rhoAllJets);
    fChain->SetBranchAddress("npu", &npu, &b_npu);
+   fChain->SetBranchAddress("NtotEvents", &NtotEvents, &b_NtotEvents);
+   fChain->SetBranchAddress("xsection", &xsection, &b_xsection);
+   fChain->SetBranchAddress("EquivLumi", &EquivLumi, &b_EquivLumi);
+   fChain->SetBranchAddress("SampleID", &SampleID, &b_SampleID);
    fChain->SetBranchAddress("pu_weight", &pu_weight, &b_pu_weight);
-   fChain->SetBranchAddress("gen_pt_gamma1", &gen_pt_gamma1, &b_gen_pt_gamma1);
-   fChain->SetBranchAddress("gen_eta_gamma1", &gen_eta_gamma1, &b_gen_eta_gamma1);
-   fChain->SetBranchAddress("gen_phi_gamma1", &gen_phi_gamma1, &b_gen_phi_gamma1);
-   fChain->SetBranchAddress("oneLooseIsoMu", &oneLooseIsoMu, &b_oneLooseIsoMu);
-   fChain->SetBranchAddress("oneTightIsoMu", &oneTightIsoMu, &b_oneTightIsoMu);
-   fChain->SetBranchAddress("oneWP80Ele", &oneWP80Ele, &b_oneWP80Ele);
-   fChain->SetBranchAddress("oneWP90Ele", &oneWP90Ele, &b_oneWP90Ele);
-   fChain->SetBranchAddress("oneHwwEle", &oneHwwEle, &b_oneHwwEle);
-   fChain->SetBranchAddress("oneHzzEle", &oneHzzEle, &b_oneHzzEle);
-   fChain->SetBranchAddress("njets", &njets, &b_njets);
-   fChain->SetBranchAddress("ecorrjet", ecorrjet, &b_ecorrjet);
-   fChain->SetBranchAddress("ptjet", ptjet, &b_ptjet);
-   fChain->SetBranchAddress("ptcorrjet", ptcorrjet, &b_ptcorrjet);
-   fChain->SetBranchAddress("etajet", etajet, &b_etajet);
-   fChain->SetBranchAddress("phijet", phijet, &b_phijet);
-   fChain->SetBranchAddress("betajet", betajet, &b_betajet);
-   fChain->SetBranchAddress("betastarjet", betastarjet, &b_betastarjet);
-   fChain->SetBranchAddress("rmsjet", rmsjet, &b_rmsjet);
-   fChain->SetBranchAddress("matchingMu", matchingMu, &b_matchingMu);
-   fChain->SetBranchAddress("matchingEle", matchingEle, &b_matchingEle);
-   fChain->SetBranchAddress("ngammas", &ngammas, &b_ngammas);
-   fChain->SetBranchAddress("dRGenphot", dRGenphot, &b_dRGenphot);
-   fChain->SetBranchAddress("ptphot", ptphot, &b_ptphot);
-   fChain->SetBranchAddress("etaphot", etaphot, &b_etaphot);
-   fChain->SetBranchAddress("phiphot", phiphot, &b_phiphot);
-   fChain->SetBranchAddress("etascphot", etascphot, &b_etascphot);
-   fChain->SetBranchAddress("E1phot", E1phot, &b_E1phot);
-   fChain->SetBranchAddress("E9phot", E9phot, &b_E9phot);
-   fChain->SetBranchAddress("r9phot", r9phot, &b_r9phot);
-   fChain->SetBranchAddress("deltaRToTrackphot", deltaRToTrackphot, &b_deltaRToTrackphot);
-   fChain->SetBranchAddress("pid_haspixelseedphot", pid_haspixelseedphot, &b_pid_haspixelseedphot);
-   fChain->SetBranchAddress("pid_HoverEphot", pid_HoverEphot, &b_pid_HoverEphot);
-   fChain->SetBranchAddress("pid_sigmaIeIephot", pid_sigmaIeIephot, &b_pid_sigmaIeIephot);
-   fChain->SetBranchAddress("pid_hlwTrack04phot", pid_hlwTrack04phot, &b_pid_hlwTrack04phot);
-   fChain->SetBranchAddress("pid_jurECAL04phot", pid_jurECAL04phot, &b_pid_jurECAL04phot);
-   fChain->SetBranchAddress("pid_twrHCAL04phot", pid_twrHCAL04phot, &b_pid_twrHCAL04phot);
-   fChain->SetBranchAddress("pid_hasMatchedConvphot", pid_hasMatchedConvphot, &b_pid_hasMatchedConvphot);
-   fChain->SetBranchAddress("pid_hasMatchedPromptElephot", pid_hasMatchedPromptElephot, &b_pid_hasMatchedPromptElephot);
-   fChain->SetBranchAddress("pid_pfIsoCharged03phot", pid_pfIsoCharged03phot, &b_pid_pfIsoCharged03phot);
-   fChain->SetBranchAddress("pid_pfIsoPhotons03phot", pid_pfIsoPhotons03phot, &b_pid_pfIsoPhotons03phot);
-   fChain->SetBranchAddress("pid_pfIsoNeutrals03phot", pid_pfIsoNeutrals03phot, &b_pid_pfIsoNeutrals03phot);
-   fChain->SetBranchAddress("pid_pfIsoCharged04phot", pid_pfIsoCharged04phot, &b_pid_pfIsoCharged04phot);
-   fChain->SetBranchAddress("pid_pfIsoPhotons04phot", pid_pfIsoPhotons04phot, &b_pid_pfIsoPhotons04phot);
-   fChain->SetBranchAddress("pid_pfIsoNeutrals04phot", pid_pfIsoNeutrals04phot, &b_pid_pfIsoNeutrals04phot);
-   fChain->SetBranchAddress("pid_deltaRToTrackphot", pid_deltaRToTrackphot, &b_pid_deltaRToTrackphot);
-   fChain->SetBranchAddress("vtxId", &vtxId, &b_vtxId);
-   fChain->SetBranchAddress("vtxPos_x", &vtxPos_x, &b_vtxPos_x);
-   fChain->SetBranchAddress("vtxPos_y", &vtxPos_y, &b_vtxPos_y);
-   fChain->SetBranchAddress("vtxPos_z", &vtxPos_z, &b_vtxPos_z);
-   fChain->SetBranchAddress("nHLT", &nHLT, &b_nHLT);
-   fChain->SetBranchAddress("allHLTNames", &allHLTNames, &b_allHLTNames);
-   fChain->SetBranchAddress("allHLTResults", &allHLTResults, &b_allHLTResults);
-   
+   fChain->SetBranchAddress("nPhot_gen", &nPhot_gen, &b_nPhot_gen);
+   fChain->SetBranchAddress("nPhot_presel", &nPhot_presel, &b_nPhot_presel);
+   fChain->SetBranchAddress("ptPhot_presel", ptPhot_presel, &b_ptPhot_presel);
+   fChain->SetBranchAddress("ePhot_presel", ePhot_presel, &b_ePhot_presel);
+   fChain->SetBranchAddress("etascPhot_presel  ", etascPhot_presel  , &b_etascPhot_presel  );
+   fChain->SetBranchAddress("etaPhot_presel", etaPhot_presel, &b_etaPhot_presel);
+   fChain->SetBranchAddress("phiPhot_presel", phiPhot_presel, &b_phiPhot_presel);
+   fChain->SetBranchAddress("pid_jurECAL03_presel", pid_jurECAL03_presel, &b_pid_jurECAL03_presel);
+   fChain->SetBranchAddress("pid_twrHCAL03_presel", pid_twrHCAL03_presel, &b_pid_twrHCAL03_presel);
+   fChain->SetBranchAddress("pid_hlwTrack03_presel", pid_hlwTrack03_presel, &b_pid_hlwTrack03_presel);
+   fChain->SetBranchAddress("pid_jurECAL04_presel", pid_jurECAL04_presel, &b_pid_jurECAL04_presel);
+   fChain->SetBranchAddress("pid_twrHCAL04_presel", pid_twrHCAL04_presel, &b_pid_twrHCAL04_presel);
+   fChain->SetBranchAddress("pid_hlwTrack04_presel", pid_hlwTrack04_presel, &b_pid_hlwTrack04_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged01ForCiC_presel", pid_pfIsoCharged01ForCiC_presel, &b_pid_pfIsoCharged01ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged02ForCiC_presel", pid_pfIsoCharged02ForCiC_presel, &b_pid_pfIsoCharged02ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged03ForCiC_presel", pid_pfIsoCharged03ForCiC_presel, &b_pid_pfIsoCharged03ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged04ForCiC_presel", pid_pfIsoCharged04ForCiC_presel, &b_pid_pfIsoCharged04ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged05ForCiC_presel", pid_pfIsoCharged05ForCiC_presel, &b_pid_pfIsoCharged05ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoCharged06ForCiC_presel", pid_pfIsoCharged06ForCiC_presel, &b_pid_pfIsoCharged06ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons01ForCiC_presel", pid_pfIsoPhotons01ForCiC_presel, &b_pid_pfIsoPhotons01ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons02ForCiC_presel", pid_pfIsoPhotons02ForCiC_presel, &b_pid_pfIsoPhotons02ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons03ForCiC_presel", pid_pfIsoPhotons03ForCiC_presel, &b_pid_pfIsoPhotons03ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons04ForCiC_presel", pid_pfIsoPhotons04ForCiC_presel, &b_pid_pfIsoPhotons04ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons05ForCiC_presel", pid_pfIsoPhotons05ForCiC_presel, &b_pid_pfIsoPhotons05ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoPhotons06ForCiC_presel", pid_pfIsoPhotons06ForCiC_presel, &b_pid_pfIsoPhotons06ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals01ForCiC_presel", pid_pfIsoNeutrals01ForCiC_presel, &b_pid_pfIsoNeutrals01ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals02ForCiC_presel", pid_pfIsoNeutrals02ForCiC_presel, &b_pid_pfIsoNeutrals02ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals03ForCiC_presel", pid_pfIsoNeutrals03ForCiC_presel, &b_pid_pfIsoNeutrals03ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals04ForCiC_presel", pid_pfIsoNeutrals04ForCiC_presel, &b_pid_pfIsoNeutrals04ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals05ForCiC_presel", pid_pfIsoNeutrals05ForCiC_presel, &b_pid_pfIsoNeutrals05ForCiC_presel);
+   fChain->SetBranchAddress("pid_pfIsoNeutrals06ForCiC_presel", pid_pfIsoNeutrals06ForCiC_presel, &b_pid_pfIsoNeutrals06ForCiC_presel);
+   fChain->SetBranchAddress("pid_scetawid_presel", pid_scetawid_presel, &b_pid_scetawid_presel);
+   fChain->SetBranchAddress("pid_scphiwid_presel", pid_scphiwid_presel, &b_pid_scphiwid_presel);
+   fChain->SetBranchAddress("pid_lambdaRatio_presel", pid_lambdaRatio_presel, &b_pid_lambdaRatio_presel);
+   fChain->SetBranchAddress("pid_HoverE_presel", pid_HoverE_presel, &b_pid_HoverE_presel);
+   fChain->SetBranchAddress("sEtaEtaPhot_presel", sEtaEtaPhot_presel, &b_sEtaEtaPhot_presel);
+   fChain->SetBranchAddress("sEtaPhiPhot_presel", sEtaPhiPhot_presel, &b_sEtaPhiPhot_presel);
+   fChain->SetBranchAddress("s4RatioPhot_presel", s4RatioPhot_presel, &b_s4RatioPhot_presel);
+   fChain->SetBranchAddress("r9Phot_presel", r9Phot_presel, &b_r9Phot_presel);
+   fChain->SetBranchAddress("rhoAllJets", &rhoAllJets, &b_rhoAllJets);
+   fChain->SetBranchAddress("rhoPF", &rhoPF, &b_rhoPF);
+   fChain->SetBranchAddress("rr_presel", rr_presel, &b_rr_presel);
+   fChain->SetBranchAddress("isMatchedPhot", isMatchedPhot, &b_isMatchedPhot);
+   fChain->SetBranchAddress("deltaRGenReco", deltaRGenReco, &b_deltaRGenReco);
+   fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
    Notify();
 }
 

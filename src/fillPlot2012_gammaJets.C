@@ -38,152 +38,115 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     outfile.open(filename.c_str()); 
   }
 
+
   // Loop over entries
   int enMax = nentries; 
   for (Long64_t jentry=0; jentry<enMax;jentry++) {
     Long64_t ientry = LoadTree(jentry);
 
+    if (jentry%10000==0) cout << jentry << endl;
+
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
-    
+
     // patological events
     if(npu>=60) continue;    
-
-    // passing reco preselection
-    if(vtxId<0) continue;    
-
-    // first vertex must be good
-    if(vtxId>0) continue;
     
-    // checking all preselected gammas to apply the full selection
-    std::vector<int> _vgamma2011_idOnly_gammas;
-    std::vector<int> _vgamma2011_gammas;
-    for (int theGamma=0; theGamma<ngammas; theGamma++) {
-
-      // classification: EB, EE, highR9, lowR9 
-      int myEB=2; 
-      int myR9=2;
-      if (TMath::Abs(etascphot[theGamma])>1.4442) myEB=0;
-      if (TMath::Abs(etascphot[theGamma])<1.4442) myEB=1;
-      if (r9phot[theGamma]<0.94)  myR9=0;
-      if (r9phot[theGamma]>=0.94) myR9=1;
-      int hggCat=4;
-      if (myEB && myR9)   hggCat=0;
-      if (myEB && !myR9)  hggCat=1;
-      if (!myEB && myR9)  hggCat=2;
-      if (!myEB && !myR9) hggCat=3;
-      
-      // chiara: HLT preselection. NB: questa selezione non e' applicata su tutti gli HLT path, da studiare
-      // oltre a questo nel dumpatore: ET>30, pid_twrHCAL[i]>4, !hasMatchedPromptElePhot
-      bool is_CaloIdVL_IsolL = true;
-      if(pid_hlwTrack04phot[theGamma] > 3.5 + 0.002*ptphot[theGamma]) is_CaloIdVL_IsolL = false;
-      if(pid_jurECAL04phot[theGamma]  > 5.5 + 0.012*ptphot[theGamma]) is_CaloIdVL_IsolL = false;
-      if(pid_twrHCAL04phot[theGamma]  > 3.5 + 0.005*ptphot[theGamma]) is_CaloIdVL_IsolL = false;
-      if(myEB) {
-	if(pid_sigmaIeIephot[theGamma]>0.024) is_CaloIdVL_IsolL = false;
-	if(pid_HoverEphot[theGamma]>0.15)     is_CaloIdVL_IsolL = false;
-      }
-      if(!myEB) {
-	if(pid_sigmaIeIephot[theGamma]>0.040) is_CaloIdVL_IsolL = false;
-	if(pid_HoverEphot[theGamma]>0.10)     is_CaloIdVL_IsolL = false;
-      }
-      if (!is_CaloIdVL_IsolL) continue;
+  
+    // HLT selection - for data only
+    if ( signal==100 && !isHLT_50() )  continue;
+    // if ( signal==100 && !isHLT_75() )  continue;
+    // if ( signal==100 && !isHLT_150() ) continue;
     
-      // photon acceptance
-      if((TMath::Abs(etascphot[theGamma])>1.4442 
-	  && TMath::Abs(etascphot[theGamma])<1.566) || TMath::Abs(etascphot[theGamma])>2.5) continue;  
 
-      // photon id as in 2011 Wgamma analysis
-      bool isVgamma2011        = false;
-      bool isVgamma2011_idOnly = false;
-      
-      float Rho25 = rhoPF;    // chiara: che rho e', controlla
-      float ATr = 0.0167;  
-      float AEc = 0.183;   
-      float AHc = 0.062;   
-      if (!myEB) {
-	ATr = 0.032;
-	AEc = 0.090;
-	AHc = 0.180;
+    // vector with index of fully selected gammas
+    vector<int> fullSelected;
+
+    // apply the full cut based photonID selection (medium WP)
+    // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonID2012
+    float EA_chargedH[7] = { 0.012, 0.010, 0.014, 0.012, 0.016, 0.020, 0.012};
+    float EA_neutralH[7] = { 0.030, 0.057, 0.039, 0.015, 0.024, 0.039, 0.072};
+    float EA_photons[7]  = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
+
+    for (int theGamma=0; theGamma<nPhot_presel; theGamma++) {
+
+      bool isFullySel = true;
+
+      /*
+      // for effective area calculation
+      int theEAregion = effectiveAreaRegion(etaPhot_presel[theGamma]); 
+      if (theEAregion>6) continue;
+
+      // corrected isolations - chiara: va fatto cosi', su ciascuno? rhoPF e' quello ok?
+      float rhoCorrCharged = pid_pfIsoCharged03ForCiC_presel[theGamma] - rhoPF*EA_chargedH[theEAregion];   
+      float rhoCorrNeutral = pid_pfIsoNeutrals03ForCiC_presel[theGamma] - rhoPF*EA_neutralH[theEAregion];
+      float rhoCorrPhoton  = pid_pfIsoPhotons03ForCiC_presel[theGamma] - rhoPF*EA_photons[theEAregion];
+      if (rhoCorrCharged<0) rhoCorrCharged = 0.;
+      if (rhoCorrNeutral<0) rhoCorrNeutral = 0.;
+      if (rhoCorrPhoton<0)  rhoCorrPhoton  = 0.;
+
+      // if(pid_hasMatchedPromptElephot[theGamma]) isFullySel = false;
+      if(pid_HoverE_presel[theGamma]>0.05)      isFullySel = false;       
+      if (theEAregion<2) {  // EB
+	if (sEtaEtaPhot_presel[theGamma]>0.011) isFullySel = false;
+	if (rhoCorrCharged > 1.5)               isFullySel = false;
+	if (rhoCorrNeutral > 1.0 + 0.04*ptPhot_presel[theGamma])  isFullySel = false;
+	if (rhoCorrPhoton  > 0.7 + 0.005*ptPhot_presel[theGamma]) isFullySel = false;
+      } else {     // EE
+	if (sEtaEtaPhot_presel[theGamma]>0.033) isFullySel = false;
+	if (rhoCorrCharged > 1.2)               isFullySel = false;
+	if (rhoCorrNeutral > 1.5 + 0.04*ptPhot_presel[theGamma])  isFullySel = false;
+	if (rhoCorrPhoton  > 1.0 + 0.005*ptPhot_presel[theGamma]) isFullySel = false;
       }
-      
-      // full Id + Isolation
-      float sigmaIetaIetaMax = 0.011 ;
-      if(!myEB) sigmaIetaIetaMax = 0.03;
-      if(pid_hlwTrack04phot[theGamma]  < 2.0 + 0.001*ptphot[theGamma] + ATr*Rho25)     
-	if(pid_jurECAL04phot[theGamma] < 4.2 + 0.006*ptphot[theGamma] + AEc*Rho25) 
-	  if(pid_twrHCAL04phot[theGamma] < 2.2 + 0.0025*ptphot[theGamma] + AHc*Rho25)
-	    if(pid_sigmaIeIephot[theGamma]<sigmaIetaIetaMax)
-	      if(!pid_hasMatchedPromptElephot[theGamma])    // chiara: diverso da 2011
-		if(!myEB || (myEB && pid_sigmaIeIephot[theGamma] > 0.001)) // additional EB spike cleaning 
-		  // chiara, c'era anche un taglio su IphiIphi, che pero' manca nelle ntuple
-		  if(pid_HoverEphot[theGamma]<0.05) isVgamma2011 = true;  
-      
-      // --- Vgamma2011 photon id w/o isolation
-      if(pid_sigmaIeIephot[theGamma]<sigmaIetaIetaMax)
-	if(!pid_hasMatchedPromptElephot[theGamma])        // chiara: diverso da 2011
-	  if(!myEB || (myEB && pid_sigmaIeIephot[theGamma] > 0.001)) 
-	    if(pid_HoverEphot[theGamma]<0.05) isVgamma2011_idOnly = true;
+      */
 
-      // chiara: vedi se serve anche un taglio extra per pulire meglio
-      // bool dRToTrack;
-      // if (hggCat==0) dRToTrack = (pid_deltaRToTrackphot[theGamma])>1;
-      // if (hggCat==1) dRToTrack = (pid_deltaRToTrackphot[theGamma])>0.062;
-      // if (hggCat==2) dRToTrack = (pid_deltaRToTrackphot[theGamma])>0.97;
-      // if (hggCat==3) dRToTrack = (pid_deltaRToTrackphot[theGamma])>0.97;
-      // if (!dRToTrack) isVgamma2011 = false;
-      // if (!dRToTrack) isVgamma2011_idOnly = false;
-
-      if(isVgamma2011_idOnly) _vgamma2011_idOnly_gammas.push_back(theGamma);  
-      if(isVgamma2011)        _vgamma2011_gammas.push_back(theGamma);  
+      if (isFullySel) fullSelected.push_back(theGamma); 
     }
+    
 
-    // at least one gamma passing the wanted ID - chiara, usa quella che serve 
-    // if (_vgamma2011_idOnly_gammas.size()==0) continue;
-    // int myLeadGamma = _vgamma2011_idOnly_gammas[0];
-    if (_vgamma2011_gammas.size()==0) continue;
-    int myLeadGamma = _vgamma2011_gammas[0];
+    // choose the two highest pT preselected gammas 
+    if (fullSelected.size()<2) continue;
+    int firstG = -1;
+    int secG   = -1;
+    float firstGpt = -999.;
+    float secGpt   = -1000.;
+    for (int ii=0; ii<fullSelected.size(); ii++) {
+      int index = fullSelected[ii];
+      if (ptPhot_presel[index]>firstGpt) {
+	secGpt   = firstGpt;
+	firstGpt = ptPhot_presel[index];
+	secG     = firstG;
+	firstG   = index;
+      } else if (ptPhot_presel[index]>secGpt) {
+	secGpt = ptPhot_presel[index];
+	secG   = index;
+      }
+    } 
 
-    // photon pT
-    if(ptphot[myLeadGamma]<ptphot1cut) continue;        
+    // to emulate the trigger: at least one photon with pT>threshold
+    if (firstGpt<ptphot1cut) continue;	
 
-    // chiara: possibile rimozione di W/Z usando un bool sui leptoni
-    // if (oneTightIsoMu) continue;
-    // if (oneWP80Ele) continue;    
-    // if (oneLooseIsoMu) continue;
-    // if (oneHwwEle) continue;    
+    // make the invariant mass of the two highest pT photons
+    TLorentzVector gamma1, gamma2;
+    gamma1.SetPtEtaPhiM(ptPhot_presel[firstG],etaPhot_presel[firstG],phiPhot_presel[firstG],0.);
+    gamma2.SetPtEtaPhiM(ptPhot_presel[secG],etaPhot_presel[secG],phiPhot_presel[secG],0.);
+    float invMass = (gamma1+gamma2).M();
 
-    // reco gammas matching the MC truth - only for plots
-    // for the analysis we consider all gammas 
-    bool isGenGamma = false;
-    float theDR = sqrt(delta_eta(etaphot[myLeadGamma],gen_eta_gamma1)*delta_eta(etaphot[myLeadGamma],gen_eta_gamma1) +
-		       delta_phi(phiphot[myLeadGamma],gen_phi_gamma1)*delta_phi(phiphot[myLeadGamma],gen_phi_gamma1) );
-    if (theDR<0.1) isGenGamma = true;
-
-    // bool leadEB = false;
-    // if (TMath::Abs(etascphot[myLeadGamma])<1.4442) leadEB=1;
-    // if (leadEB) continue;
+    // only for Z studies
+    // if (invMass>110 || invMass<70) continue;
 
     // finding variable to be plotted
     double variable(0);
-    if (var == "ptphot")          variable = ptphot[myLeadGamma];
-    else if (var == "etaphot")    variable = TMath::Abs(etaphot[myLeadGamma]);
-    else if (var == "phiphot")    variable = phiphot[myLeadGamma];
-    else if (var == "nvtx")       variable = nvtx;
-    else if (var == "npu")        variable = npu;
-    else if (var == "sigmaIeIe")  variable = pid_sigmaIeIephot[myLeadGamma];         
-    else if (var == "HoE")        variable = pid_HoverEphot[myLeadGamma];
-    else if (var == "trackerIso") variable = pid_hlwTrack04phot[myLeadGamma];
-    else if (var == "ecalIso")    variable = pid_jurECAL04phot[myLeadGamma];
-    else if (var == "hcalIso")    variable = pid_twrHCAL04phot[myLeadGamma];
-    else if (var == "chargedIso") variable = pid_pfIsoCharged04phot[myLeadGamma];
-    else if (var == "neutralIso") variable = pid_pfIsoNeutrals04phot[myLeadGamma];
-    else if (var == "gammaIso")   variable = pid_pfIsoPhotons04phot[myLeadGamma];
-    else if (var == "pfIso")      variable = pid_pfIsoCharged04phot[myLeadGamma] + pid_pfIsoNeutrals04phot[myLeadGamma] + pid_pfIsoPhotons04phot[myLeadGamma];
-    else if (var == "oneTightIsoMu") variable = oneTightIsoMu;
-    else if (var == "oneLooseIsoMu") variable = oneLooseIsoMu;
-    else if (var == "oneHwwEle")     variable = oneHwwEle;
-    else if (var == "oneHzzEle")     variable = oneHzzEle;
+    if (var == "nvtx") variable = nvtx;
+    else if (var == "ngamma")    variable = nPhot_presel;
+    else if (var == "sigmaIeIe") variable = sEtaEtaPhot_presel[firstG];
+    else if (var == "HoE")       variable = pid_HoverE_presel[firstG]; 
+    else if (var == "chargedIso") variable = pid_pfIsoCharged03ForCiC_presel[firstG];
+    else if (var == "neutralIso") variable = pid_pfIsoNeutrals03ForCiC_presel[firstG];
+    else if (var == "gammaIso") variable   = pid_pfIsoPhotons03ForCiC_presel[firstG];
+    else if (var == "etaL") variable = gamma1.Eta();
+    else if (var == "ptL")  variable = firstGpt;
+    else if (var == "mass") variable = invMass;
     else{
       cout << "NO SUCH VARIABLE IMPLEMENTED!" << endl;
       break;
@@ -191,10 +154,8 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     
     // pu/pt reweighting
     float weight(1);
-    if(dopureweight) weight *= pu_weight;
-    
-    if ( (signal!=18 && signal!=19) )                tempplot->Fill(variable, weight);
-    if ( (signal==18 || signal==19) && isGenGamma )  tempplot->Fill(variable, weight);
+    if (dopureweight) weight *= pu_weight;
+    tempplot->Fill(variable, weight);
   }
   
   if (writetxt != "")  outfile.close(); 
@@ -279,3 +240,50 @@ void fillPlot2012_gammaJets::getweights() {
   }
 }
 
+bool fillPlot2012_gammaJets::isHLT_50() {
+
+  bool isok = false;
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v15") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v16") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v17") isok=true;
+  }
+  return isok;
+}
+
+bool fillPlot2012_gammaJets::isHLT_75() {
+  
+  bool isok = false;
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
+  }
+  return isok;
+}
+
+bool fillPlot2012_gammaJets::isHLT_150() {
+  bool isok = false;
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v1") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v2") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon150_v3") isok=true;
+  }
+  return isok;
+}
+
+// for effective area calculation
+int fillPlot2012_gammaJets::effectiveAreaRegion(float theEta) {
+
+  int theEAregion = 999;
+  if (fabs(theEta)<1.) theEAregion = 0;      
+  if (fabs(theEta)<1.479 && fabs(theEta)>1.)    theEAregion = 1;
+  if (fabs(theEta)<2.    && fabs(theEta)>1.479) theEAregion = 2;
+  if (fabs(theEta)<2.2   && fabs(theEta)>2.0)   theEAregion = 3;
+  if (fabs(theEta)<2.3   && fabs(theEta)>2.2)   theEAregion = 4;
+  if (fabs(theEta)<2.4   && fabs(theEta)>2.3)   theEAregion = 5;
+  if (fabs(theEta)>2.4) theEAregion = 6;
+  return theEAregion;
+}
