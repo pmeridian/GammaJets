@@ -105,6 +105,10 @@ void SingleGammaTree_giulia::Loop() {
   float etaPhot_presel[10];
 
   float deltaRGenReco[10];
+  float deltaRGenReco_EB_nopresel[10], deltaRGenReco_EE_nopresel[10];
+  float eTrue_EB_nopresel[10], eTrue_EE_nopresel[10];
+  float eReco_EB_matched[10], eReco_EE_matched[10];
+
   int isMatchedPhot[10];
 
   float pid_scetawid_presel[10];
@@ -153,8 +157,8 @@ void SingleGammaTree_giulia::Loop() {
   
 
   
-  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, train") ;
-  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, 2") ;
+  ana_tree = new TTree ("AnaTree","Reduced tree for final analysis");
+  //ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, 2") ;
   // general
   
   ana_tree->Branch("run",&runRN,"run/I");
@@ -228,6 +232,14 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("isMatchedPhot", isMatchedPhot, "isMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("deltaRGenReco", deltaRGenReco, "deltaRGenReco[nPhot_gen]/F"  );
 
+  ana_tree->Branch("deltaRGenReco_EB_nopresel", deltaRGenReco_EB_nopresel, "deltaRGenReco_EB_nopresel[nPhot_gen]/F"  );
+  ana_tree->Branch("deltaRGenReco_EE_nopresel", deltaRGenReco_EE_nopresel, "deltaRGenReco_EE_nopresel[nPhot_gen]/F"  );
+  ana_tree->Branch("eTrue_EB_nopresel", eTrue_EB_nopresel, "eTrue_EB_nopresel[nPhot_gen]/F"  );
+  ana_tree->Branch("eTrue_EE_nopresel", eTrue_EE_nopresel, "eTrue_EE_nopresel[nPhot_gen]/F"  );
+  ana_tree->Branch("eReco_EB_matched", eReco_EB_matched, "eReco_EB_matched[nPhot_gen]/F"  );
+  ana_tree->Branch("eReco_EE_matched", eReco_EE_matched, "eReco_EE_matched[nPhot_gen]/F"  );
+
+
   // triggering paths                                                                                                                 
   ana_tree->Branch("firedHLTNames",  &aHLTNames);
 
@@ -289,15 +301,15 @@ void SingleGammaTree_giulia::Loop() {
     int nGenPhot(0);
     vector<bool> photassocMC;
     //    TVector3 recoPhot[nPhot_presel]; 
-    vector<TVector3> genPhot, recoPhot;
-    TVector3 gen, reco;
+    vector<TVector3> genPhot, recoPhot, recoPhot_nopresel;
+    TVector3 gen, reco, reco_nopresel;
        
     /// init of mc related variables
         
     for(int i=0; i<nMC; i++) {
       
       if((pdgIdMC[i] == 22 && statusMC[i] == 3)
-	 //|| (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 || TMath::Abs(pdgIdMC[motherIDMC[i]])==21 ) )
+	 || (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 ) )
 	 ){
 
 	photassocMC.push_back(1);	
@@ -315,6 +327,86 @@ void SingleGammaTree_giulia::Loop() {
     nPhot_gen = nGenPhot;
     //    if (nGenPhot != 1) cout << "nGenPhot:  " << nGenPhot << endl; 
 
+
+
+    //matching efficiency (before preselection)
+    vector<float> deltaR_gen_reco_nopresel_EB, deltaR_gen_reco_nopresel_EE;
+    vector<int> i_reco_nopresel_matched_EB, i_reco_nopresel_matched_EE;
+    vector<float> vec_eTrue_nopresel_EB, vec_eTrue_nopresel_EE;
+    vector<float> vec_eReco_matched_EB, vec_eReco_matched_EE;
+
+    float deltaRmin_nopresel_EB, deltaRmin_nopresel_EE;
+    int i_nPhot_nopresel_matched_EB, i_nPhot_nopresel_matched_EE;
+    float eTrue_nopresel_EB, eTrue_nopresel_EE;
+    float eReco_matched_EB, eReco_matched_EE;
+    TVector3 reco_nopresel_EB, reco_nopresel_EE, gen_presel;
+
+
+    for (int i=0; i<nMC; i++) {
+      deltaRmin_nopresel_EB = 0.3;
+      deltaRmin_nopresel_EE = 0.3;
+      i_nPhot_nopresel_matched_EB = -1;
+      i_nPhot_nopresel_matched_EE = -1;
+  
+      if(photassocMC[i] && ptMC[i]>30 && TMath::Abs(etaMC[i])<1.4442) {
+	gen_presel.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
+	for(int j=0; j<nPhot; j++){
+	  reco_nopresel_EB.SetPtEtaPhi(ptPhot[j],etaPhot[j],phiPhot[j]);
+	  if(gen_presel.DeltaR(reco_nopresel_EB) < deltaRmin_nopresel_EB) {
+	    deltaRmin_nopresel_EB = gen_presel.DeltaR(reco_nopresel_EB);
+	    i_nPhot_nopresel_matched_EB = j;
+	    eTrue_nopresel_EB = eMC[i];
+	    eReco_matched_EB = ePhot[j];
+	  }
+	}
+	
+	deltaR_gen_reco_nopresel_EB.push_back(deltaRmin_nopresel_EB);
+	i_reco_nopresel_matched_EB.push_back(i_nPhot_nopresel_matched_EB);
+	//etasc_reco_nopresel_EB.pushback(etascPhot[i_nPhot_nopresel_matched_EB]);
+	vec_eTrue_nopresel_EB.push_back(eTrue_nopresel_EB);
+	vec_eReco_matched_EB.push_back(eReco_matched_EB);
+      }
+    
+      else if(photassocMC[i] && ptMC[i]>30 && TMath::Abs(etaMC[i])>1.566 && TMath::Abs(etaMC[i])<2.5 ) {
+	gen_presel.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
+	for(int j=0; j<nPhot; j++){
+	  reco_nopresel_EE.SetPtEtaPhi(ptPhot[j],etaPhot[j],phiPhot[j]);
+	  if(gen_presel.DeltaR(reco_nopresel_EE) < deltaRmin_nopresel_EE) {
+	    deltaRmin_nopresel_EE = gen_presel.DeltaR(reco_nopresel_EE);
+	    i_nPhot_nopresel_matched_EE = j;
+	    eTrue_nopresel_EE = eMC[i];
+	    eReco_matched_EE = ePhot[j];
+	  }
+	}
+	
+	deltaR_gen_reco_nopresel_EE.push_back(deltaRmin_nopresel_EE);
+	i_reco_nopresel_matched_EE.push_back(i_nPhot_nopresel_matched_EE);
+	//	etasc_reco_nopresel_EE.pushback(etascPhot[i_nPhot_nopresel_matched_EE]);
+	vec_eTrue_nopresel_EE.push_back(eTrue_nopresel_EE);
+	vec_eReco_matched_EE.push_back(eReco_matched_EE);
+      }
+    }
+
+    for (int i=0; i<nGenPhot; i++) {
+      deltaRGenReco_EB_nopresel[i] = -999.;
+      deltaRGenReco_EE_nopresel[i] = -999.;
+      eTrue_EB_nopresel[i] = -999.;
+      eTrue_EE_nopresel[i] = -999.;
+      eReco_EB_matched[i] = -999.;
+      eReco_EE_matched[i] = -999.;
+    }
+
+    for (int i=0; i<deltaR_gen_reco_nopresel_EB.size(); i++) {
+      deltaRGenReco_EB_nopresel[i] = deltaR_gen_reco_nopresel_EB[i];
+      eTrue_EB_nopresel[i] =  vec_eTrue_nopresel_EB[i];
+      eReco_EB_matched[i] = vec_eReco_matched_EB[i];
+    }
+
+    for (int i=0; i<deltaR_gen_reco_nopresel_EE.size(); i++) {
+      deltaRGenReco_EE_nopresel[i] = deltaR_gen_reco_nopresel_EE[i];
+      eTrue_EE_nopresel[i] =  vec_eTrue_nopresel_EE[i];
+      eReco_EE_matched[i] = vec_eReco_matched_EE[i];
+    }
 
     /***************************************************
      *                                                 *
@@ -619,17 +711,17 @@ bool SingleGammaTree_giulia::PhotonMITPreSelection( int photon_index, int vertex
   int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
   float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index][vertex_index];
 
-
+  /*
       
   if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false;                                           
   if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
   if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
   if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false;                                           
   if (val_trkiso          >= mitCuts_trkiso[photon_category]      ) return false;
-
+  */
   if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
 
-  if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
+  //if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
   
   return true;
 }
