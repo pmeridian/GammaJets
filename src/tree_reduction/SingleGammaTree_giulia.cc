@@ -711,17 +711,17 @@ bool SingleGammaTree_giulia::PhotonMITPreSelection( int photon_index, int vertex
   int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
   float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index][vertex_index];
 
-  /*
+  
       
   if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false;                                           
   if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
   if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
   if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false;                                           
   if (val_trkiso          >= mitCuts_trkiso[photon_category]      ) return false;
-  */
+  
   if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
 
-  //if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
+  if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
   
   return true;
 }
