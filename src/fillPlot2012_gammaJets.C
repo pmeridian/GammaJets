@@ -38,13 +38,17 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     outfile.open(filename.c_str()); 
   }
 
+  // photonID MVA
+  tmvaReaderID_Single_Endcap=0;
+  tmvaReaderID_Single_Barrel=0;
+  if (!tmvaReaderID_Single_Barrel || !tmvaReaderID_Single_Endcap) SetAllMVA();  
 
   // Loop over entries
   int enMax = nentries; 
   for (Long64_t jentry=0; jentry<enMax;jentry++) {
     Long64_t ientry = LoadTree(jentry);
 
-    if (jentry%10000==0) cout << jentry << endl;
+    if (jentry%100000==0) cout << jentry << endl;
 
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -125,6 +129,9 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
       }
       */
 
+      // photon ID MVA
+      // float theIdMva = PhotonIDMVA(theGamma);
+
       if (isFullySel) fullSelected.push_back(theGamma); 
     }
 
@@ -164,10 +171,12 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     // if (invMass>110 || invMass<70) continue;         // chiara: per check Z
 
     // for ID variables, splitting EB/EE
-    if (var == "HoE_EB"       && fabs(firstGeta)>1.5) continue;
-    if (var == "HoE_EE"       && fabs(firstGeta)<1.5) continue;
-    if (var == "sigmaIeIe_EB" && fabs(firstGeta)>1.5) continue;
-    if (var == "sigmaIeIe_EE" && fabs(firstGeta)<1.5) continue;
+    if (var == "HoE_EB"         && fabs(firstGeta)>1.5) continue;
+    if (var == "HoE_EE"         && fabs(firstGeta)<1.5) continue;
+    if (var == "sigmaIeIe_EB"   && fabs(firstGeta)>1.5) continue;
+    if (var == "sigmaIeIe_EE"   && fabs(firstGeta)<1.5) continue;
+    if (var == "photonIdMva_EB" && fabs(firstGeta)>1.5) continue;
+    if (var == "photonIdMva_EE" && fabs(firstGeta)<1.5) continue;
 
     // finding variable to be plotted
     double variable(0);
@@ -179,6 +188,9 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     else if (var == "HoE")       variable = pid_HoverE_presel[firstG]; 
     else if (var == "HoE_EB")    variable = pid_HoverE_presel[firstG]; 
     else if (var == "HoE_EE")    variable = pid_HoverE_presel[firstG]; 
+    else if (var == "photonIdMva")    variable = PhotonIDMVA(firstG);
+    else if (var == "photonIdMva_EB") variable = PhotonIDMVA(firstG);
+    else if (var == "photonIdMva_EE") variable = PhotonIDMVA(firstG);
     else if (var == "chargedIso") variable = pid_pfIsoCharged03ForCiC_presel[firstG];
     else if (var == "neutralIso") variable = pid_pfIsoNeutrals03ForCiC_presel[firstG];
     else if (var == "gammaIso") variable   = pid_pfIsoPhotons03ForCiC_presel[firstG];
@@ -353,4 +365,68 @@ int fillPlot2012_gammaJets::effectiveAreaRegion(float theEta) {
   if (fabs(theEta)<2.4   && fabs(theEta)>2.3)   theEAregion = 5;
   if (fabs(theEta)>2.4) theEAregion = 6;
   return theEAregion;
+}
+
+// to compute photonID MVA
+Float_t fillPlot2012_gammaJets::PhotonIDMVA(Int_t iPhoton) {
+
+  Float_t mva = 999.;
+
+  tmva_photonid_etawidth     = pid_scetawid_presel[iPhoton];
+  tmva_photonid_phiwidth     = pid_scphiwid_presel[iPhoton];
+  tmva_photonid_sieie        = sEtaEtaPhot_presel[iPhoton];
+  tmva_photonid_sieip        = sEtaPhiPhot_presel[iPhoton];
+  tmva_photonid_s4ratio      = s4RatioPhot_presel[iPhoton];
+  tmva_photonid_r9           = r9Phot_presel[iPhoton];
+  tmva_photonid_pt           = ptPhot_presel[iPhoton];
+  tmva_photonid_sceta        = etascPhot_presel[iPhoton];
+  tmva_photonid_rr           = 0.0; 
+  if (rr_presel[iPhoton]>0. && rr_presel[iPhoton]<999999.) tmva_photonid_rr = rr_presel[iPhoton];
+
+  bool isEBphot = true;
+  if (fabs(etascPhot_presel[iPhoton])>1.5) isEBphot = false; 
+
+  if (isEBphot)
+    mva = tmvaReaderID_Single_Barrel->EvaluateMVA("AdaBoost");
+  else
+    mva = tmvaReaderID_Single_Endcap->EvaluateMVA("AdaBoost");
+  
+  return mva;
+}
+
+void fillPlot2012_gammaJets::SetAllMVA() {
+
+  tmvaReaderID_Single_Barrel = new TMVA::Reader("!Color:Silent");
+
+  tmvaReaderID_Single_Barrel->AddVariable("pid_scetawid_presel", &tmva_photonid_etawidth );
+  tmvaReaderID_Single_Barrel->AddVariable("pid_scphiwid_presel", &tmva_photonid_phiwidth );
+  tmvaReaderID_Single_Barrel->AddVariable("sEtaEtaPhot_presel",  &tmva_photonid_sieie );
+  tmvaReaderID_Single_Barrel->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
+  tmvaReaderID_Single_Barrel->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
+  tmvaReaderID_Single_Barrel->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
+  tmvaReaderID_Single_Barrel->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
+  tmvaReaderID_Single_Barrel->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Barrel->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
+  tmvaReaderID_Single_Barrel->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
+  tmvaReaderID_Single_Barrel->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+
+  tmvaReaderID_Single_Endcap = new TMVA::Reader("!Color:Silent");
+
+  tmvaReaderID_Single_Endcap->AddVariable("pid_scetawid_presel", &tmva_photonid_etawidth );
+  tmvaReaderID_Single_Endcap->AddVariable("pid_scphiwid_presel", &tmva_photonid_phiwidth );
+  tmvaReaderID_Single_Endcap->AddVariable("sEtaEtaPhot_presel",  &tmva_photonid_sieie );
+  tmvaReaderID_Single_Endcap->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
+  tmvaReaderID_Single_Endcap->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
+  tmvaReaderID_Single_Endcap->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
+  tmvaReaderID_Single_Endcap->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
+  tmvaReaderID_Single_Endcap->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Endcap->AddVariable("rr_presel",           &tmva_photonid_rr );
+  tmvaReaderID_Single_Endcap->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
+  tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
+  tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+
+  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EB/TMVAClassification_BDT.weights.xml" << endl;
+  tmvaReaderID_Single_Barrel->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EB/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EE/TMVAClassification_BDT.weights.xml" << endl;
+  tmvaReaderID_Single_Endcap->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EE/TMVAClassification_BDT.weights.xml");
 }

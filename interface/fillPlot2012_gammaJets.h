@@ -15,6 +15,8 @@
 #include <TRandom3.h>
 #include <vector>
 
+#include "TMVA/Reader.h"
+
 class fillPlot2012_gammaJets {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -188,6 +190,17 @@ public :
    bool isHLT_90();
    bool isHLT_150();
    int effectiveAreaRegion(float theEta);
+
+   // To read photon ID MVA
+   void SetAllMVA(); 
+   Float_t PhotonIDMVA(Int_t iPhoton);
+   TMVA::Reader *tmvaReaderID_Single_Barrel, *tmvaReaderID_Single_Endcap;
+   float tmva_photonid_etawidth, tmva_photonid_phiwidth;
+   float tmva_photonid_sieie,    tmva_photonid_sieip;
+   float tmva_photonid_s4ratio,  tmva_photonid_r9;
+   float tmva_photonid_pt,       tmva_photonid_sceta;
+   float tmva_photonid_rr;
+   float tmva_photonid_nPhot, tmva_photonid_isMatchedPhot, tmva_photonid_ptWeight;
 };
 
 #endif
