@@ -21,9 +21,11 @@ public :
    Int_t           fCurrent; //!current Tree number in a TChain
 
    // Cuts values                   
-   double ptphot1cut;
+   double ptphot1_mincut;
+   double ptphot1_maxcut;
    int ebcat;
    int r9cat;
+   int hltcut;
 
    // bool to decide if we want to write output txt file 
    std::string writetxt;
@@ -41,12 +43,19 @@ public :
    Int_t           event;
    Int_t           lumi;
    Float_t         nvtx;
+   Int_t           LOGamma;
+   Int_t           ISRGamma;
+   Int_t           FSRGamma;
    Int_t           npu;
    Int_t           NtotEvents;
    Float_t         xsection;
    Float_t         EquivLumi;
    Int_t           SampleID;
    Float_t         pu_weight;
+   Float_t         pu_weight30;
+   Float_t         pu_weight50;
+   Float_t         pu_weight75;
+   Float_t         pu_weight90;
    Int_t           nPhot_gen;
    Int_t           nPhot_presel;
    Float_t         ptPhot_presel[100];   //[nPhot_presel]
@@ -91,6 +100,7 @@ public :
    Float_t         rr_presel[100];   //[nPhot_presel]
    Int_t           isMatchedPhot[100];   //[nPhot_presel]
    Float_t         deltaRGenReco[100];   //[nPhot_gen]
+   Int_t           vtxId;
    vector<string>  *firedHLTNames;
 
    // List of branches
@@ -98,12 +108,19 @@ public :
    TBranch        *b_event;   //!
    TBranch        *b_lumi;   //!
    TBranch        *b_nvtx;   //!
+   TBranch        *b_LOGamma;   //!                                             
+   TBranch        *b_ISRGamma;   //!                                            
+   TBranch        *b_FSRGamma;   //! 
    TBranch        *b_npu;   //!
    TBranch        *b_NtotEvents;   //!
    TBranch        *b_xsection;   //!
    TBranch        *b_EquivLumi;   //!
    TBranch        *b_SampleID;   //!
    TBranch        *b_pu_weight;   //!
+   TBranch        *b_pu_weight30;   //!                                         
+   TBranch        *b_pu_weight50;   //!                                         
+   TBranch        *b_pu_weight75;   //!                                         
+   TBranch        *b_pu_weight90;   //! 
    TBranch        *b_nPhot_gen;   //!
    TBranch        *b_nPhot_presel;   //!
    TBranch        *b_ptPhot_presel;   //!
@@ -149,6 +166,7 @@ public :
    TBranch        *b_isMatchedPhot;   //!
    TBranch        *b_deltaRGenReco;   //!
    TBranch        *b_firedHLTNames;   //!  
+   TBranch        *b_vtxId;   //!     
 
    fillPlot2012_gammaJets(TTree *tree=0);
    virtual ~fillPlot2012_gammaJets();
@@ -156,7 +174,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Setcuts(double pt1=50, int eb = 1, int r9 = 1);
+   virtual void     Setcuts(double pt1min=50, double pt1max=70, int eb = 1, int r9 = 1, int HLTth = 50);
    virtual TH1D*    Plot(string var, string name, int nbin=200, double min=90, double max=190, int signal=50);
    virtual void     Writetxt(char * filename);
    virtual void     WriteRoot(char * filename);
@@ -164,8 +182,10 @@ public :
    virtual void     DoPuReweight();
    virtual Bool_t   Notify();
 
+   bool isHLT_30();
    bool isHLT_50();
    bool isHLT_75();
+   bool isHLT_90();
    bool isHLT_150();
    int effectiveAreaRegion(float theEta);
 };
@@ -235,12 +255,19 @@ void fillPlot2012_gammaJets::Init(TTree *tree)
    fChain->SetBranchAddress("event", &event, &b_event);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
+   fChain->SetBranchAddress("LOGamma", &LOGamma, &b_LOGamma);
+   fChain->SetBranchAddress("ISRGamma", &ISRGamma, &b_ISRGamma);
+   fChain->SetBranchAddress("FSRGamma", &FSRGamma, &b_FSRGamma);
    fChain->SetBranchAddress("npu", &npu, &b_npu);
    fChain->SetBranchAddress("NtotEvents", &NtotEvents, &b_NtotEvents);
    fChain->SetBranchAddress("xsection", &xsection, &b_xsection);
    fChain->SetBranchAddress("EquivLumi", &EquivLumi, &b_EquivLumi);
    fChain->SetBranchAddress("SampleID", &SampleID, &b_SampleID);
    fChain->SetBranchAddress("pu_weight", &pu_weight, &b_pu_weight);
+   fChain->SetBranchAddress("pu_weight30", &pu_weight30, &b_pu_weight30);
+   fChain->SetBranchAddress("pu_weight50", &pu_weight50, &b_pu_weight50);
+   fChain->SetBranchAddress("pu_weight75", &pu_weight75, &b_pu_weight75);
+   fChain->SetBranchAddress("pu_weight90", &pu_weight90, &b_pu_weight90);
    fChain->SetBranchAddress("nPhot_gen", &nPhot_gen, &b_nPhot_gen);
    fChain->SetBranchAddress("nPhot_presel", &nPhot_presel, &b_nPhot_presel);
    fChain->SetBranchAddress("ptPhot_presel", ptPhot_presel, &b_ptPhot_presel);
@@ -286,6 +313,7 @@ void fillPlot2012_gammaJets::Init(TTree *tree)
    fChain->SetBranchAddress("isMatchedPhot", isMatchedPhot, &b_isMatchedPhot);
    fChain->SetBranchAddress("deltaRGenReco", deltaRGenReco, &b_deltaRGenReco);
    fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
+   fChain->SetBranchAddress("vtxId", &vtxId, &b_vtxId);
    Notify();
 }
 
