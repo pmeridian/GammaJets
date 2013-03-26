@@ -166,12 +166,21 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("lumi",&lumi,"lumi/I");
   ana_tree->Branch("nvtx",&nvtx,"nvtx/F");
 
+  ana_tree->Branch("LOGamma",    &LOGamma,    "LOGamma/I");
+  ana_tree->Branch("ISRGamma",   &ISRGamma,   "ISRGamma/I");
+  ana_tree->Branch("FSRGamma",   &FSRGamma,   "FSRGamma/I");
+
   ana_tree->Branch("npu",&npu,"npu/I");
   ana_tree->Branch("NtotEvents",&NtotEvents,"NtotEvents/I");
   ana_tree->Branch("xsection",&xsection,"xsection/F");
   ana_tree->Branch("EquivLumi",&EquivLumi,"EquivLumi/F");
   ana_tree->Branch("SampleID",&SampleID,"SampleID/I");
   ana_tree->Branch("pu_weight",&pu_weight,"pu_weight/F");
+  // 
+  ana_tree->Branch("pu_weight30",&pu_weight30,"pu_weight30/F");
+  ana_tree->Branch("pu_weight50",&pu_weight50,"pu_weight50/F");
+  ana_tree->Branch("pu_weight75",&pu_weight75,"pu_weight75/F");
+  ana_tree->Branch("pu_weight90",&pu_weight90,"pu_weight90/F");
   
   // photons
   ana_tree->Branch("nPhot_gen",&nPhot_gen,"nPhot_gen/I");
@@ -239,6 +248,8 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("eReco_EB_matched", eReco_EB_matched, "eReco_EB_matched[nPhot_gen]/F"  );
   ana_tree->Branch("eReco_EE_matched", eReco_EE_matched, "eReco_EE_matched[nPhot_gen]/F"  );
 
+  // vertex
+  ana_tree->Branch("vtxId",   &vtxId,   "vtxId/I");
 
   // triggering paths                                                                                                                 
   ana_tree->Branch("firedHLTNames",  &aHLTNames);
@@ -433,7 +444,31 @@ void SingleGammaTree_giulia::Loop() {
       pu_weight = 1;
     
     weight=pu_weight;
-    
+
+    // for dedicated HLT selections
+    if(npu<MAX_PU_REWEIGHT && nMC>0) {
+
+      if(puweights30_.size()>0)  
+	pu_weight30 = puweights30_[npu];  
+      else 
+	pu_weight30 = 1.;
+      
+      if(puweights50_.size()>0) 
+	pu_weight50 = puweights50_[npu];  
+      else 
+	pu_weight50 = 1.;
+      
+      if(puweights75_.size()>0) 
+	pu_weight75 = puweights75_[npu];  
+      else 
+	pu_weight75 = 1.;
+      
+      if(puweights90_.size()>0) 
+	pu_weight90 = puweights90_[npu];  
+      else 
+	pu_weight90 = 1.;
+    }
+
     // to be used after
     ptphotgen1.Fill(ptMC[firstfourgenphot.at(0)],weight);
     
@@ -672,6 +707,16 @@ void SingleGammaTree_giulia::Loop() {
       runRN = run;
       eventRN = event;
       lumi = lbn;
+
+      // check LO gammas - to remove duplicate events in different MC samples
+      LOGamma  = countLOGenGamma();
+      ISRGamma = countISRGenGamma();
+      FSRGamma = countFSRGenGamma();
+
+      // check if the first vertex is good
+      vtxId=0;
+      float rhoVtx=sqrt(vx[0]*vx[0]+vy[0]*vy[0]);
+      if (vndof[0]<4 || fabs(vz[0])>24. || rhoVtx>2.) vtxId=-555;
       
       ana_tree->Fill();
     }
@@ -711,21 +756,18 @@ bool SingleGammaTree_giulia::PhotonMITPreSelection( int photon_index, int vertex
   int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
   float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index][vertex_index];
 
-  
-      
-  if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false;                                           
+  if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false; 
   if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
   if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
-  if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false;                                           
+  if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false; 
   if (val_trkiso          >= mitCuts_trkiso[photon_category]      ) return false;
-  
+
   if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
 
   if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
   
   return true;
 }
-
 
 void SingleGammaTree_giulia::SetPuWeights(std::string puWeightFile)
 {
@@ -762,6 +804,48 @@ void SingleGammaTree_giulia::SetPuWeights(std::string puWeightFile)
     weight=weights->GetBinContent(i+1);
     sumPuWeights+=weight;
     puweights_.push_back(weight);
+  }
+}
+
+// leave the main pu weight as it is. Add this new one for dedicated HLT patsh 
+void SingleGammaTree_giulia::SetPuWeightsHLT(std::string puWeightFileHLT, int hltThresh)
+{
+  if (puWeightFileHLT == "") {
+    std::cout << "you need a weights file to use this function" << std::endl;
+    return;
+  }
+  
+  std::cout << "PU REWEIGHTING:: Using file " << puWeightFileHLT << " with HLT threshold " << hltThresh << std::endl;
+  
+  TFile *f_pu  = new TFile(puWeightFileHLT.c_str(),"READ");
+  f_pu->cd();
+  
+  TH1D *puweights = 0;
+  TH1D *gen_pu = 0;
+  
+  gen_pu= (TH1D*) f_pu->Get("generated_pu");
+  puweights= (TH1D*) f_pu->Get("weights");
+  
+  if (!puweights || !gen_pu) {
+    std::cout << "weights histograms not found in file " << puWeightFileHLT << std::endl;
+    return;
+  }
+  
+  TH1D* weightedPU= (TH1D*)gen_pu->Clone("weightedPU");
+  weightedPU->Multiply(puweights);
+  //Rescaling weights in order to preserve same integral of events
+  TH1D* weights= (TH1D*)puweights->Clone("rescaledWeights");
+  weights->Scale( gen_pu->Integral(1,MAX_PU_REWEIGHT) / weightedPU->Integral(1,MAX_PU_REWEIGHT) );
+  
+  float sumPuWeights=0.;
+  for (int i = 0; i<MAX_PU_REWEIGHT; i++) {
+    float weight=1.;
+    weight=weights->GetBinContent(i+1);
+    sumPuWeights+=weight;
+    if (hltThresh==30) puweights30_.push_back(weight);  
+    if (hltThresh==50) puweights50_.push_back(weight);  
+    if (hltThresh==75) puweights75_.push_back(weight);  
+    if (hltThresh==90) puweights90_.push_back(weight);  
   }
 }
 
@@ -818,4 +902,47 @@ void SingleGammaTree_giulia::ClusterShape(Int_t* iPhoton, Float_t* tmva_photonid
 
 }
 
+int SingleGammaTree_giulia::countLOGenGamma(){
+  
+  int totLO = 0;
+  for (int ii=0; ii<nMC; ii++) {
+    int myStatus = statusMC[ii];
+    int myId     = pdgIdMC[ii];
+    if (myStatus==3 && myId==22) {
+      int myMoth   = motherIDMC[ii];
+      int myMothId = abs(pdgIdMC[myMoth]);
+      if (myMothId<=25) totLO++;   // quarks, gluons, W, Z and ZHiggs as mothers                  
+    }
+  }
+  return totLO;
+}
 
+int SingleGammaTree_giulia::countISRGenGamma(){
+  
+  int totISR = 0;
+  for (int ii=0; ii<nMC; ii++) {
+    int myStatus = statusMC[ii];
+    int myId     = pdgIdMC[ii];
+    if (myStatus==1 && myId==22) {
+      int myMoth   = motherIDMC[ii];
+      int myMothId = abs(pdgIdMC[myMoth]);
+      if (myMothId<11 || myMothId==21) totISR++;   // quarks and gluons as mothers                  
+    }
+  }
+  return totISR;
+}
+
+int SingleGammaTree_giulia::countFSRGenGamma(){
+  
+  int totFSR = 0;
+  for (int ii=0; ii<nMC; ii++) {
+    int myStatus = statusMC[ii];
+    int myId     = pdgIdMC[ii];
+    if (myStatus==1 && myId==22) {
+      int myMoth   = motherIDMC[ii];
+      int myMothId = abs(pdgIdMC[myMoth]);
+      if (myMothId>10 && myMothId<21) totFSR++;   // leptons as mothers                  
+    }
+  }
+  return totFSR;
+}

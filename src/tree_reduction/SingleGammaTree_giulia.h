@@ -39,6 +39,7 @@ public:
   virtual void     Loop();
   void SetJsonFile(const char* json) { jsonFile = json; };
   void SetPuWeights(std::string puWeightFile);
+  void SetPuWeightsHLT(std::string puWeightFileHLT, int hltThresh);
   double ErrEt(double Et, double Eta);
   void SetNtotXsection(int ntot, float xsec) {      
     NtotEvents = ntot;
@@ -214,6 +215,10 @@ private:
 
   // vector of pu weights
   std::vector<Double_t> puweights_;
+  std::vector<Double_t> puweights30_;
+  std::vector<Double_t> puweights50_;
+  std::vector<Double_t> puweights75_;
+  std::vector<Double_t> puweights90_;
 
   EnergyScaleCorrection* scaleCorrections_;
  
@@ -224,6 +229,10 @@ private:
   Float_t rhoPFRN;
   Int_t npu;
   Float_t pu_weight;
+  Float_t pu_weight30;
+  Float_t pu_weight50;
+  Float_t pu_weight75;
+  Float_t pu_weight90;
   Int_t promptGamma;
   Int_t LOGamma;
   Int_t ISRGamma;

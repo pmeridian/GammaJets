@@ -13,7 +13,6 @@ if [ "$domain" == "cern.ch" ]; then
     redirector=pccmsrm27.cern.ch
     castordir=`dirname $3`
     filename=`basename $3`
-    ## rfmkdir ${castordir}   chiara!
     xrootdir=/cms/local/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
     echo "Creating dir root://${redirector}//${xrootdir}"
     xrd mkdir ${redirector} ${xrootdir}
@@ -25,10 +24,12 @@ fi
 if [ "$domain" == "cern.ch" ]; then
     cd -
 fi
-echo dir is $CMSSW_BASE file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
-echo ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 #$4 ${8} ${9} $5 $6 $7 
+echo dir is
+echo dir2 is $CMSSW_BASE 
+echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
+echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 $7 $8 $9 ${10} #$4 ${8} ${9} $5 $6 $7 
 
-${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 #$4 $8 $9 $5 $6 $7 
+${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia $2 ${filename} $5 $6 $7 $8 $9 ${10} #$4 $8 $9 $5 $6 $7 
 exit_stat=$?
 
 if [ "$domain" == "cern.ch" ]; then
