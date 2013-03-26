@@ -50,14 +50,16 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     nb = fChain->GetEntry(jentry);   nbytes += nb;
 
     // patological events
-    if(npu>=60) continue;    
-    
-  
+    if (npu>=60) continue;    
+
+    // first vertex must be good
+    if (vtxId<0) continue;
+
     // HLT selection - for data only
-    if ( signal==100 && !isHLT_50() )  continue;
-    // if ( signal==100 && !isHLT_75() )  continue;
-    // if ( signal==100 && !isHLT_150() ) continue;
-    
+    if ( signal==100 && hltcut==30 && !isHLT_30() )  continue;
+    if ( signal==100 && hltcut==50 && !isHLT_50() )  continue;
+    if ( signal==100 && hltcut==75 && !isHLT_75() )  continue;
+    if ( signal==100 && hltcut==90 && !isHLT_90() )  continue;
 
     // vector with index of fully selected gammas
     vector<int> fullSelected;
@@ -68,24 +70,47 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     float EA_neutralH[7] = { 0.030, 0.057, 0.039, 0.015, 0.024, 0.039, 0.072};
     float EA_photons[7]  = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
 
-    for (int theGamma=0; theGamma<nPhot_presel; theGamma++) {
+    int theNumber = nPhot_presel;
+    if (nPhot_presel>100) theNumber = 100;
+    for (int theGamma=0; theGamma<theNumber; theGamma++) {
 
-      bool isFullySel = true;
+      bool isFullySel     = true;
+
+      // for effective area calculation
+      int theEAregion = effectiveAreaRegion(etaPhot_presel[theGamma]); 
+      if (theEAregion>6) continue;
+
+      // preselection to really emulate the single gamma HLT requirements (current preselection is H->gg one)
+      bool isReallyPresel = true;      
+      float preselECAL    = pid_jurECAL03_presel[theGamma]  - 0.012*ptPhot_presel[theGamma];  
+      float preselHCAL    = pid_twrHCAL03_presel[theGamma]  - 0.005*ptPhot_presel[theGamma]; 
+      float preselTracker = pid_hlwTrack03_presel[theGamma] - 0.002*ptPhot_presel[theGamma]; 
+      if ( preselECAL > 5.5)    isReallyPresel = false;
+      if ( preselHCAL > 3.5)    isReallyPresel = false;
+      if ( preselTracker > 3.5) isReallyPresel = false;
+      if ( theEAregion<2) {  // EB
+	if ( pid_HoverE_presel[theGamma]>0.15 )   isReallyPresel = false;       
+	if ( sEtaEtaPhot_presel[theGamma]>0.024 ) isReallyPresel = false;
+      } else {     // EE
+	if(pid_HoverE_presel[theGamma]>0.10)      isReallyPresel = false;       
+	if (sEtaEtaPhot_presel[theGamma]>0.040)   isReallyPresel = false;
+      }
+      if( !isReallyPresel ) continue;
 
       /*
       // for effective area calculation
       int theEAregion = effectiveAreaRegion(etaPhot_presel[theGamma]); 
       if (theEAregion>6) continue;
 
-      // corrected isolations - chiara: va fatto cosi', su ciascuno? rhoPF e' quello ok?
-      float rhoCorrCharged = pid_pfIsoCharged03ForCiC_presel[theGamma] - rhoPF*EA_chargedH[theEAregion];   
-      float rhoCorrNeutral = pid_pfIsoNeutrals03ForCiC_presel[theGamma] - rhoPF*EA_neutralH[theEAregion];
-      float rhoCorrPhoton  = pid_pfIsoPhotons03ForCiC_presel[theGamma] - rhoPF*EA_photons[theEAregion];
+      // isolations corrected with effective areas
+      float rhoCorrCharged = pid_pfIsoCharged03ForCiC_presel[theGamma] - rhoAllJets*EA_chargedH[theEAregion];   
+      float rhoCorrNeutral = pid_pfIsoNeutrals03ForCiC_presel[theGamma] - rhoAllJets*EA_neutralH[theEAregion];
+      float rhoCorrPhoton  = pid_pfIsoPhotons03ForCiC_presel[theGamma] - rhoAllJets*EA_photons[theEAregion];
       if (rhoCorrCharged<0) rhoCorrCharged = 0.;
       if (rhoCorrNeutral<0) rhoCorrNeutral = 0.;
       if (rhoCorrPhoton<0)  rhoCorrPhoton  = 0.;
 
-      // if(pid_hasMatchedPromptElephot[theGamma]) isFullySel = false;
+      // if(pid_hasMatchedPromptElephot[theGamma]) isFullySel = false;   // already applied at preselection level
       if(pid_HoverE_presel[theGamma]>0.05)      isFullySel = false;       
       if (theEAregion<2) {  // EB
 	if (sEtaEtaPhot_presel[theGamma]>0.011) isFullySel = false;
@@ -102,29 +127,32 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
 
       if (isFullySel) fullSelected.push_back(theGamma); 
     }
-    
 
     // choose the two highest pT preselected gammas 
-    if (fullSelected.size()<2) continue;
+    // if (fullSelected.size()<2) continue;            // chiara: per check Z
+    if (fullSelected.size()<1) continue;
     int firstG = -1;
     int secG   = -1;
-    float firstGpt = -999.;
-    float secGpt   = -1000.;
+    float firstGpt  = -999.;
+    float secGpt    = -1000.;
+    float firstGeta = -999.;
     for (int ii=0; ii<fullSelected.size(); ii++) {
       int index = fullSelected[ii];
       if (ptPhot_presel[index]>firstGpt) {
-	secGpt   = firstGpt;
-	firstGpt = ptPhot_presel[index];
-	secG     = firstG;
-	firstG   = index;
+	secGpt    = firstGpt;
+	firstGpt  = ptPhot_presel[index];
+	firstGeta = etaPhot_presel[index];
+	secG      = firstG;
+	firstG    = index;
       } else if (ptPhot_presel[index]>secGpt) {
 	secGpt = ptPhot_presel[index];
 	secG   = index;
       }
     } 
 
-    // to emulate the trigger: at least one photon with pT>threshold
-    if (firstGpt<ptphot1cut) continue;	
+    // ptcut to restrict to the wanted range - matching HLT
+    if (firstGpt<ptphot1_mincut) continue;	
+    if (firstGpt>ptphot1_maxcut) continue;	
 
     // make the invariant mass of the two highest pT photons
     TLorentzVector gamma1, gamma2;
@@ -133,14 +161,24 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     float invMass = (gamma1+gamma2).M();
 
     // only for Z studies
-    // if (invMass>110 || invMass<70) continue;
+    // if (invMass>110 || invMass<70) continue;         // chiara: per check Z
+
+    // for ID variables, splitting EB/EE
+    if (var == "HoE_EB"       && fabs(firstGeta)>1.5) continue;
+    if (var == "HoE_EE"       && fabs(firstGeta)<1.5) continue;
+    if (var == "sigmaIeIe_EB" && fabs(firstGeta)>1.5) continue;
+    if (var == "sigmaIeIe_EE" && fabs(firstGeta)<1.5) continue;
 
     // finding variable to be plotted
     double variable(0);
     if (var == "nvtx") variable = nvtx;
     else if (var == "ngamma")    variable = nPhot_presel;
     else if (var == "sigmaIeIe") variable = sEtaEtaPhot_presel[firstG];
+    else if (var == "sigmaIeIe_EB") variable = sEtaEtaPhot_presel[firstG];
+    else if (var == "sigmaIeIe_EE") variable = sEtaEtaPhot_presel[firstG];
     else if (var == "HoE")       variable = pid_HoverE_presel[firstG]; 
+    else if (var == "HoE_EB")    variable = pid_HoverE_presel[firstG]; 
+    else if (var == "HoE_EE")    variable = pid_HoverE_presel[firstG]; 
     else if (var == "chargedIso") variable = pid_pfIsoCharged03ForCiC_presel[firstG];
     else if (var == "neutralIso") variable = pid_pfIsoNeutrals03ForCiC_presel[firstG];
     else if (var == "gammaIso") variable   = pid_pfIsoPhotons03ForCiC_presel[firstG];
@@ -154,7 +192,10 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     
     // pu/pt reweighting
     float weight(1);
-    if (dopureweight) weight *= pu_weight;
+    if (dopureweight && hltcut==30) weight *= pu_weight30;
+    if (dopureweight && hltcut==50) weight *= pu_weight50;
+    if (dopureweight && hltcut==75) weight *= pu_weight75;
+    if (dopureweight && hltcut==90) weight *= pu_weight90;
     tempplot->Fill(variable, weight);
   }
   
@@ -163,11 +204,13 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
   return tempplot;
 }
 
-void  fillPlot2012_gammaJets::Setcuts(double pt1, int eb, int r9) {
+void  fillPlot2012_gammaJets::Setcuts(double pt1min, double pt1max, int eb, int r9, int HLTth) {
 
-  ptphot1cut = pt1;
+  ptphot1_mincut = pt1min;
+  ptphot1_maxcut = pt1max;
   ebcat = eb;
   r9cat = r9;
+  hltcut = HLTth;
 }
 
 void fillPlot2012_gammaJets::Writetxt(char * filename) {
@@ -240,6 +283,18 @@ void fillPlot2012_gammaJets::getweights() {
   }
 }
 
+bool fillPlot2012_gammaJets::isHLT_30() {
+
+  bool isok = false;
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v17") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v18") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v19") isok=true;
+  }
+  return isok;
+}
+
 bool fillPlot2012_gammaJets::isHLT_50() {
 
   bool isok = false;
@@ -260,6 +315,18 @@ bool fillPlot2012_gammaJets::isHLT_75() {
     if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
+  }
+  return isok;
+}
+
+bool fillPlot2012_gammaJets::isHLT_90() {
+  
+  bool isok = false;
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v13") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v14") isok=true;
+    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v15") isok=true;
   }
   return isok;
 }
