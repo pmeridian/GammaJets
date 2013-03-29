@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     
     cout << "isEB = " << isEB << "   nTrees =  " << nTrees << "    depthMax = " << depthMax << endl; 
 
-    doTMVA_giulia(isEB, 0, nTrees, depthMax); 
+    doTMVA_giulia(true, 0, nTrees, depthMax); 
   
     exit(0);
   }
@@ -81,11 +81,11 @@ void doTMVA_giulia( bool isEB, bool isPtEtaWeight, int nTrees, int depthMax)
    else   region = "_EE";
    
 
-   TString outfileName( ("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/doMVA/TMVAoutput"+region+".root").c_str() );
+   TString outfileName( ("/afs/cern.ch/work/s/soffi/CMSSW536-Red/src/SingleGamma/RedAnalysis/doMVA/TMVAoutput"+region+".root").c_str() );
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    cout << "file output is: " << outfileName;
 
-   (TMVA::gConfig().GetIONames()).fWeightFileDir = ("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/doMVA/weights"+region).c_str();
+   (TMVA::gConfig().GetIONames()).fWeightFileDir = ("/afs/cern.ch/work/s/soffi/CMSSW536-Red/src/SingleGamma/RedAnalysis/doMVA/weights"+region).c_str();
    
 
    // Create the factory object. Later you can choose the methods
@@ -116,7 +116,7 @@ void doTMVA_giulia( bool isEB, bool isPtEtaWeight, int nTrees, int depthMax)
      factory->AddVariable("r9Phot_presel","r9Phot_presel","", 'F'); 
      factory->AddVariable("ptPhot_presel","ptPhot_presel","", 'F'); 
      factory->AddVariable("etascPhot_presel","etascPhot_presel","", 'F'); 
-
+     //  factory->AddVariable("chi2timePhot_presel/chi2NDFtimePhot_presel","chi2timePhot_presel/chi2NDFtimePhot_presel","", 'F'); 
        
    } else {
      factory->AddVariable("pid_scetawid_presel","pid_scetawid_presel","", 'F');	
@@ -161,11 +161,11 @@ void doTMVA_giulia( bool isEB, bool isPtEtaWeight, int nTrees, int depthMax)
    
    TFile* mc_2012[2];
    
-   //mc_2012[0] = TFile::Open("root://pccmsrm27.cern.ch//xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv2.cicpfloose.scales-Lisbon-Hgg.singleGamma_v2_forMVA/merged/redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
-   //mc_2012[1] = TFile::Open("root://pccmsrm27.cern.ch//xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv2.cicpfloose.scales-Lisbon-Hgg.singleGamma_v2_forMVA/merged/redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
+   mc_2012[0] = TFile::Open("redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-AODSIM.root");
+   mc_2012[1] = TFile::Open("redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-AODSIM.root");
    
-   mc_2012[0] = TFile::Open("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/inputfiles/redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
-   mc_2012[1] = TFile::Open("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/inputfiles/redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
+   // mc_2012[0] = TFile::Open("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/inputfiles/redntp_GJet_Pt-20to40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
+   // mc_2012[1] = TFile::Open("/afs/cern.ch/work/g/gdimperi/CMSSW_5_2_3/src/GammaJets/src/reduced_analysis/inputfiles/redntp_GJet_Pt40_doubleEMEnriched_TuneZ2star_8TeV-pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
 
    cross_mc[0] = 0.001835 * 81930.0 * kfactorgamjet;    // gjet pt 20to40       https://hypernews.cern.ch/HyperNews/CMS/get/higgs2g/731.html  
    cross_mc[1] = 0.05387 * 8884.0 * kfactorgamjet;      // gjet pt > 40
@@ -218,9 +218,13 @@ void doTMVA_giulia( bool isEB, bool isPtEtaWeight, int nTrees, int depthMax)
    
    if(isEB){
      
-     mycuts = "abs(etascPhot_presel)<1.4442&& isMatchedPhot==1"; 
+     mycuts = "abs(etascPhot_presel)<1.4442&& isMatchedPhot==1 "; 
      mycutb = "abs(etascPhot_presel)<1.4442&& isMatchedPhot==0";
      
+     //   mycuts = "abs(etascPhot_presel)<1.4442&& isMatchedPhot==1 && chi2NDFtimePhot_presel>2&&chi2NDFtimePhot_presel<100"; 
+     //  mycutb = "abs(etascPhot_presel)<1.4442&& isMatchedPhot==0&& chi2NDFtimePhot_presel>2&&chi2NDFtimePhot_presel<100";
+     
+
    }else{
      
      mycuts = "abs(etascPhot_presel)>1.566 && abs(etascPhot_presel)<2.5&& isMatchedPhot==1"; 

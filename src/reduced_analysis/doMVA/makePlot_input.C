@@ -19,16 +19,16 @@
 void makePlot_input() {
 
   TFile* fileinput[2];
-
-  fileinput[0]  = new TFile("TMVAoutput_EB.root", "READ");
-  fileinput[1]  = new TFile("TMVAoutput_EE.root", "READ"); 
-
-  TH1F *h_etascPhot_S[2], *h_ptPhot_S[2],  *h_sEtaEta_S[2], *h_sEtaPhi_S[2], *h_etaWidth_S[2], *h_phiWidth_S[2], *h_r9_S[2], *h_s4_S[2];
-  TH1F *h_etascPhot_B[2], *h_ptPhot_B[2],  *h_sEtaEta_B[2], *h_sEtaPhi_B[2], *h_etaWidth_B[2], *h_phiWidth_B[2], *h_r9_B[2], *h_s4_B[2];
+  std::cout<<"flag1"<<std::endl;
+  fileinput[0]  = new TFile("TMVAoutput_EB_chi2.root", "READ");
+  fileinput[1]  = new TFile("TMVAoutput_EB_chi2.root", "READ"); 
+  std::cout<<"flag1"<<std::endl;
+  TH1F *h_etascPhot_S[2], *h_ptPhot_S[2],  *h_sEtaEta_S[2], *h_sEtaPhi_S[2], *h_etaWidth_S[2], *h_phiWidth_S[2], *h_r9_S[2], *h_s4_S[2], *h_chi2_S[2];
+  TH1F *h_etascPhot_B[2], *h_ptPhot_B[2],  *h_sEtaEta_B[2], *h_sEtaPhi_B[2], *h_etaWidth_B[2], *h_phiWidth_B[2], *h_r9_B[2], *h_s4_B[2],  *h_chi2_B[2];
   TH1F *h_rrPreshower_S,  *h_rrPreshower_B;
   //  TCanvas*  c_etascPhot[2], c_ptPhot[2], c_sEtaEta[2], c_sEtaPhi[2], c_etaWidth[2], c_phiWidth[2], c_r9[2], c_s4[2];       
 
-  h_rrPreshower_S = ((TH1F*)fileinput[1]->Get("InputVariables_Id/rr_presel__Signal_Id"));
+  /*  h_rrPreshower_S = ((TH1F*)fileinput[1]->Get("InputVariables_Id/rr_presel__Signal_Id"));
   h_rrPreshower_B = ((TH1F*)fileinput[1]->Get("InputVariables_Id/rr_presel__Background_Id"));
 
   h_rrPreshower_S    ->SetLineColor(kAzure+1); 
@@ -36,8 +36,8 @@ void makePlot_input() {
   h_rrPreshower_S    ->SetFillStyle(3001); 
   h_rrPreshower_B    ->SetLineColor(kRed); 
   h_rrPreshower_B    ->SetFillColor(kRed); 
-  h_rrPreshower_B    ->SetFillStyle(3004); 
-
+  h_rrPreshower_B    ->SetFillStyle(3004); */
+  std::cout<<"flag1"<<std::endl;
   for (int i=0; i<2; i++){
     h_etascPhot_S[i] =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/etascPhot_presel__Signal_Id"));
     h_ptPhot_S[i]    =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/ptPhot_presel__Signal_Id"));
@@ -47,6 +47,8 @@ void makePlot_input() {
     h_phiWidth_S[i]  =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/pid_scphiwid_presel__Signal_Id"));
     h_r9_S[i]        =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/r9Phot_presel__Signal_Id"));
     h_s4_S[i]        =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/s4RatioPhot_presel__Signal_Id"));
+    std::cout<<"flag2"<<std::endl;
+    h_chi2_S[i]      =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/chi2timePhot_presel_D_chi2NDFtimePhot_presel__Signal_Id"));
 
 
     h_etascPhot_B[i]  =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/etascPhot_presel__Background_Id"));
@@ -57,7 +59,7 @@ void makePlot_input() {
     h_phiWidth_B[i]   =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/pid_scphiwid_presel__Background_Id"));
     h_r9_B[i]         =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/r9Phot_presel__Background_Id"));
     h_s4_B[i]         =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/s4RatioPhot_presel__Background_Id"));
-
+    h_chi2_B[i]      =  ((TH1F*)fileinput[i]->Get("InputVariables_Id/chi2timePhot_presel_D_chi2NDFtimePhot_presel__Background_Id"));
     
     h_etascPhot_S[i]   ->SetLineColor(kAzure+1);
     h_ptPhot_S[i]      ->SetLineColor(kAzure+1);
@@ -67,6 +69,7 @@ void makePlot_input() {
     h_phiWidth_S[i]    ->SetLineColor(kAzure+1);
     h_r9_S[i]          ->SetLineColor(kAzure+1);
     h_s4_S[i]          ->SetLineColor(kAzure+1);
+    h_chi2_S[i]         ->SetLineColor(kAzure+1);
 
     
     h_etascPhot_S[i]   ->SetFillColor(kAzure+6);
@@ -77,7 +80,7 @@ void makePlot_input() {
     h_phiWidth_S[i]    ->SetFillColor(kAzure+6);
     h_r9_S[i]          ->SetFillColor(kAzure+6);
     h_s4_S[i]          ->SetFillColor(kAzure+6);
-    
+    h_chi2_S[i]        ->SetFillColor(kAzure+6);
     
     h_etascPhot_S[i]    ->SetFillStyle(3001);
     h_ptPhot_S[i]       ->SetFillStyle(3001);
@@ -87,6 +90,7 @@ void makePlot_input() {
     h_phiWidth_S[i]     ->SetFillStyle(3001);
     h_r9_S[i]           ->SetFillStyle(3001);
     h_s4_S[i]           ->SetFillStyle(3001);
+    h_chi2_S[i]           ->SetFillStyle(3001);
     
     
     h_etascPhot_B[i]   ->SetLineColor(kRed);
@@ -97,6 +101,7 @@ void makePlot_input() {
     h_phiWidth_B[i]    ->SetLineColor(kRed);
     h_r9_B[i]          ->SetLineColor(kRed);
     h_s4_B[i]          ->SetLineColor(kRed);
+    h_chi2_B[i]        ->SetLineColor(kRed);
     
     
     h_etascPhot_B[i]  ->SetFillColor(kRed);
@@ -107,6 +112,7 @@ void makePlot_input() {
     h_phiWidth_B[i]   ->SetFillColor(kRed);
     h_r9_B[i]         ->SetFillColor(kRed);
     h_s4_B[i]         ->SetFillColor(kRed);
+    h_chi2_B[i]       ->SetFillColor(kRed);
     
     
     h_etascPhot_B[i]  ->SetFillStyle(3004);
@@ -117,9 +123,12 @@ void makePlot_input() {
     h_phiWidth_B[i]   ->SetFillStyle(3004);
     h_r9_B[i]         ->SetFillStyle(3004);
     h_s4_B[i]         ->SetFillStyle(3004);
+    h_chi2_B[i]       ->SetFillStyle(3004);
     
   }
 
+
+  std::cout<<"flag"<<std::endl;
   //normalization
   float integral(1);
   for(int i=0; i<2; i++) {
@@ -139,6 +148,8 @@ void makePlot_input() {
     if(integral) h_r9_B[i] ->Scale(1./integral);
     integral = h_s4_B[i]         -> Integral();
     if(integral) h_s4_B[i]->Scale(1./integral);
+    integral = h_chi2_B[i]         -> Integral();
+    if(integral) h_chi2_B[i]->Scale(1./integral);
  
     integral = h_etascPhot_S[i] -> Integral();
     if (integral) h_etascPhot_S[i]->Scale(1./integral);
@@ -156,14 +167,16 @@ void makePlot_input() {
     if(integral) h_r9_S[i] ->Scale(1./integral);
     integral = h_s4_S[i]         -> Integral();
     if(integral) h_s4_S[i]->Scale(1./integral);
+    integral = h_chi2_S[i]         -> Integral();
+    if(integral) h_chi2_S[i]->Scale(1./integral);
 
  }
   
 
 
   //range
-  vector<double> maxbin0_EB, maxbin1_EB, maxbin2_EB, maxbin3_EB, maxbin4_EB, maxbin5_EB, maxbin6_EB, maxbin7_EB, maxbin8_EB, maxbin9_EB;
-  vector<double> maxbin0_EE, maxbin1_EE, maxbin2_EE, maxbin3_EE, maxbin4_EE, maxbin5_EE, maxbin6_EE, maxbin7_EE, maxbin8_EE, maxbin9_EE;
+  vector<double> maxbin0_EB, maxbin1_EB, maxbin2_EB, maxbin3_EB, maxbin4_EB, maxbin5_EB, maxbin6_EB, maxbin7_EB, maxbin8_EB, maxbin9_EB, maxbin10_EB;
+  vector<double> maxbin0_EE, maxbin1_EE, maxbin2_EE, maxbin3_EE, maxbin4_EE, maxbin5_EE, maxbin6_EE, maxbin7_EE, maxbin8_EE, maxbin9_EE, maxbin10_EE;
 
 
   maxbin0_EB.push_back(h_etascPhot_S[0]->GetMaximum());
@@ -182,6 +195,9 @@ void makePlot_input() {
   maxbin6_EB.push_back(h_r9_B[0]        ->GetMaximum());
   maxbin7_EB.push_back(h_s4_S[0]        ->GetMaximum());
   maxbin7_EB.push_back(h_s4_B[0]        ->GetMaximum());
+  maxbin8_EB.push_back(h_chi2_S[0]        ->GetMaximum());
+  maxbin8_EB.push_back(h_chi2_B[0]        ->GetMaximum());
+
   
   maxbin0_EE.push_back(h_etascPhot_S[1]->GetMaximum());
   maxbin0_EE.push_back(h_etascPhot_B[1]->GetMaximum());
@@ -199,6 +215,8 @@ void makePlot_input() {
   maxbin6_EE.push_back(h_r9_B[1]        ->GetMaximum());
   maxbin7_EE.push_back(h_s4_S[1]        ->GetMaximum());
   maxbin7_EE.push_back(h_s4_B[1]        ->GetMaximum());
+  maxbin8_EE.push_back(h_chi2_S[1]        ->GetMaximum());
+  maxbin8_EE.push_back(h_chi2_B[1]        ->GetMaximum());
   
 
   std::sort( maxbin0_EB.begin(),              maxbin0_EB.end());
@@ -218,8 +236,8 @@ void makePlot_input() {
   std::sort( maxbin7_EB.begin(),	      maxbin7_EB.end());	  	     
   double yRange7_EB    	= maxbin7_EB.back() + 0.1*maxbin7_EB.back();
   std::sort( maxbin8_EB.begin(),	      maxbin8_EB.end());	  	     
-  /*double yRange8_EB 	= maxbin8_EB.back() + 0.1*maxbin8_EB.back();
-  std::sort( maxbin9_EB.begin(),	      maxbin9_EB.end());	  	     
+  double yRange8_EB 	= maxbin8_EB.back() + 0.1*maxbin8_EB.back();
+  /*  std::sort( maxbin9_EB.begin(),	      maxbin9_EB.end());	  	     
   double yRange9_EB 	= maxbin9_EB.back() + 0.1*maxbin9_EB.back();
   */		    				    
   std::sort( maxbin0_EE.begin(),              maxbin0_EE.end());
@@ -239,9 +257,9 @@ void makePlot_input() {
   std::sort( maxbin7_EE.begin(),	      maxbin7_EE.end());	  	     
   double yRange7_EE    	= maxbin7_EE.back() + 0.1*maxbin7_EE.back();
   std::sort( maxbin8_EE.begin(),	      maxbin8_EE.end());	  	     
-  /*double yRange8_EE 	= maxbin8_EE.back() + 0.1*maxbin8_EE.back();
-  std::sort( maxbin9_EE.begin(),	      maxbin9_EE.end());	  	     
-  double yRange9_EE 	= maxbin9_EE.back() + 0.1*maxbin9_EE.back();
+  double yRange8_EE 	= maxbin8_EE.back() + 0.1*maxbin8_EE.back();
+  /*std::sort( maxbin9_EE.begin(),	      maxbin9_EE.end());	  	     
+   double yRange9_EE 	= maxbin9_EE.back() + 0.1*maxbin9_EE.back();
   */		    				    
    
 
@@ -253,6 +271,7 @@ void makePlot_input() {
   h_phiWidth_S[0]   ->SetMaximum(yRange5_EB);
   h_r9_S[0]         ->SetMaximum(yRange6_EB);
   h_s4_S[0]         ->SetMaximum(yRange7_EB);
+  h_chi2_S[0]       ->SetMaximum(yRange8_EB);
 
   h_etascPhot_S[1]  ->SetMaximum(yRange0_EE);
   h_ptPhot_S[1]     ->SetMaximum(yRange1_EE);
@@ -262,6 +281,7 @@ void makePlot_input() {
   h_phiWidth_S[1]   ->SetMaximum(yRange5_EE);
   h_r9_S[1]         ->SetMaximum(yRange6_EE);
   h_s4_S[1]         ->SetMaximum(yRange7_EE);
+  h_chi2_S[1]       ->SetMaximum(yRange8_EE);
 
 
   TCanvas* c_etascPhot_EB = new TCanvas("c_etascPhot_EB", "", 1);
@@ -272,6 +292,7 @@ void makePlot_input() {
   TCanvas* c_phiWidth_EB  = new TCanvas("c_phiWidth_EB", "", 1);
   TCanvas* c_r9_EB        = new TCanvas("c_r9_EB", "", 1);
   TCanvas* c_s4_EB        = new TCanvas("c_s4_EB", "", 1);
+  TCanvas* c_chi2_EB        = new TCanvas("c_chi2_EB", "", 1);
 
   TCanvas* c_etascPhot_EE = new TCanvas("c_etascPhot_EE", "", 1);
   TCanvas* c_ptPhot_EE    = new TCanvas("c_ptPhot_EE", "", 1);
@@ -281,6 +302,7 @@ void makePlot_input() {
   TCanvas* c_phiWidth_EE  = new TCanvas("c_phiWidth_EE", "", 1);
   TCanvas* c_r9_EE        = new TCanvas("c_r9_EE", "", 1);
   TCanvas* c_s4_EE        = new TCanvas("c_s4_EE", "", 1);
+  TCanvas* c_chi2_EE        = new TCanvas("c_chi2_EE", "", 1);
   TCanvas* c_rrPreshower  = new TCanvas("c_rrPreshower", "", 1);
 
   c_etascPhot_EB->cd();
@@ -332,6 +354,13 @@ void makePlot_input() {
   c_s4_EB->Close();
 
 
+  c_chi2_EB->cd();
+  h_chi2_S[0]->DrawNormalized();
+  h_chi2_B[0]->DrawNormalized("same");
+  c_chi2_EB->SaveAs("plot_input/c_chi2_EB.png");
+  c_chi2_EB->Close();
+
+
   c_etascPhot_EE->cd();
   h_etascPhot_S[1]->DrawNormalized();
   h_etascPhot_B[1]->DrawNormalized("same");
@@ -380,15 +409,15 @@ void makePlot_input() {
   c_s4_EE->SaveAs("plot_input/c_s4_EE.png");
   c_s4_EE->Close();
 
-  c_rrPreshower->cd();
+  /*  c_rrPreshower->cd();
   h_rrPreshower_S->DrawNormalized();
   h_rrPreshower_B->DrawNormalized("same");
   c_rrPreshower->SaveAs("plot_input/c_rrPreshower.png");
   c_rrPreshower->Close();
-
+  */
 
   //canvas with legend
-  TCanvas* c_legend = new TCanvas("c_legend", "", 1);
+  /*  TCanvas* c_legend = new TCanvas("c_legend", "", 1);
   TLegend* leg = new TLegend(0.2, 0.2, 0.7, 0.5 );
   leg->SetBorderSize(0);
   leg->SetFillColor(0);
@@ -398,6 +427,6 @@ void makePlot_input() {
   c_legend->cd();
   leg->Draw();
   c_legend->SaveAs("plot_input/legend.png");
-  c_legend->Close();
+  c_legend->Close();*/
 
 }
