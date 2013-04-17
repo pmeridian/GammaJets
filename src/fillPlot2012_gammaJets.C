@@ -56,6 +56,9 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     // patological events
     if (npu>=60) continue;    
 
+    // test to remove possible duplicated events between samples
+    // if ( signal<6 && (ISRGamma>0 || FSRGamma>0) ) continue; // chiara
+
     // first vertex must be good
     if (vtxId<0) continue;
 
@@ -78,12 +81,11 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
     if (nPhot_presel>100) theNumber = 100;
     for (int theGamma=0; theGamma<theNumber; theGamma++) {
 
-      bool isFullySel     = true;
-
       // for effective area calculation
       int theEAregion = effectiveAreaRegion(etaPhot_presel[theGamma]); 
       if (theEAregion>6) continue;
 
+      // ---------------------------------------------------------------------------
       // preselection to really emulate the single gamma HLT requirements (current preselection is H->gg one)
       bool isReallyPresel = true;      
       float preselECAL    = pid_jurECAL03_presel[theGamma]  - 0.012*ptPhot_presel[theGamma];  
@@ -101,10 +103,10 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
       }
       if( !isReallyPresel ) continue;
 
+      // ---------------------------------------------------------------------------
       /*
-      // for effective area calculation
-      int theEAregion = effectiveAreaRegion(etaPhot_presel[theGamma]); 
-      if (theEAregion>6) continue;
+      // full 2012 egamma pog cut based selection
+      bool isFullySel = true;
 
       // isolations corrected with effective areas
       float rhoCorrCharged = pid_pfIsoCharged03ForCiC_presel[theGamma] - rhoAllJets*EA_chargedH[theEAregion];   
@@ -115,7 +117,7 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
       if (rhoCorrPhoton<0)  rhoCorrPhoton  = 0.;
 
       // if(pid_hasMatchedPromptElephot[theGamma]) isFullySel = false;   // already applied at preselection level
-      if(pid_HoverE_presel[theGamma]>0.05)      isFullySel = false;       
+      if (pid_HoverE_presel[theGamma]>0.05)     isFullySel = false;       
       if (theEAregion<2) {  // EB
 	if (sEtaEtaPhot_presel[theGamma]>0.011) isFullySel = false;
 	if (rhoCorrCharged > 1.5)               isFullySel = false;
@@ -127,12 +129,13 @@ TH1D * fillPlot2012_gammaJets::Plot(string var, string name, int nbin, double mi
 	if (rhoCorrNeutral > 1.5 + 0.04*ptPhot_presel[theGamma])  isFullySel = false;
 	if (rhoCorrPhoton  > 1.0 + 0.005*ptPhot_presel[theGamma]) isFullySel = false;
       }
+      if( !isFullySel ) continue;
       */
 
       // photon ID MVA
       // float theIdMva = PhotonIDMVA(theGamma);
 
-      if (isFullySel) fullSelected.push_back(theGamma); 
+      fullSelected.push_back(theGamma); 
     }
 
     // choose the two highest pT preselected gammas 
@@ -425,8 +428,8 @@ void fillPlot2012_gammaJets::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
 
-  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EB/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EB/TMVAClassification_BDT.weights.xml");
-  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EE/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_new_EE/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
+  tmvaReaderID_Single_Barrel->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
+  tmvaReaderID_Single_Endcap->BookMVA("AdaBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
 }
