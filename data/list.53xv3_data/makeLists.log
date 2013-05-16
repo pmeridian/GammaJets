@@ -1,0 +1,63 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Working on dataset DoubleElectron_Run2012D-PromptReco-v1
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+split -l 20 -d -a 2 /tmp/uniq.DoubleElectron_Run2012D-PromptReco-v1.files.tmp DoubleElectron_Run2012D-PromptReco-v1_
+# of root files in directory: 1176
+# of uniq files in directory: 1118 /tmp/uniq.DoubleElectron_Run2012D-PromptReco-v1.files.tmp
+# of files per list: 20
+new list:   DoubleElectron_Run2012D-PromptReco-v1_00.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_01.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_02.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_03.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_04.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_05.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_06.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_07.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_08.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_09.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_10.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_11.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_12.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_13.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_14.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_15.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_16.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_17.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_18.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_19.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_20.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_21.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_22.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_23.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_24.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_25.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_26.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_27.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_28.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_29.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_30.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_31.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_32.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_33.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_34.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_35.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_36.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_37.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_38.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_39.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_40.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_41.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_42.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_43.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_44.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_45.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_46.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_47.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_48.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_49.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_50.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_51.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_52.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_53.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_54.list
+new list:   DoubleElectron_Run2012D-PromptReco-v1_55.list
