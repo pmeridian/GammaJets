@@ -213,24 +213,27 @@ def main(options,args):
     plotsDir=options.plotsDir
     additionalText=options.additionalText
     additionalCuts=options.additionalCuts
-    
+
+    #Creating output dir
     try:
         os.mkdir(plotsDir)
     except:
         pass
-    
+
+    #Reading data files list
     lines = [line.strip() for line in open(options.dataFiles)]
     for line in lines:
         if line.startswith('#'):
             continue
         data.Add(line)
 
+    #Reading mc files list
     lines = [line.strip() for line in open(options.mcFiles)]
     for line in lines:
         if line.startswith('#'):
             continue
         mc.Add(line)
-
+    #Setting up parallel processing
     ncpu=multiprocessing.cpu_count()
 
     if (options.numberOfCPU>0):
@@ -238,9 +241,9 @@ def main(options,args):
         
     pool = multiprocessing.Pool(processes=ncpu)
 
-    #run all the samples in parallel
+    #run all the samples in parallel 
     pars=[ dict(variable=x,plotsDir=plotsDir,additional_cuts=additionalCuts,additional_text=additionalText) for x in variables.keys() ]
-    print pars
+    #      print pars
     pool.map(plot, pars)
 
     #for variable in variables.keys():
