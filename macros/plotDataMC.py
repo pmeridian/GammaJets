@@ -3,6 +3,7 @@
 from optparse import OptionParser, make_option
 from ROOT import *
 import subprocess
+import multiprocessing
 import os
 
 treeName="finalTree"
@@ -13,9 +14,15 @@ text="CMS Preliminary #sqrt{s}=8 TeV"
 
 variables={}
 variables['ptPhot']='ptPhot'
+variables['etaPhot']='etaPhot'
+variables['mvaIdPhot']='mvaIdPhot'
+variables['nvtx']='nvtx'
 
 plotPars={}
 plotPars['ptPhot']=dict( name='ptPhot', nBins=60, xMin=0., xMax=300., xaxisLabel="#gamma p_{T} (GeV/c)")
+plotPars['etaPhot']=dict( name='etaPhot', nBins=60, xMin=-3., xMax=3., xaxisLabel="#gamma #eta")
+plotPars['mvaIdPhot']=dict( name='mvaIdPhot', nBins=100, xMin=0., xMax=1., xaxisLabel="#gamma MVA output")
+plotPars['nvtx']=dict( name='nvtx', nBins=41, xMin=-0.5, xMax=40.5, xaxisLabel="nvtx")
 
 cuts={}
 cuts['All']='1' #just to avoid error
@@ -60,128 +67,141 @@ def splitCanvas(c):
     for pad in pads:
         pad.Draw()
     return pads
-                
-def plot(variable,plotsDir,additional_text="",savefmts=[".C",".png",".pdf"]):
-    c = TCanvas(variable,variable,1000,900)
+
+def drawText(additional_text):
+    tex_m=TLatex()
+    tex_m.SetNDC()
+    tex_m.SetTextAlign(12)
+    tex_m.SetTextSize(0.037)
+    tex_m.SetLineWidth(2)
+    tex_m.DrawLatex(0.25,0.94,text)
+    
+    if (additional_text != ""):
+        tex_m.SetTextSize(0.045)
+        tex_m.DrawLatex(0.63,0.63,additional_text)
+        
+#def plot(variable,plotsDir,additional_cuts="1",pars['additional_text']="",savefmts=[".C",".png",".pdf"]):
+def plot(pars,savefmts=[".C",".png",".pdf"]):
+    c = TCanvas(pars['variable'],pars['variable'],1000,900)
     customizeCanvas(c)
     
     for cut in cuts.keys():
-        histos[str(variable)+'_data_'+str(cut)]=TH1F(str(plotPars[str(variable)]['name'])+"_data_"+str(cut),str(plotPars[str(variable)]['name'])+"_data_"+str(cut),int(plotPars[str(variable)]['nBins']),float(plotPars[str(variable)]['xMin']),float(plotPars[str(variable)]['xMax']))
-        histos[str(variable)+'_data_'+str(cut)].Sumw2()
+        histos[str(pars['variable'])+'_data_'+str(cut)]=TH1F(str(plotPars[str(pars['variable'])]['name'])+"_data_"+str(cut),str(plotPars[str(pars['variable'])]['name'])+"_data_"+str(cut),int(plotPars[str(pars['variable'])]['nBins']),float(plotPars[str(pars['variable'])]['xMin']),float(plotPars[str(pars['variable'])]['xMax']))
+        histos[str(pars['variable'])+'_data_'+str(cut)].Sumw2()
         for type in mc_types.keys():
-            histos[str(variable)+'_mc_'+type+"_"+str(cut)]=TH1F(str(plotPars[str(variable)]['name'])+"_mc_"+type+"_"+str(cut),str(plotPars[str(variable)]['name'])+"_mc_"+type+"_"+str(cut),plotPars[str(variable)]['nBins'],plotPars[str(variable)]['xMin'],plotPars[str(variable)]['xMax'])
-            histos[str(variable)+'_mc_'+type+"_"+str(cut)].Sumw2()
+            histos[str(pars['variable'])+'_mc_'+type+"_"+str(cut)]=TH1F(str(plotPars[str(pars['variable'])]['name'])+"_mc_"+type+"_"+str(cut),str(plotPars[str(pars['variable'])]['name'])+"_mc_"+type+"_"+str(cut),plotPars[str(pars['variable'])]['nBins'],plotPars[str(pars['variable'])]['xMin'],plotPars[str(pars['variable'])]['xMax'])
+            histos[str(pars['variable'])+'_mc_'+type+"_"+str(cut)].Sumw2()
         #Filling histos
-        data.Project( histos[str(variable)+'_data_'+str(cut)].GetName(), str(variables[str(variable)]), str(cuts[cut]))
-        histos[str(variable)+'_data_'+str(cut)].Print()
+        data.Project( histos[str(pars['variable'])+'_data_'+str(cut)].GetName(), str(variables[str(pars['variable'])]), str(cuts[cut])+"&&"+pars['additional_cuts'])
+        histos[str(pars['variable'])+'_data_'+str(cut)].Print()
         for aopt in draw_opts['data'].keys():
-            a=histos[str(variable)+'_data_'+str(cut)]
+            a=histos[str(pars['variable'])+'_data_'+str(cut)]
             eval('a.'+str(aopt)+'('+str(draw_opts['data'][aopt])+')')
             
         for mc_type in mc_types.keys():
-            mc.Project( histos[str(variable)+'_mc_'+mc_type+"_"+str(cut)].GetName(), str(variables[str(variable)]), "("+str(cuts[cut])+"&&"+str(mc_types[mc_type])+")*"+weight_var )
-            histos[str(variable)+'_mc_'+mc_type+"_"+str(cut)].Print()
+            mc.Project( histos[str(pars['variable'])+'_mc_'+mc_type+"_"+str(cut)].GetName(), str(variables[str(pars['variable'])]), "("+str(cuts[cut])+"&&"+pars['additional_cuts']+"&&"+str(mc_types[mc_type])+")*"+weight_var )
+            histos[str(pars['variable'])+'_mc_'+mc_type+"_"+str(cut)].Print()
             for aopt in draw_opts['mc_'+mc_type].keys():
-                a=histos[str(variable)+'_mc_'+mc_type+"_"+str(cut)]
+                a=histos[str(pars['variable'])+'_mc_'+mc_type+"_"+str(cut)]
                 eval('a.'+str(aopt)+'('+str(draw_opts['mc_'+mc_type][aopt])+')')
 
-        c.cd(1)
-        histos[str(variable)+'_data_'+str(cut)].Draw("PE")
-        histos[str(variable)+'_data_'+str(cut)].SetMaximum(histos[str(variable)+'_data_'+str(cut)].GetMaximum()*1.4)
-        histos[str(variable)+'_data_'+str(cut)].SetMinimum(0)
-        histos[str(variable)+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(variable)]['xaxisLabel']))
-
+        #Stacked MC Histogram
         stack=THStack()
         mc_types_keys=mc_types.keys()
         mc_types_keys.sort()
         for mc_type in range(len(mc_types_keys)):
-            stack.Add(histos[str(variable)+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)])
+            stack.Add(histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)])
+            
+        histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PE")
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*1.4)
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0)
+        histos[str(pars['variable'])+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(pars['variable'])]['xaxisLabel']))
         stack.Draw("HSAME")
-        histos[str(variable)+'_data_'+str(cut)].Draw("PESAME")
+        histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PESAME")
 
+        #Legend
         a=TLegend(0.63,0.68,0.88,0.88)
         a.SetBorderSize(0)
         a.SetFillColor(0)
         a.SetTextSize(0.038)
         a.SetHeader(str(cut))
-        a.AddEntry( histos[str(variable)+'_data_'+str(cut)],"Data","PL" )
+        a.AddEntry( histos[str(pars['variable'])+'_data_'+str(cut)],"Data","PL" )
         for mc_type in range(len(mc_types_keys)):
-             a.AddEntry( histos[str(variable)+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)], mc_types_keys[mc_type], "F" )
+             a.AddEntry( histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)], mc_types_keys[mc_type], "F" )
         a.Draw()
 
-        tex_m=TLatex();
-        tex_m.SetNDC();
-        tex_m.SetTextAlign(12);
-        tex_m.SetTextSize(0.037);
-        tex_m.SetLineWidth(2);
-        tex_m.DrawLatex(0.25,0.94,text);
+        #Additional text
+        drawText(pars['additional_text'])
 
-        if (additional_text != ""):
-            tex_m.SetTextSize(0.045);
-            tex_m.DrawLatex(0.63,0.63,additional_text);
-
-                        
+        #Save plots
         c.SetLogy(0)
         for format in savefmts:
-            c.SaveAs(plotsDir+"/"+str(variable)+str(cut)+format)
+            c.SaveAs(pars['plotsDir']+"/"+str(pars['variable'])+str(cut)+format)
+
+        # now log and ratio plots in splitted canvas
         c.Clear()
         pads=splitCanvas(c)
+
+        #First pad
         pads[0].cd()
         gPad.SetLogy(1)
-        histos[str(variable)+'_data_'+str(cut)].Draw("PE")
-        histos[str(variable)+'_data_'+str(cut)].SetMaximum(histos[str(variable)+'_data_'+str(cut)].GetMaximum()*1.4)
-        histos[str(variable)+'_data_'+str(cut)].SetMinimum(0)
-        histos[str(variable)+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(variable)]['xaxisLabel']))
+        histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PE")
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*1.4)
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0)
+        histos[str(pars['variable'])+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(pars['variable'])]['xaxisLabel']))
         stack.Draw("HSAME")
-        histos[str(variable)+'_data_'+str(cut)].Draw("PESAME")
+        histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PESAME")
 
         a=TLegend(0.63,0.68,0.88,0.88)
         a.SetBorderSize(0)
         a.SetFillColor(0)
         a.SetTextSize(0.038)
         a.SetHeader(str(cut))
-        a.AddEntry( histos[str(variable)+'_data_'+str(cut)],"Data","PL" )
+        a.AddEntry( histos[str(pars['variable'])+'_data_'+str(cut)],"Data","PL" )
         for mc_type in range(len(mc_types_keys)):
-             a.AddEntry( histos[str(variable)+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)], mc_types_keys[mc_type], "F" )
+             a.AddEntry( histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)], mc_types_keys[mc_type], "F" )
         a.Draw()
 
-        tex_m=TLatex();
-        tex_m.SetNDC();
-        tex_m.SetTextAlign(12);
-        tex_m.SetTextSize(0.037);
-        tex_m.SetLineWidth(2);
-        tex_m.DrawLatex(0.25,0.94,text);
+        drawText(pars['additional_text'])
 
-        if (additional_text != ""):
-            tex_m.SetTextSize(0.045);
-            tex_m.DrawLatex(0.63,0.63,additional_text);
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*4.)
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0.1)
 
-        histos[str(variable)+'_data_'+str(cut)].SetMaximum(histos[str(variable)+'_data_'+str(cut)].GetMaximum()*4.)
-        histos[str(variable)+'_data_'+str(cut)].SetMinimum(0.1)
+        #Second pad (bottom)
         pads[1].cd()
         pads[1].SetBottomMargin(0.2)
         pads[1].SetGridy(1)
-        ratio=histos[str(variable)+'_data_'+str(cut)].Clone("ratio")
+
+        #prepare ratio histogram
+        ratio=histos[str(pars['variable'])+'_data_'+str(cut)].Clone("ratio")
         for mc_type in range(len(mc_types_keys)):
             if (mc_type==0):
-                sum=histos[str(variable)+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)].Clone("sum")
+                sum=histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)].Clone("sum")
             else:
-                sum.Add(histos[str(variable)+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)])
+                sum.Add(histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)])
         ratio.Divide(sum)
+        
         ratio.SetMaximum(3)
         ratio.SetMinimum(0.2)
+
+        ratio.GetYaxis().SetTitle("Data/MC")
         ratio.GetYaxis().SetLabelSize(0.07)
         ratio.GetXaxis().SetLabelSize(0.07)
         ratio.GetXaxis().SetTitleSize(0.08)
+        ratio.GetYaxis().SetTitleSize(0.08)
         ratio.GetXaxis().SetTitleOffset(1.)
+        ratio.GetYaxis().SetTitleOffset(1.)
         ratio.Draw("PE")
-        aL=TLine(float(plotPars[str(variable)]['xMin']),1,float(plotPars[str(variable)]['xMax']),1)
+
+        #Draw a line @1
+        aL=TLine(float(plotPars[str(pars['variable'])]['xMin']),1,float(plotPars[str(pars['variable'])]['xMax']),1)
         aL.SetLineColor(4)
         aL.SetLineWidth(2)
         aL.Draw()
+        
         ratio.Draw("PESAME")
         for format in savefmts:
-            c.SaveAs(plotsDir+"/"+str(variable)+str(cut)+"_log"+format)
+            c.SaveAs(pars['plotsDir']+"/"+str(pars['variable'])+str(cut)+"_log"+format)
 
 def main(options,args):
 
@@ -192,6 +212,7 @@ def main(options,args):
 
     plotsDir=options.plotsDir
     additionalText=options.additionalText
+    additionalCuts=options.additionalCuts
     
     try:
         os.mkdir(plotsDir)
@@ -210,8 +231,20 @@ def main(options,args):
             continue
         mc.Add(line)
 
-    for variable in variables.keys():
-        plot(variable,plotsDir,additionalText)
+    ncpu=multiprocessing.cpu_count()
+
+    if (options.numberOfCPU>0):
+        ncpu=options.numberOfCPU
+        
+    pool = multiprocessing.Pool(processes=ncpu)
+
+    #run all the samples in parallel
+    pars=[ dict(variable=x,plotsDir=plotsDir,additional_cuts=additionalCuts,additional_text=additionalText) for x in variables.keys() ]
+    print pars
+    pool.map(plot, pars)
+
+    #for variable in variables.keys():
+    #    plot(variable,plotsDir,additionalCuts,additionalText)
 
     
 if __name__ == "__main__":
@@ -234,6 +267,11 @@ if __name__ == "__main__":
         make_option("--additionalText",
                     action="store", type="string", dest="additionalText",
                     default="",
+                    help="", metavar=""
+                    ),
+        make_option("--additionalCuts",
+                    action="store", type="string", dest="additionalCuts",
+                    default="1",
                     help="", metavar=""
                     ),
         make_option("--numberOfCPU",
