@@ -17,12 +17,14 @@ variables['ptPhot']='ptPhot'
 variables['etaPhot']='etaPhot'
 variables['mvaIdPhot']='mvaIdPhot'
 variables['nvtx']='nvtx'
+variables['combinedPfIso03Phot']='combinedPfIso03Phot'
 
 plotPars={}
-plotPars['ptPhot']=dict( name='ptPhot', nBins=60, xMin=0., xMax=300., xaxisLabel="#gamma p_{T} (GeV/c)")
+plotPars['ptPhot']=dict( name='ptPhot', nBins=60, xMin=0., xMax=300., xaxisLabel="#gamma p_{T} (GeV)")
 plotPars['etaPhot']=dict( name='etaPhot', nBins=60, xMin=-3., xMax=3., xaxisLabel="#gamma #eta")
 plotPars['mvaIdPhot']=dict( name='mvaIdPhot', nBins=100, xMin=0., xMax=1., xaxisLabel="#gamma MVA output")
 plotPars['nvtx']=dict( name='nvtx', nBins=41, xMin=-0.5, xMax=40.5, xaxisLabel="nvtx")
+plotPars['combinedPfIso03Phot']=dict( name='combinedPfIso03Phot', nBins=200, xMin=-5, xMax=15, xaxisLabel="combined PfIso #DeltaR=0.3 (GeV)")
 
 cuts={}
 cuts['All']='1' #just to avoid error
