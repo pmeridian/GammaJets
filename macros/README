@@ -1,0 +1,3 @@
+Examples:
+
+./plotDataMC.py --dataFiles="data_hlt50.txt" --mcFiles="mc_hlt50.txt" --additionalText="HLT 50" --plotsDir="plots_hlt50/"
