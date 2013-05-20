@@ -123,6 +123,23 @@ Float_t GammaJetAnalysis::PhotonIDMVA(Int_t iPhoton)
   tmva_photonid_rr           = 0.0; 
   if (rr_presel[iPhoton]>0. && rr_presel[iPhoton]<999999.) tmva_photonid_rr = rr_presel[iPhoton];
 
+  if (sampleIndex>0)
+    {
+      if (isEBPhot[iPhoton]) {
+        tmva_photonid_r9 = 1.0045*tmva_photonid_r9 + 0.0010;
+        tmva_photonid_s4ratio = 1.01894*tmva_photonid_s4ratio - 0.01034;
+        tmva_photonid_sieie = 0.891832*tmva_photonid_sieie + 0.0009133;
+        tmva_photonid_etawidth =  1.04302*tmva_photonid_etawidth - 0.000618;
+        tmva_photonid_phiwidth =  1.00002*tmva_photonid_phiwidth - 0.000371;
+      } else {
+        tmva_photonid_r9 = 1.0086*tmva_photonid_r9 - 0.0007;
+        tmva_photonid_s4ratio = 1.04969*tmva_photonid_s4ratio - 0.03642;
+        tmva_photonid_sieie = 0.99470*tmva_photonid_sieie + 0.00003;
+        tmva_photonid_etawidth =  0.903254*tmva_photonid_etawidth + 0.001346;
+        tmva_photonid_phiwidth =  0.99992*tmva_photonid_phiwidth - 0.00000048;
+      }
+    }
+
   bool isEBphot = true;
   if (fabs(etascPhot_presel[iPhoton])>1.5) isEBphot = false; 
 
