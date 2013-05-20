@@ -40,8 +40,9 @@ public :
 /*    int ebcat; */
 /*    int r9cat; */
    int hltcut;
+   bool hltiso;
    int mvaIDWP;
-   
+
    bool  isMVAinitialized;
 
    TFile*         outFile;
@@ -51,12 +52,12 @@ public :
 
    bool dopureweight;
 
-   bool isHLT_30();
-   bool isHLT_50();
-   bool isHLT_75();
-   bool isHLT_90();
+   bool isHLT_30(bool isoCut);
+   bool isHLT_50(bool isoCut);
+   bool isHLT_75(bool isoCut);
+   bool isHLT_90(bool isoCut);
    bool isHLT_150();
-   bool passHLT();
+   bool passHLT(bool isoCut);
    int effectiveAreaRegion(float theEta);
    float GetPUWeight();
    float GetSampleWeight();
@@ -99,7 +100,7 @@ public :
 #endif
 
 #ifdef GammaJetAnalysis_cxx
-GammaJetAnalysis::GammaJetAnalysis(TTree *tree) : fChain(0) , isMVAinitialized(false), dopureweight(true)
+GammaJetAnalysis::GammaJetAnalysis(TTree *tree) : fChain(0) , isMVAinitialized(false), dopureweight(true), hltiso(true)
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.

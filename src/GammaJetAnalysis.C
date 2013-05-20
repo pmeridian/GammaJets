@@ -63,7 +63,7 @@ void GammaJetAnalysis::Loop()
       // first vertex must be good
       if (vtxId<0) continue;
       
-      if (!passHLT()) continue;
+      if (!passHLT(hltiso)) continue;
 
       std::vector<int> photons=sortedPtPhotons();
       if (photons.size()<1)
@@ -123,9 +123,13 @@ Float_t GammaJetAnalysis::PhotonIDMVA(Int_t iPhoton)
   tmva_photonid_rr           = 0.0; 
   if (rr_presel[iPhoton]>0. && rr_presel[iPhoton]<999999.) tmva_photonid_rr = rr_presel[iPhoton];
 
+  bool isEBphot = true;
+  if (fabs(etascPhot_presel[iPhoton])>1.479) isEBphot = false; 
+
+  //rescale MC to match data (Hgg analysis rescalings)
   if (sampleIndex>0)
     {
-      if (isEBPhot[iPhoton]) {
+      if (isEBphot) {
         tmva_photonid_r9 = 1.0045*tmva_photonid_r9 + 0.0010;
         tmva_photonid_s4ratio = 1.01894*tmva_photonid_s4ratio - 0.01034;
         tmva_photonid_sieie = 0.891832*tmva_photonid_sieie + 0.0009133;
@@ -139,9 +143,6 @@ Float_t GammaJetAnalysis::PhotonIDMVA(Int_t iPhoton)
         tmva_photonid_phiwidth =  0.99992*tmva_photonid_phiwidth - 0.00000048;
       }
     }
-
-  bool isEBphot = true;
-  if (fabs(etascPhot_presel[iPhoton])>1.5) isEBphot = false; 
 
   if (isEBphot)
     mva = tmvaReaderID_Single_Barrel->EvaluateMVA("GradBoost");
@@ -194,50 +195,89 @@ void GammaJetAnalysis::SetAllMVA() {
   return;
 }
 
-bool GammaJetAnalysis::isHLT_30() {
+bool GammaJetAnalysis::isHLT_30(bool isoCut) {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v18") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v19") isok=true;
+    if (isoCut)
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v17") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v18") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v19") isok=true;
+      }
+    else
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v11") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v12") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v13") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_v14") isok=true;
+      }
   }
   return isok;
 }
 
-bool GammaJetAnalysis::isHLT_50() {
-
+bool GammaJetAnalysis::isHLT_50(bool isoCut) {
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v17") isok=true;
+    if (isoCut)
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v15") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v16") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v17") isok=true;
+      }
+    else
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v7") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v8") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v9") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_v10") isok=true;
+      }
   }
   return isok;
 }
 
-bool GammaJetAnalysis::isHLT_75() {
+bool GammaJetAnalysis::isHLT_75(bool isoCut) {
   
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
+    if (isoCut)
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
+      }
+    else
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v10") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v11") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v12") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_v13") isok=true;
+      }
   }
   return isok;
 }
 
-bool GammaJetAnalysis::isHLT_90() {
+bool GammaJetAnalysis::isHLT_90(bool isoCut) {
   
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v13") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v15") isok=true;
+    if (isoCut)
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v13") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v14") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v15") isok=true;
+      }
+    else
+      {
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v7") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v8") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v9") isok=true;
+	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_v10") isok=true;
+      }
   }
   return isok;
 }
@@ -406,13 +446,13 @@ std::vector<int> GammaJetAnalysis::sortedPtPhotons()
   return sortedPhotons;
 }
 
-bool GammaJetAnalysis::passHLT()
+bool GammaJetAnalysis::passHLT(bool isoCut)
 {
   // HLT selection - for data only
-  if ( sampleIndex==0 && hltcut==30 && !isHLT_30() )  return false;
-  if ( sampleIndex==0 && hltcut==50 && !isHLT_50() )  return false;
-  if ( sampleIndex==0 && hltcut==75 && !isHLT_75() )  return false;
-  if ( sampleIndex==0 && hltcut==90 && !isHLT_90() )  return false;
+  if ( sampleIndex==0 && hltcut==30 && !isHLT_30(isoCut) )  return false;
+  if ( sampleIndex==0 && hltcut==50 && !isHLT_50(isoCut) )  return false;
+  if ( sampleIndex==0 && hltcut==75 && !isHLT_75(isoCut) )  return false;
+  if ( sampleIndex==0 && hltcut==90 && !isHLT_90(isoCut) )  return false;
   return true;
 }
 
