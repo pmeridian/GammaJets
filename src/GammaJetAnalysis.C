@@ -127,22 +127,22 @@ Float_t GammaJetAnalysis::PhotonIDMVA(Int_t iPhoton)
   if (fabs(etascPhot_presel[iPhoton])>1.479) isEBphot = false; 
 
   //rescale MC to match data (Hgg analysis rescalings)
-  if (sampleIndex>0)
-    {
-      if (isEBphot) {
-        tmva_photonid_r9 = 1.0045*tmva_photonid_r9 + 0.0010;
-        tmva_photonid_s4ratio = 1.01894*tmva_photonid_s4ratio - 0.01034;
-        tmva_photonid_sieie = 0.891832*tmva_photonid_sieie + 0.0009133;
-        tmva_photonid_etawidth =  1.04302*tmva_photonid_etawidth - 0.000618;
-        tmva_photonid_phiwidth =  1.00002*tmva_photonid_phiwidth - 0.000371;
-      } else {
-        tmva_photonid_r9 = 1.0086*tmva_photonid_r9 - 0.0007;
-        tmva_photonid_s4ratio = 1.04969*tmva_photonid_s4ratio - 0.03642;
-        tmva_photonid_sieie = 0.99470*tmva_photonid_sieie + 0.00003;
-        tmva_photonid_etawidth =  0.903254*tmva_photonid_etawidth + 0.001346;
-        tmva_photonid_phiwidth =  0.99992*tmva_photonid_phiwidth - 0.00000048;
-      }
-    }
+//   if (sampleIndex>0)
+//     {
+//       if (isEBphot) {
+//         tmva_photonid_r9 = 1.0045*tmva_photonid_r9 + 0.0010;
+//         tmva_photonid_s4ratio = 1.01894*tmva_photonid_s4ratio - 0.01034;
+//         tmva_photonid_sieie = 0.891832*tmva_photonid_sieie + 0.0009133;
+//         tmva_photonid_etawidth =  1.04302*tmva_photonid_etawidth - 0.000618;
+//         tmva_photonid_phiwidth =  1.00002*tmva_photonid_phiwidth - 0.000371;
+//       } else {
+//         tmva_photonid_r9 = 1.0086*tmva_photonid_r9 - 0.0007;
+//         tmva_photonid_s4ratio = 1.04969*tmva_photonid_s4ratio - 0.03642;
+//         tmva_photonid_sieie = 0.99470*tmva_photonid_sieie + 0.00003;
+//         tmva_photonid_etawidth =  0.903254*tmva_photonid_etawidth + 0.001346;
+//         tmva_photonid_phiwidth =  0.99992*tmva_photonid_phiwidth - 0.00000048;
+//       }
+//     }
 
   if (isEBphot)
     mva = tmvaReaderID_Single_Barrel->EvaluateMVA("GradBoost");
