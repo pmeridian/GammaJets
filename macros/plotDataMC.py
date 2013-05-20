@@ -10,33 +10,42 @@ treeName="finalTree"
 data = TChain(treeName)
 mc = TChain(treeName)
 
+#Global text print on top of the plots
 text="CMS Preliminary #sqrt{s}=8 TeV"
 
+# associate name of the variable to the expression to print it. This list should contain all the variables to plot
 variables={}
 variables['ptPhot']='ptPhot'
 variables['etaPhot']='etaPhot'
 variables['mvaIdPhot']='mvaIdPhot'
 variables['nvtx']='nvtx'
 variables['combinedPfIso03Phot']='combinedPfIso03Phot'
+variables['rho']='rho'
 
+#characteristics of the plot of a given variable
 plotPars={}
 plotPars['ptPhot']=dict( name='ptPhot', nBins=60, xMin=0., xMax=300., xaxisLabel="#gamma p_{T} (GeV)")
 plotPars['etaPhot']=dict( name='etaPhot', nBins=60, xMin=-3., xMax=3., xaxisLabel="#gamma #eta")
 plotPars['mvaIdPhot']=dict( name='mvaIdPhot', nBins=100, xMin=0., xMax=1., xaxisLabel="#gamma MVA output")
 plotPars['nvtx']=dict( name='nvtx', nBins=41, xMin=-0.5, xMax=40.5, xaxisLabel="nvtx")
 plotPars['combinedPfIso03Phot']=dict( name='combinedPfIso03Phot', nBins=200, xMin=-5, xMax=15, xaxisLabel="combined PfIso #DeltaR=0.3 (GeV)")
+plotPars['rho']=dict( name='rho', nBins=100, xMin=0, xMax=40, xaxisLabel="#rho (GeV)")
 
+#possible selections for the plots
 cuts={}
 cuts['All']='1' #just to avoid error
 cuts['EB']='abs(etaPhot)<1.4442'
 cuts['EE']='abs(etaPhot)>1.566 && abs(etaPhot)<2.5'
 
+#different types of MC (and corresponding selection to differentiate them using ntuple variables"
 mc_types={}
 mc_types['Signal']="isMatchedPhot==1"
 mc_types['Bkg']="isMatchedPhot==0"
 
+#name of the variable to use as weight in MC
 weight_var="weight"
 
+#options to draw data and MC plots
 draw_opts={}
 draw_opts['data']=dict( SetMarkerSize=0.7,SetMarkerStyle=20,SetLineColor=1 )
 draw_opts['mc_Bkg']=dict( SetLineColor=kMagenta,SetLineWidth=2,SetFillColor=kMagenta,SetFillStyle=1001 )
@@ -55,7 +64,7 @@ def customizeCanvas(c):
     c.SetBorderMode(0)
     c.SetBorderSize(2)
     c.SetTickx(1)
-    c.SetLeftMargin(0.1)
+    c.SetLeftMargin(0.13)
     c.SetRightMargin(0.07)
     c.SetTopMargin(0.09)
     c.SetBottomMargin(0.1)
@@ -96,6 +105,7 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
         #Filling histos
         data.Project( histos[str(pars['variable'])+'_data_'+str(cut)].GetName(), str(variables[str(pars['variable'])]), str(cuts[cut])+"&&"+pars['additional_cuts'])
         histos[str(pars['variable'])+'_data_'+str(cut)].Print()
+        #Now set drawing options
         for aopt in draw_opts['data'].keys():
             a=histos[str(pars['variable'])+'_data_'+str(cut)]
             eval('a.'+str(aopt)+'('+str(draw_opts['data'][aopt])+')')
@@ -118,6 +128,8 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
         histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*1.4)
         histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0)
         histos[str(pars['variable'])+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(pars['variable'])]['xaxisLabel']))
+        histos[str(pars['variable'])+'_data_'+str(cut)].GetYaxis().SetTitle('Entries/'+str(histos[str(pars['variable'])+'_data_'+str(cut)].GetBinWidth(1)))
+        histos[str(pars['variable'])+'_data_'+str(cut)].GetYaxis().SetTitleOffset(1.5)
         stack.Draw("HSAME")
         histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PESAME")
 
@@ -140,20 +152,20 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
         for format in savefmts:
             c.SaveAs(pars['plotsDir']+"/"+str(pars['variable'])+str(cut)+format)
 
-        # now log and ratio plots in splitted canvas
+        # now log and ratio plots in a splitted canvas
         c.Clear()
         pads=splitCanvas(c)
 
         #First pad
         pads[0].cd()
         gPad.SetLogy(1)
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*4.)
+        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0.1)
+        histos[str(pars['variable'])+'_data_'+str(cut)].GetYaxis().SetTitleOffset(0.9)
         histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PE")
-        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*1.4)
-        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0)
-        histos[str(pars['variable'])+'_data_'+str(cut)].GetXaxis().SetTitle(str(plotPars[str(pars['variable'])]['xaxisLabel']))
         stack.Draw("HSAME")
         histos[str(pars['variable'])+'_data_'+str(cut)].Draw("PESAME")
-
+        
         a=TLegend(0.63,0.68,0.88,0.88)
         a.SetBorderSize(0)
         a.SetFillColor(0)
@@ -165,9 +177,6 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
         a.Draw()
 
         drawText(pars['additional_text'])
-
-        histos[str(pars['variable'])+'_data_'+str(cut)].SetMaximum(histos[str(pars['variable'])+'_data_'+str(cut)].GetMaximum()*4.)
-        histos[str(pars['variable'])+'_data_'+str(cut)].SetMinimum(0.1)
 
         #Second pad (bottom)
         pads[1].cd()
@@ -182,7 +191,6 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
             else:
                 sum.Add(histos[str(pars['variable'])+'_mc_'+mc_types_keys[mc_type]+"_"+str(cut)])
         ratio.Divide(sum)
-        
         ratio.SetMaximum(3)
         ratio.SetMinimum(0.2)
 
@@ -192,7 +200,7 @@ def plot(pars,savefmts=[".C",".png",".pdf"]):
         ratio.GetXaxis().SetTitleSize(0.08)
         ratio.GetYaxis().SetTitleSize(0.08)
         ratio.GetXaxis().SetTitleOffset(1.)
-        ratio.GetYaxis().SetTitleOffset(1.)
+        ratio.GetYaxis().SetTitleOffset(0.35)
         ratio.Draw("PE")
 
         #Draw a line @1
