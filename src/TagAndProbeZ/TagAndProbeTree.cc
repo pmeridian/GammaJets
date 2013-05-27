@@ -105,70 +105,70 @@ void TagAndProbeTree::Loop() {
   // general
 
   //output BDT
-  Float_t         BDT_output[10]; 
-  Float_t         r9Phot[10];     
-  Float_t         s4RatioPhot[10];
-  Float_t         sigmaRRPhot[10];
+  Float_t         BDT_output[20]; 
+  Float_t         r9Phot[20];     
+  Float_t         s4RatioPhot[20];
+  Float_t         sigmaRRPhot[20];
 
 
   //isocharged using the vertex 0
-  Float_t         pid_pfIsoCharged01ForCiC_[10];
-  Float_t         pid_pfIsoCharged02ForCiC_[10];
-  Float_t         pid_pfIsoCharged03ForCiC_[10];
-  Float_t         pid_pfIsoCharged04ForCiC_[10];
-  Float_t         pid_pfIsoCharged05ForCiC_[10];
-  Float_t         pid_pfIsoCharged06ForCiC_[10]; 
+  Float_t         pid_pfIsoCharged01ForCiC_[20];
+  Float_t         pid_pfIsoCharged02ForCiC_[20];
+  Float_t         pid_pfIsoCharged03ForCiC_[20];
+  Float_t         pid_pfIsoCharged04ForCiC_[20];
+  Float_t         pid_pfIsoCharged05ForCiC_[20];
+  Float_t         pid_pfIsoCharged06ForCiC_[20]; 
 
   //pass preselection
-  Int_t           passPreselection[10];
+  Int_t           passPreselection[20];
   
   //electrons
  
-  Int_t           isEleTag_match[10];
-  Int_t           isEleProbe_match[10];
-  Int_t           isEleProbe_ele_match[10];
-  Int_t           passLooseElePtEta_match[10];
-  Int_t           passLooseEleID_match[10];
-  Int_t           passLooseEleImpactPar_match[10];
-  Int_t           passLooseEleIsoRel_match[10];
-  Int_t           passLooseEleMinHits_match[10];
-  Int_t           passMediumElePtEta_match[10];
-  Int_t           passMediumEleID_match[10];
-  Int_t           passMediumEleImpactPar_match[10];
-  Int_t           passMediumEleIsoRel_match[10];
-  Int_t           passMediumEleMinHits_match[10];
-  Int_t           passTightElePtEta_match[10];
-  Int_t           passTightEleID_match[10];
-  Int_t           passTightEleImpactPar_match[10];
-  Int_t           passTightEleIsoRel_match[10];
-  Int_t           passTightEleMinHits_match[10];
+  Int_t           isEleTag_match[20];
+  Int_t           isEleProbe_match[20];
+  Int_t           isEleProbe_ele_match[20];
+  Int_t           passLooseElePtEta_match[20];
+  Int_t           passLooseEleID_match[20];
+  Int_t           passLooseEleImpactPar_match[20];
+  Int_t           passLooseEleIsoRel_match[20];
+  Int_t           passLooseEleMinHits_match[20];
+  Int_t           passMediumElePtEta_match[20];
+  Int_t           passMediumEleID_match[20];
+  Int_t           passMediumEleImpactPar_match[20];
+  Int_t           passMediumEleIsoRel_match[20];
+  Int_t           passMediumEleMinHits_match[20];
+  Int_t           passTightElePtEta_match[20];
+  Int_t           passTightEleID_match[20];
+  Int_t           passTightEleImpactPar_match[20];
+  Int_t           passTightEleIsoRel_match[20];
+  Int_t           passTightEleMinHits_match[20];
 
-  Int_t           genEleMatched_index_tag[10];
-  Int_t           genEleMatched_index_probe[10];
-  Float_t         deltaR_EleTagGenReco[10];
-  Float_t         deltaR_EleProbeGenReco[10];
-  Float_t         invMassEle_match[10];
+  Int_t           genEleMatched_index_tag[20];
+  Int_t           genEleMatched_index_probe[20];
+  Float_t         deltaR_EleTagGenReco[20];
+  Float_t         deltaR_EleProbeGenReco[20];
+  Float_t         invMassEle_match[20];
 
-  Int_t           isEleTag[10];
-  Int_t           isEleProbe[10];
-  Int_t           isEleProbe_ele[10];
-  Float_t         invMassEle[10];
+  Int_t           isEleTag[20];
+  Int_t           isEleProbe[20];
+  Int_t           isEleProbe_ele[20];
+  Float_t         invMassEle[20];
 
-  Int_t           passLooseElePtEta[10];
-  Int_t           passLooseEleID[10];
-  Int_t           passLooseEleImpactPar[10];
-  Int_t           passLooseEleIsoRel[10];
-  Int_t           passLooseEleMinHits[10];
-  Int_t           passMediumElePtEta[10];
-  Int_t           passMediumEleID[10];
-  Int_t           passMediumEleImpactPar[10];
-  Int_t           passMediumEleIsoRel[10];
-  Int_t           passMediumEleMinHits[10];
-  Int_t           passTightElePtEta[10];
-  Int_t           passTightEleID[10];
-  Int_t           passTightEleImpactPar[10];
-  Int_t           passTightEleIsoRel[10];
-  Int_t           passTightEleMinHits[10];
+  Int_t           passLooseElePtEta[20];
+  Int_t           passLooseEleID[20];
+  Int_t           passLooseEleImpactPar[20];
+  Int_t           passLooseEleIsoRel[20];
+  Int_t           passLooseEleMinHits[20];
+  Int_t           passMediumElePtEta[20];
+  Int_t           passMediumEleID[20];
+  Int_t           passMediumEleImpactPar[20];
+  Int_t           passMediumEleIsoRel[20];
+  Int_t           passMediumEleMinHits[20];
+  Int_t           passTightElePtEta[20];
+  Int_t           passTightEleID[20];
+  Int_t           passTightEleImpactPar[20];
+  Int_t           passTightEleIsoRel[20];
+  Int_t           passTightEleMinHits[20];
   
   cout << "Definisco i branch" << endl;
     
@@ -332,7 +332,7 @@ void TagAndProbeTree::Loop() {
   ana_tree->Branch("sMinMinPhot", sMinMinPhot, "sMinMinPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("alphaPhot", alphaPhot, "alphaPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("sEtaEtaPhot", sEtaEtaPhot, "sEtaEtaPhot[nPhot]/F");   //[nPhot]
-  ana_tree->Branch("sEtaPhiPhot", sEtaPhiPhot, "sEtaPhiPhot/F[nPhot]");   //[nPhot]
+  ana_tree->Branch("sEtaPhiPhot", sEtaPhiPhot, "sEtaPhiPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("sPhiPhiPhot", sPhiPhiPhot, "sPhiPhiPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("E1Phot", E1Phot, "E1Phot[nPhot]/F") ;   //[nPhot]
   ana_tree->Branch("E2OverE9Phot", E2OverE9Phot, "E2OverE9Phot[nPhot]/F");   //[nPhot]
@@ -369,7 +369,7 @@ void TagAndProbeTree::Loop() {
   ana_tree->Branch("passTightEleMinHits_match", passTightEleMinHits_match, "passTightEleMinHits_match[nPhot]/I");
   		   
   		   
-  ana_tree->Branch("invMassEle_match", invMassEle_match, "invMassEle_match[10]/F");
+  ana_tree->Branch("invMassEle_match", invMassEle_match, "invMassEle_match[20]/F");
   		   
   ana_tree->Branch("isEleTag", isEleTag, "isEleTag[nEle]/I");
   ana_tree->Branch("isEleProbe", isEleProbe, "isEleProbe[nPhot]/I");
@@ -392,7 +392,7 @@ void TagAndProbeTree::Loop() {
   ana_tree->Branch("passTightEleMinHits", passTightEleMinHits, "passTightEleMinHits[nPhot]/I");
   
 
-  ana_tree->Branch("invMassEle", invMassEle, "invMassEle[10]/F");
+  ana_tree->Branch("invMassEle", invMassEle, "invMassEle[20]/F");
   ana_tree->Branch("BDT_output", BDT_output, "BDT_output[nPhot]/F") ;   //[nPhot]
 
   // triggering paths      
@@ -522,10 +522,23 @@ void TagAndProbeTree::Loop() {
     TLorentzVector gen_tag, gen_probe, reco_tag, reco_probe, gen, reco;
     //vector<bool> vec_iselefromz(nMC);
   
-    float r9_phot[10];      
-    float s4Ratio_phot[10];
-    float sigmaRR[10];     
+    float r9_phot[20];      
+    float s4Ratio_phot[20];
+    float sigmaRR[20];     
 
+
+    int edge_phot, edge_ele;
+    if(nPhot>20) edge_phot = 20;
+    else edge_phot = nPhot;
+    if(nEle>20) edge_ele = 20;
+    else edge_ele = nEle;
+
+
+    for(int i=0; i<20; i++){
+      r9_phot[i] = -999.;     
+      s4Ratio_phot[i] = -999.;
+      sigmaRR[i] = -999.;     
+    }
 
     /********************************************************
      *                                                      *
@@ -681,6 +694,7 @@ void TagAndProbeTree::Loop() {
     //cout << "starting reco analysis" << endl;
     //cout << "nEle : " << nEle << "    nPhot : " << nPhot << endl;
 
+
     /***************************************************
      *                                                 *
      *                 RECO ELE & PHOTONS              *
@@ -691,7 +705,9 @@ void TagAndProbeTree::Loop() {
     //----------------------------------------------
     //            cluster shape corrections
     //----------------------------------------------
-    for (int i=0; i<nPhot; i++){
+
+
+    for (int i=0; i<edge_phot; i++){
       
       float rr2 = 0;
       rr2=pid_esXwidth[i]*pid_esXwidth[i]+pid_esYwidth[i]*pid_esYwidth[i];
@@ -849,69 +865,69 @@ void TagAndProbeTree::Loop() {
     */
     /////////////////////////////////////////////////////////////////////
     //int countPreselPhot = 0;  
-    int isEle_tag_match[10];
-    int isEle_probe_match[10];
-    int isEle_probe_ele_match[10];
+    int isEle_tag_match[20];
+    int isEle_probe_match[20];
+    int isEle_probe_ele_match[20];
     
-    int passLoose_ElePtEta_match[10];
-    int passLoose_EleID_match[10];
-    int passLoose_EleImpactPar_match[10];
-    int passLoose_EleIsoRel_match[10];
-    int passLoose_EleMinHits_match[10];
-    int passMedium_ElePtEta_match[10];
-    int passMedium_EleID_match[10];
-    int passMedium_EleImpactPar_match[10];
-    int passMedium_EleIsoRel_match[10];
-    int passMedium_EleMinHits_match[10];
-    int passTight_ElePtEta_match[10];
-    int passTight_EleID_match[10];
-    int passTight_EleImpactPar_match[10];
-    int passTight_EleIsoRel_match[10];
-    int passTight_EleMinHits_match[10];
+    int passLoose_ElePtEta_match[20];
+    int passLoose_EleID_match[20];
+    int passLoose_EleImpactPar_match[20];
+    int passLoose_EleIsoRel_match[20];
+    int passLoose_EleMinHits_match[20];
+    int passMedium_ElePtEta_match[20];
+    int passMedium_EleID_match[20];
+    int passMedium_EleImpactPar_match[20];
+    int passMedium_EleIsoRel_match[20];
+    int passMedium_EleMinHits_match[20];
+    int passTight_ElePtEta_match[20];
+    int passTight_EleID_match[20];
+    int passTight_EleImpactPar_match[20];
+    int passTight_EleIsoRel_match[20];
+    int passTight_EleMinHits_match[20];
 
 
     TLorentzVector  ele, phot;
-    TLorentzVector vector_ele[10], vector_phot[10]; 
-    int vec_genMatched_index_tag[10];
-    int vec_genMatched_index_probe[10];
+    TLorentzVector vector_ele[20], vector_phot[20]; 
+    int vec_genMatched_index_tag[20];
+    int vec_genMatched_index_probe[20];
 
     //int vec_recoMatched_index[nEle] = {-999.};
-    float vec_deltaR_tag[10] ;
-    float vec_deltaR_probe[10] ;
+    float vec_deltaR_tag[20] ;
+    float vec_deltaR_probe[20] ;
     float deltaR, deltaRmin;
     int recoMatched_index = -999.;
     int genMatched_index = -999.;
     //vector<float> vec_invmass_match;
-    float vec_invmass_match[10];
+    float vec_invmass_match[20];
     float invmass_match = - 999.;
 
-    int isEle_tag[10];
-    int isEle_probe[10];
-    int isEle_probe_ele[10];
-    float vec_invmass[10];
+    int isEle_tag[20];
+    int isEle_probe[20];
+    int isEle_probe_ele[20];
+    float vec_invmass[20];
     float invmass = - 999.;
 
-    int pass_preselection[10];
+    int pass_preselection[20];
 
-    int passLoose_ElePtEta[10];    
-    int passLoose_EleID[10];       
-    int passLoose_EleImpactPar[10];
-    int passLoose_EleIsoRel[10];   
-    int passLoose_EleMinHits[10];  
-    int passMedium_ElePtEta[10];    
-    int passMedium_EleID[10];       
-    int passMedium_EleImpactPar[10];
-    int passMedium_EleIsoRel[10];   
-    int passMedium_EleMinHits[10];  
-    int passTight_ElePtEta[10];    
-    int passTight_EleID[10];       
-    int passTight_EleImpactPar[10];
-    int passTight_EleIsoRel[10];   
-    int passTight_EleMinHits[10];  
+    int passLoose_ElePtEta[20];    
+    int passLoose_EleID[20];       
+    int passLoose_EleImpactPar[20];
+    int passLoose_EleIsoRel[20];   
+    int passLoose_EleMinHits[20];  
+    int passMedium_ElePtEta[20];    
+    int passMedium_EleID[20];       
+    int passMedium_EleImpactPar[20];
+    int passMedium_EleIsoRel[20];   
+    int passMedium_EleMinHits[20];  
+    int passTight_ElePtEta[20];    
+    int passTight_EleID[20];       
+    int passTight_EleImpactPar[20];
+    int passTight_EleIsoRel[20];   
+    int passTight_EleMinHits[20];  
 
     //cout << "initialization of reco quantities" << endl;
     //initialization
-    for (int i=0; i<10; i++){
+    for (int i=0; i<20; i++){
       isEle_tag_match[i] = 0;
       isEle_probe_match[i] = 0;
       isEle_probe_ele_match[i] = 0;
@@ -995,16 +1011,19 @@ void TagAndProbeTree::Loop() {
 
     //cout << "starting Tag&Probe matching" << endl;
 
+
+
     /************************************************************
      *                                                          *
      *                       PRESELECTION                       *
      *                                                          *
      ************************************************************/
 
-      for(int iPhot=0; iPhot<nPhot; iPhot++){
-	if(PhotonMITPreSelection(iPhot,0,0)) pass_preselection[iPhot] = 1;
-	//if(pass_preselection[iPhot]!=0 && pass_preselection[iPhot]!=1) cout << "pass_preselection : " << pass_preselection[iPhot] << endl;
-      }
+
+    for(int iPhot=0; iPhot<edge_phot; iPhot++){
+      if(PhotonMITPreSelection(iPhot,0,0)) pass_preselection[iPhot] = 1;
+      //if(pass_preselection[iPhot]!=0 && pass_preselection[iPhot]!=1) cout << "pass_preselection : " << pass_preselection[iPhot] << endl;
+    }
 
 
     if(isMC) {
@@ -1017,13 +1036,15 @@ void TagAndProbeTree::Loop() {
   
       //if(nEle>0) cout << "Probe electrons" << endl;
       //for probe electrons with match
+
       for(int i =0; i<nMC; i++){
 	if(isElectronFromZ[i]) {
 	  gen.SetPtEtaPhiE(ptMC[i],etaMC[i],phiMC[i],eMC[i]);
 	  deltaRmin = 0.2;
 	  recoMatched_index = -999.;
-	  genMatched_index = -999.; 
-	  for(int j=0; j<nPhot; j++) {
+	  genMatched_index = -999.;
+
+	  for(int j=0; j<edge_phot; j++) {
 	    phot.SetPtEtaPhiE(ptPhot[j], etaPhot[j], phiPhot[j], ePhot[j]);
 	    deltaR = gen.DeltaR(phot);
 	    
@@ -1104,13 +1125,14 @@ void TagAndProbeTree::Loop() {
       
       //if(nEle>0) cout << "Tag electrons" << endl;
       //for tag electrons
+
       for(int i =0; i<nMC; i++){
 	if(isElectronFromZ[i]) {
 	  gen.SetPtEtaPhiE(ptMC[i],etaMC[i],phiMC[i],eMC[i]);
 	  deltaRmin = 0.2;
 	  recoMatched_index = -999.;
 	  genMatched_index = -999.; 
-	  for(int j=0; j<nEle; j++) {
+	  for(int j=0; j<edge_ele; j++) {
 	    ele.SetPtEtaPhiE(electron_pt[j], electron_eta[j], electron_phi[j], electron_energy[j]);
 	    deltaR = gen.DeltaR(ele);
 	    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1141,18 +1163,19 @@ void TagAndProbeTree::Loop() {
       int ele_index = -999; 
       TLorentzVector sum;
       
-      for(int i=0; i<nEle; i++){
+      for(int i=0; i<20; i++){
 	isEle_probe_ele_match[i] = 0; 
       }
       
-      for(int i=0; i<nPhot; i++) {
+      for(int i=0; i<edge_phot; i++) {
 	invmass_match = -999.;
 	best_invmass_match = -999;
 	
 	//      d_invmass_match = 30.;
 	//d_invmass_match = 90.;
 	if(isEle_probe_match[i]) {
-	  for(int j=0; j<nEle; j++) {
+
+	  for(int j=0; j<edge_ele; j++) {
 	    sum = vector_ele[j] + vector_phot[i];
 	    invmass_match = sum.M();
 	    //if(invmass_match < 5.) cout << "invmass_match : " << invmass_match << endl;
@@ -1160,7 +1183,7 @@ void TagAndProbeTree::Loop() {
 	      best_invmass_match = invmass_match;
 	      ele_index = j;
 	    }
-	    if(j==(nEle-1) && TMath::Abs(best_invmass_match)<5.) {
+	    if(j==(edge_ele-1) && TMath::Abs(best_invmass_match)<5.) {
 	      isEle_probe_ele_match[ele_index] = 1;
 	      //cout << "best_invmass_match : " << best_invmass_match << endl;
 	    }
@@ -1169,9 +1192,9 @@ void TagAndProbeTree::Loop() {
       }
       //compute invmass for each couple (should eliminate double counting and invmass=0)
       int ncouples_match =0;
-      for (int i=0; i<nEle; i++){
+      for (int i=0; i<edge_ele; i++){
 	if(isEle_tag_match[i]) {
-	  for (int j=i+1;  j<nEle ; j++){
+	  for (int j=i+1;  j<edge_ele ; j++){
 	    if(isEle_probe_ele_match[j]){
 	      sum = vector_ele[i]+vector_ele[j];
 	      invmass_match = sum.M();
@@ -1189,13 +1212,13 @@ void TagAndProbeTree::Loop() {
       //}
       
       thereIsOneTag_match = 0; 
-      for (int i=0; i<nEle; i++) {
+      for (int i=0; i<edge_ele; i++) {
 	if(isEle_tag_match[i]) thereIsOneTag_match += 1;
       }
       
       //cout << "thereIsOneTag : " << thereIsOneTag << endl;
       if(thereIsOneTag_match) {
-	for (int j=0; j<nPhot; j++) {
+	for (int j=0; j<edge_phot; j++) {
 	  if(isEle_probe_match[j]) {
 	    
 	    //------------------------------------------
@@ -1269,7 +1292,7 @@ void TagAndProbeTree::Loop() {
     //for tag electrons
     
     int recoTag_index;
-    for(int j=0; j<nEle; j++) {
+    for(int j=0; j<edge_ele; j++) {
       recoTag_index = -999;
       if(leptonCutsEle2012(j, eletag_tight2012, &idpasseletag2012)) {
 	//if(leptonCutsEle2012(j, eletag_tight2012, idpasseletag2012)) {
@@ -1281,7 +1304,7 @@ void TagAndProbeTree::Loop() {
     }
     
     int recoProbe_index;
-    for(int j=0; j<nPhot; j++) {
+    for(int j=0; j<edge_phot; j++) {
       recoProbe_index = -999;
       if(pass_preselection[j]
 	 && ptPhot[j]>20.  
@@ -1306,21 +1329,18 @@ void TagAndProbeTree::Loop() {
 
 
     //
-    for(int i=0; i<nEle; i++){
+    for(int i=0; i<20; i++){
       isEle_probe_ele[i] = 0; 
     }
 
-
-
-
-    for(int i=0; i<nPhot; i++) {
+    for(int i=0; i<edge_phot; i++) {
       invmass = -999.;
       best_invmass = -999;
 
       //      d_invmass = 30.;                                                                                                                   
       //d_invmass = 90.;                                                                                                                         
       if(isEle_probe[i]) {
-        for(int j=0; j<nEle; j++) {
+        for(int j=0; j<edge_ele; j++) {
           sum = vector_ele[j] + vector_phot[i];
           invmass = sum.M();
           //if(invmass < 5.) cout << "invmass : " << invmass << endl;                                                                
@@ -1328,14 +1348,14 @@ void TagAndProbeTree::Loop() {
             best_invmass = invmass;
             ele_index = j;
           }
-          if(j==(nEle-1) && TMath::Abs(best_invmass)<5.) {
+          if(j==(edge_ele-1) && TMath::Abs(best_invmass)<5.) {
             isEle_probe_ele[ele_index] = 1;
             //cout << "best_invmass : " << best_invmass << endl;                                                                           
           }
         }
       }
     }
-
+    
 
 
     /*
@@ -1362,9 +1382,9 @@ void TagAndProbeTree::Loop() {
     */
     //compute invmass for each couple (should eliminate double counting and invmass=0)
     int ncouples =0;
-    for (int i=0; i<nEle; i++){
+    for (int i=0; i<edge_ele; i++){
       if(isEle_tag[i]) {
-	for (int j=i+1;  j<nEle; j++){
+	for (int j=i+1;  j<edge_ele; j++){
 	  if(isEle_probe_ele[j]){
 	    sum = vector_ele[i]+vector_ele[j];
 	    invmass = sum.M();
@@ -1403,12 +1423,12 @@ void TagAndProbeTree::Loop() {
 
 
     int thereIsOneTag = 0; 
-    for (int i=0; i<nEle; i++) {
+    for (int i=0; i<edge_ele; i++) {
       if(isEle_tag[i]) thereIsOneTag += 1;
     }
     
     if(thereIsOneTag) {
-      for (int j=0; j<nPhot; j++) {
+      for (int j=0; j<edge_phot; j++) {
 	if(isEle_probe[j]) {
 	  
 	  //------------------------------------------
@@ -1466,13 +1486,13 @@ void TagAndProbeTree::Loop() {
      *                                                  *
      ****************************************************/
    
-    Float_t theIdMva[10];
-    for(int iGamma=0; iGamma<10; iGamma++) {
+    Float_t theIdMva[20];
+    for(int iGamma=0; iGamma<20; iGamma++) {
       theIdMva[iGamma] = -999.;
     }
     // photon ID MVA
-    for(int iGamma=0; iGamma<nPhot; iGamma++) {
-      if(isEleProbe[iGamma])  theIdMva[iGamma] = PhotonIDMVA(iGamma);   
+    for(int iGamma=0; iGamma<edge_phot; iGamma++) {
+      /*if(isEleProbe[iGamma])*/  theIdMva[iGamma] = PhotonIDMVA(iGamma);   
     }
 
     //cout << "starting SAVING RECO VARIABLES IN TTREE " << endl;  
@@ -1484,8 +1504,10 @@ void TagAndProbeTree::Loop() {
      ****************************************************/
     
     
-    //if(nEle>0) cout << "Save variables in tree" << endl;
-    for(int i=0; i<nEle; i++) {
+    //if(nEle>10) edge = 10;
+    //else edge = nEle;    
+
+    for(int i=0; i<edge_ele; i++) {
       isEleTag_match[i] = isEle_tag_match[i];
       isEleProbe_ele_match[i] = isEle_probe_ele_match[i];
       genEleMatched_index_tag[i] = vec_genMatched_index_tag[i];
@@ -1496,8 +1518,14 @@ void TagAndProbeTree::Loop() {
       
     }
     
-    
-    for(int i=0; i<nPhot; i++) {
+
+    //if(nPhot>10) edge = 10;
+    //else edge = nPhot;    
+    for(int i=0; i<edge_phot; i++) {
+
+      r9Phot[i] = r9_phot[i]      ;
+      s4RatioPhot[i] = s4Ratio_phot[i] ;
+      sigmaRRPhot[i] = sigmaRR[i]      ;
 
       BDT_output[i] = theIdMva[i] ;
       
@@ -1574,7 +1602,7 @@ void TagAndProbeTree::Loop() {
       }
       cout << ")" << endl; 
      */
-    for(int i=0; i<10; i++) {
+    for(int i=0; i<20; i++) {
       invMassEle_match[i] = vec_invmass_match[i];
       invMassEle[i] = vec_invmass[i];
     }
@@ -2104,7 +2132,7 @@ Float_t TagAndProbeTree::PhotonIDMVA(Int_t i) {
   tmva_photonid_pt           = ptPhot[i];
   tmva_photonid_sceta        = etascPhot[i];
   tmva_photonid_rr           = 0.0; 
-
+  tmva_photonid_eventrho     = rhoAllJets;
   
   if (rr>0. && rr<99999.) tmva_photonid_rr = rr;
 
@@ -2131,11 +2159,13 @@ void TagAndProbeTree::SetAllMVA() {
   tmvaReaderID_Single_Barrel->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Barrel->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Barrel->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  tmvaReaderID_Single_Barrel->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
+  //tmvaReaderID_Single_Barrel->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Barrel->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Barrel->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Barrel->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
   tmvaReaderID_Single_Barrel->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Barrel->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+  tmvaReaderID_Single_Barrel->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
   tmvaReaderID_Single_Endcap = new TMVA::Reader("!Color:Silent");
 
@@ -2145,18 +2175,26 @@ void TagAndProbeTree::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Endcap->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Endcap->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  tmvaReaderID_Single_Endcap->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
+  //tmvaReaderID_Single_Endcap->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Endcap->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Endcap->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Endcap->AddVariable("rr_presel",           &tmva_photonid_rr );
   tmvaReaderID_Single_Endcap->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+  tmvaReaderID_Single_Endcap->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
+  /*
+    std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
+    tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
+    std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
+    tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
+  */
   
-  //std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
-  //std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml" << endl;
+  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml");
+  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml" << endl;
+  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml");
   
 }
 
