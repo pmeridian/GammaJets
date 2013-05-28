@@ -40,33 +40,33 @@ public :
    Float_t         rhoAllJets;
    Float_t         rhoPF;
    Int_t           nEle;
-   Float_t         electron_pt[10];   //[nEle]
-   Float_t         electron_energy[10];   //[nEle]
-   Float_t         electron_phi[10];   //[nEle]
-   Float_t         electron_eta[10];   //[nEle]
-   Float_t         electron_EoP[10];   //[nEle]
-   Float_t         electron_OneOverEMinusOneOverP[10];   //[nEle]
-   Float_t         electron_r9[10];   //[nEle]
-   Float_t         electron_SigmaIetaIeta[10];   //[nEle]
-   Float_t         electron_dEtaIn[10];   //[nEle]
-   Float_t         electron_dPhiIn[10];   //[nEle]
-   Float_t         electron_HoE[10];   //[nEle]
-   Float_t         electron_sc_eta[10];   //[nEle]
-   Float_t         electron_trkIso[10];   //[nEle]
-   Float_t         electron_ecalIso[10];   //[nEle]
-   Float_t         electron_hcalIso[10];   //[nEle]
-   Float_t         electron_trkIso03[10];   //[nEle]
-   Float_t         electron_ecalIso03[10];   //[nEle]
-   Float_t         electron_hcalIso03[10];   //[nEle]
-   Float_t         electron_chHad03Iso[10];   //[nEle]
-   Float_t         electron_nHad03Iso[10];   //[nEle]
-   Float_t         electron_phot03Iso[10];   //[nEle]
-   Float_t         electron_chHad04Iso[10];   //[nEle]
-   Float_t         electron_nHad04Iso[10];   //[nEle]
-   Float_t         electron_phot04Iso[10];   //[nEle]
-   Float_t         electron_chHad05Iso[10];   //[nEle]
-   Float_t         electron_nHad05Iso[10];   //[nEle]
-   Float_t         electron_phot05Iso[10];   //[nEle]
+   Float_t         electron_pt[50];   //[nEle]
+   Float_t         electron_energy[50];   //[nEle]
+   Float_t         electron_phi[50];   //[nEle]
+   Float_t         electron_eta[50];   //[nEle]
+   Float_t         electron_EoP[50];   //[nEle]
+   Float_t         electron_OneOverEMinusOneOverP[50];   //[nEle]
+   Float_t         electron_r9[50];   //[nEle]
+   Float_t         electron_SigmaIetaIeta[50];   //[nEle]
+   Float_t         electron_dEtaIn[50];   //[nEle]
+   Float_t         electron_dPhiIn[50];   //[nEle]
+   Float_t         electron_HoE[50];   //[nEle]
+   Float_t         electron_sc_eta[50];   //[nEle]
+   Float_t         electron_trkIso[50];   //[nEle]
+   Float_t         electron_ecalIso[50];   //[nEle]
+   Float_t         electron_hcalIso[50];   //[nEle]
+   Float_t         electron_trkIso03[50];   //[nEle]
+   Float_t         electron_ecalIso03[50];   //[nEle]
+   Float_t         electron_hcalIso03[50];   //[nEle]
+   Float_t         electron_chHad03Iso[50];   //[nEle]
+   Float_t         electron_nHad03Iso[50];   //[nEle]
+   Float_t         electron_phot03Iso[50];   //[nEle]
+   Float_t         electron_chHad04Iso[50];   //[nEle]
+   Float_t         electron_nHad04Iso[50];   //[nEle]
+   Float_t         electron_phot04Iso[50];   //[nEle]
+   Float_t         electron_chHad05Iso[50];   //[nEle]
+   Float_t         electron_nHad05Iso[50];   //[nEle]
+   Float_t         electron_phot05Iso[50];   //[nEle]
    Int_t           nPhot;
    Float_t         ptPhot[50];   //[nPhot]
    Float_t         ePhot[50];   //[nPhot]
@@ -169,12 +169,12 @@ public :
    Float_t         E25Phot[50];   //[nPhot]
    Int_t           ieleassocPhot[50];   //[nPhot]
    Float_t         pid_deltaRToTrackPhot[50];   //[nPhot]
-   Int_t           isEleTag_match[10];   //[nEle]
+   Int_t           isEleTag_match[50];   //[nEle]
    Int_t           isEleProbe_match[50];   //[nPhot]
-   Int_t           isEleProbe_ele_match[10];   //[nEle]
-   Float_t         deltaR_EleTagGenReco[10];   //[nEle]
+   Int_t           isEleProbe_ele_match[50];   //[nEle]
+   Float_t         deltaR_EleTagGenReco[50];   //[nEle]
    Float_t         deltaR_EleProbeGenReco[50];   //[nPhot]
-   Float_t         genEleMatched_index_tag[10];   //[nEle]
+   Float_t         genEleMatched_index_tag[50];   //[nEle]
    Float_t         genEleMatched_index_probe[50];   //[nPhot]
    Int_t           passLooseElePtEta_match[50];   //[nPhot]
    Int_t           passLooseEleID_match[50];   //[nPhot]
@@ -191,10 +191,10 @@ public :
    Int_t           passTightEleImpactPar_match[50];   //[nPhot]
    Int_t           passTightEleIsoRel_match[50];   //[nPhot]
    Int_t           passTightEleMinHits_match[50];   //[nPhot]
-   Float_t         invMassEle_match[10];
-   Int_t           isEleTag[10];   //[nEle]
+   Float_t         invMassEle_match[50];
+   Int_t           isEleTag[50];   //[nEle]
    Int_t           isEleProbe[50];   //[nPhot]
-   Int_t           isEleProbe_ele[10];   //[nEle]
+   Int_t           isEleProbe_ele[50];   //[nEle]
    Int_t           passLooseElePtEta[50];   //[nPhot]
    Int_t           passLooseEleID[50];   //[nPhot]
    Int_t           passLooseEleImpactPar[50];   //[nPhot]
@@ -210,7 +210,7 @@ public :
    Int_t           passTightEleImpactPar[50];   //[nPhot]
    Int_t           passTightEleIsoRel[50];   //[nPhot]
    Int_t           passTightEleMinHits[50];   //[nPhot]
-   Float_t         invMassEle[10];
+   Float_t         invMassEle[50];
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
@@ -420,24 +420,28 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+
+   bool     isHLT_TandP();
+   bool     isHLT_30();
+   bool     isHLT_50();
+   bool     isHLT_75();
+   bool     isHLT_90();
 };
 
 #endif
 
 #ifdef riduttore_cxx
-riduttore::riduttore(TTree *tree)
+riduttore::riduttore(TTree *tree) : fChain(0)
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv2_extra.cicpfloose..DrellYan_v1/merged//redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv2_extra.cicpfloose..DrellYan_v1/merged//redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1.root");
-      }
-      f->GetObject("AnaTree",tree);
-
-   }
-   Init(tree);
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0) {
+    TChain * chain = new TChain("AnaTree","");
+    // chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose.DoubleElectron_withpt/redntp_*.root/AnaTree");
+    chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose..DrellYan_v1/redntp_DoubleElectron_Run2012A*.root/AnaTree");
+    tree = chain;
+  }
+  Init(tree);
 }
 
 riduttore::~riduttore()
