@@ -56,14 +56,55 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
     // first vertex must be good
     if (vtxId<0) continue;
 
-    //if(isHLT_30())   cout << "before calling isHLT_30" << endl;
 
+
+    int edge_phot;
+    if(edge_phot>20) edge_phot = 20;
+    else edge_phot = nPhot;
+    int edge_ele;
+    if(edge_ele>20) edge_ele = 20;
+    else edge_ele = nEle;
+    
+    //----------------------------------------------------
+    //
+    //                okMass T&P
+    //
+    //-----------------------------------------------------
+
+    TLorentzVector vec_ele, vec_phot, sum;
+    double mass;
+    int okMass[nPhot];
+    for(int iPhot=0; iPhot<edge_phot; iPhot++){
+      okMass[iPhot] = 0;
+    }
+
+    for(int iEle=0; iEle<edge_ele; iEle++){
+      if(isEleTag[iEle]) vec_ele.SetPtEtaPhiE(electron_pt[iEle],electron_eta[iEle],electron_phi[iEle],electron_energy[iEle]);
+      for(int iPhot=0; iPhot<edge_phot; iPhot++){
+	if(isEleProbe[iPhot]) {
+	  vec_phot.SetPtEtaPhiE(ptPhot[iPhot],etaPhot[iPhot],phiPhot[iPhot],ePhot[iPhot]);
+	  sum = vec_ele + vec_phot;
+	  mass = sum.M();
+	  if(mass>60. && mass<120.) okMass[iPhot] = 1;
+	}
+      }
+    }
+
+
+    //if(isHLT_30())   cout << "before calling isHLT_30" << endl;
+    
+    //-----------------------------------------------------------------------------------
+
+    //                   TRIGGER  
+
+    //-----------------------------------------------------------------------------------
     // HLT selection - for data only
+    /*
     if ( signal==100 && hltcut==30 && !isHLT_30() )  continue;
     if ( signal==100 && hltcut==50 && !isHLT_50() )  continue;
     if ( signal==100 && hltcut==75 && !isHLT_75() )  continue;
     if ( signal==100 && hltcut==90 && !isHLT_90() )  continue;
-
+    */
     //if(isHLT_30()) cout << "after calling isHLT_30" << endl;
 
     // vector with index of fully selected gammas
@@ -73,19 +114,18 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
     // pu/pt reweighting for mc only
     
     float weight(1);
+    /*
     if (dopureweight && hltcut==30) weight *= (pu_weight30);
     if (dopureweight && hltcut==50) weight *= (pu_weight50);
     if (dopureweight && hltcut==75) weight *= (pu_weight75);
     if (dopureweight && hltcut==90) weight *= (pu_weight90);
+    */
+    if (dopureweight ) weight *= (pu_weight);
 
-
-    int edge_phot;
-    if(edge_phot>20) edge_phot = 20;
-    else edge_phot = nPhot;
     for(int iPhot=0; iPhot<edge_phot; iPhot++) {
       //data, not pu reweight
       if(signal == 100) {
-	if(isEleProbe[iPhot] && isEBPhot[iPhot]) {
+	if(isEleProbe[iPhot] && okMass[iPhot] && isEBPhot[iPhot]) {
 	  plots_EB[0]->Fill(ptPhot[iPhot]);
 	  plots_EB[1]->Fill(etascPhot[iPhot]);
 	  plots_EB[2]->Fill(pid_etawid[iPhot]);
@@ -97,10 +137,10 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
 	  plots_EB[8]->Fill(pid_HoverE[iPhot]);
 	  plots_EB[9]->Fill(rhoAllJets);
 	  plots_EB[10]->Fill(BDT_output[iPhot]);
-	
+
 	}
 	
-	if(isEleProbe[iPhot] && isEEPhot[iPhot]) {
+	if(isEleProbe[iPhot] && okMass[iPhot] && isEEPhot[iPhot]) {
 	  plots_EE[0]->Fill(ptPhot[iPhot]);
 	  plots_EE[1]->Fill(etascPhot[iPhot]);
 	  plots_EE[2]->Fill(pid_etawid[iPhot]);
@@ -112,12 +152,12 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
 	  plots_EE[8]->Fill(pid_HoverE[iPhot]);
 	  plots_EE[9]->Fill(rhoAllJets);
 	  plots_EE[10]->Fill(BDT_output[iPhot]);
-	  plots_EE[11]->Fill(sigmaRRPhot[iPhot]);
+	  plots_EE[12]->Fill(sigmaRRPhot[iPhot]);
 	}
       }
       //mc, pu reweight
       else if (signal == 0){
-	if(isEleProbe_match[iPhot] && isEBPhot[iPhot]) {
+	if(isEleProbe_match[iPhot] && okMass[iPhot] && isEBPhot[iPhot]) {
 	  /*
 	  if(dopureweight){
 	    cout << "dopureweight: " << dopureweight << endl;
@@ -141,7 +181,7 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
 	
 	}
 	
-	if(isEleProbe_match[iPhot] && isEEPhot[iPhot]) {
+	if(isEleProbe_match[iPhot] && okMass[iPhot] && isEEPhot[iPhot]) {
 	  plots_EE[0]->Fill(ptPhot[iPhot],weight);
 	  plots_EE[1]->Fill(etascPhot[iPhot],weight);
 	  plots_EE[2]->Fill(pid_etawid[iPhot],weight);
@@ -153,11 +193,20 @@ void fillPlot2012_doubleEle::Plot(TH1D* plots_EB[], TH1D* plots_EE[],  int signa
 	  plots_EE[8]->Fill(pid_HoverE[iPhot], weight);
 	  plots_EE[9]->Fill(rhoAllJets, weight);
 	  plots_EE[10]->Fill(BDT_output[iPhot], weight);
-	  plots_EE[11]->Fill(sigmaRRPhot[iPhot], weight);
+	  plots_EE[12]->Fill(sigmaRRPhot[iPhot], weight);
 	}
       }
     }
-    
+    //data
+    if(signal == 100){
+      plots_EB[11]->Fill(nvtx); 
+      plots_EE[11]->Fill(nvtx);
+    }
+    //mc
+    else if(signal == 0){
+      plots_EB[11]->Fill(nvtx,weight); 
+      plots_EE[11]->Fill(nvtx,weight);
+    }
 
   }
   

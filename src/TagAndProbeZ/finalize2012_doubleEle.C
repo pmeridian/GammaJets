@@ -94,15 +94,15 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   TFile * hOutputFile = new TFile(name, "RECREATE" ) ;
 
   // histograms needed by the machinery
-  TH1D* vardata_30_EB[11];
-  TH1D* vardata_50_EB[11];
-  TH1D* vardata_75_EB[11];
-  TH1D* vardata_90_EB[11];
+  TH1D* vardata_30_EB[12];
+  TH1D* vardata_50_EB[12];
+  TH1D* vardata_75_EB[12];
+  TH1D* vardata_90_EB[12];
 
-  TH1D* vardata_30_EE[12];
-  TH1D* vardata_50_EE[12];
-  TH1D* vardata_75_EE[12];
-  TH1D* vardata_90_EE[12];
+  TH1D* vardata_30_EE[13];
+  TH1D* vardata_50_EE[13];
+  TH1D* vardata_75_EE[13];
+  TH1D* vardata_90_EE[13];
 
   //barrel
   vardata_30_EB[0] = new TH1D("hdata_ptPhot_30_EB","", 120, 0., 180.);
@@ -116,6 +116,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_30_EB[8] = new TH1D("hdata_HoverE_30_EB","", 120, 0., 0.5);
   vardata_30_EB[9] = new TH1D("hdata_rho_30_EB","", 120, 0., 60.);
   vardata_30_EB[10] = new TH1D("hdata_BDToutput_30_EB","", 120, -1., 1.);
+  vardata_30_EB[11] = new TH1D("hdata_nvtx_30_EB","", 60, 0., 60.);  
 
   vardata_50_EB[0] = new TH1D("hdata_ptPhot_50_EB","", 120, 0., 180.);
   vardata_50_EB[1] = new TH1D("hdata_etascPhot_50_EB","", 120, -2.5, 2.5);
@@ -128,6 +129,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_50_EB[8] = new TH1D("hdata_HoverE_50_EB","", 120, 0., 0.5);
   vardata_50_EB[9] = new TH1D("hdata_rho_50_EB","", 120, 0., 60.);
   vardata_50_EB[10] = new TH1D("hdata_BDToutput_50_EB","", 120, -1., 1.);
+  vardata_50_EB[11] = new TH1D("hdata_nvtx_50_EB","", 60, 0., 60.);  
 
   vardata_75_EB[0] = new TH1D("hdata_ptPhot_75_EB","", 120, 0., 180.);
   vardata_75_EB[1] = new TH1D("hdata_etascPhot_75_EB","", 120, -2.5, 2.5);
@@ -140,6 +142,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_75_EB[8] = new TH1D("hdata_HoverE_75_EB","", 120, 0., 0.5);
   vardata_75_EB[9] = new TH1D("hdata_rho_75_EB","", 120, 0., 60.);
   vardata_75_EB[10] = new TH1D("hdata_BDToutput_75_EB","", 120, -1., 1.);
+  vardata_75_EB[11] = new TH1D("hdata_nvtx_75_EB","", 60, 0., 60.);  
 
   vardata_90_EB[0] = new TH1D("hdata_ptPhot_90_EB","", 120, 0., 180.);
   vardata_90_EB[1] = new TH1D("hdata_etascPhot_90_EB","", 120, -2.5, 2.5);
@@ -152,12 +155,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_90_EB[8] = new TH1D("hdata_HoverE_90_EB","", 120, 0., 0.5);
   vardata_90_EB[9] = new TH1D("hdata_rho_90_EB","", 120, 0., 60.);
   vardata_90_EB[10] = new TH1D("hdata_BDToutput_90_EB","", 120, -1., 1.);
-  
+  vardata_90_EB[11] = new TH1D("hdata_nvtx_90_EB","", 60, 0., 60.);  
+
   //endcap
   vardata_30_EE[0] = new TH1D("hdata_ptPhot_30_EE","", 120, 0., 180.);
   vardata_30_EE[1] = new TH1D("hdata_etascPhot_30_EE","", 120, -2.5, 2.5);
   vardata_30_EE[2] = new TH1D("hdata_sEtaEta_30_EE","", 120, 0.01, 0.04);
-  vardata_30_EE[3] = new TH1D("hdata_sEtaPhi_30_EE","", 120, -0.01, 0.01);
+  vardata_30_EE[3] = new TH1D("hdata_sEtaPhi_30_EE","", 120, -0.001, 0.001);
   vardata_30_EE[4] = new TH1D("hdata_scetawid_30_EE","", 120, 0., 0.06);
   vardata_30_EE[5] = new TH1D("hdata_scphiwid_30_EE","", 120, 0., 0.15);
   vardata_30_EE[6] = new TH1D("hdata_r9_30_EE","", 120, 0., 1.);
@@ -165,12 +169,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_30_EE[8] = new TH1D("hdata_HoverE_30_EE","", 120, 0., 0.5);
   vardata_30_EE[9] = new TH1D("hdata_rho_30_EE","", 120, 0., 60.);
   vardata_30_EE[10] = new TH1D("hdata_BDToutput_30_EE","", 120, -1., 1.);
-  vardata_30_EE[11] = new TH1D("hdata_sigmaRR_30_EE","", 120, 0., 15.);
+  vardata_30_EE[11] = new TH1D("hdata_nvtx_30_EE","", 60, 0., 60.);
+  vardata_30_EE[12] = new TH1D("hdata_sigmaRR_30_EE","", 120, 0., 15.);
 
   vardata_50_EE[0] = new TH1D("hdata_ptPhot_50_EE","", 120, 0., 180.);
   vardata_50_EE[1] = new TH1D("hdata_etascPhot_50_EE","", 120, -2.5, 2.5);
   vardata_50_EE[2] = new TH1D("hdata_sEtaEta_50_EE","", 120, 0.01, 0.04);
-  vardata_50_EE[3] = new TH1D("hdata_sEtaPhi_50_EE","", 120, -0.01, 0.01);
+  vardata_50_EE[3] = new TH1D("hdata_sEtaPhi_50_EE","", 120, -0.001, 0.001);
   vardata_50_EE[4] = new TH1D("hdata_scetawid_50_EE","", 120, 0., 0.06);
   vardata_50_EE[5] = new TH1D("hdata_scphiwid_50_EE","", 120, 0., 0.15);
   vardata_50_EE[6] = new TH1D("hdata_r9_50_EE","", 120, 0., 1.);
@@ -178,12 +183,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_50_EE[8] = new TH1D("hdata_HoverE_50_EE","", 120, 0., 0.5);
   vardata_50_EE[9] = new TH1D("hdata_rho_50_EE","", 120, 0., 60.);
   vardata_50_EE[10] = new TH1D("hdata_BDToutput_50_EE","", 120, -1., 1.);
-  vardata_50_EE[11] = new TH1D("hdata_sigmaRR_50_EE","", 120, 0., 15.);
+  vardata_50_EE[11] = new TH1D("hdata_nvtx_50_EE","", 60, 0., 60.);
+  vardata_50_EE[12] = new TH1D("hdata_sigmaRR_50_EE","", 120, 0., 15.);
 
   vardata_75_EE[0] = new TH1D("hdata_ptPhot_75_EE","", 120, 0., 180.);
   vardata_75_EE[1] = new TH1D("hdata_etascPhot_75_EE","", 120, -2.5, 2.5);
   vardata_75_EE[2] = new TH1D("hdata_sEtaEta_75_EE","", 120, 0.01, 0.04);
-  vardata_75_EE[3] = new TH1D("hdata_sEtaPhi_75_EE","", 120, -0.01, 0.01);
+  vardata_75_EE[3] = new TH1D("hdata_sEtaPhi_75_EE","", 120, -0.001, 0.001);
   vardata_75_EE[4] = new TH1D("hdata_scetawid_75_EE","", 120, 0., 0.06);
   vardata_75_EE[5] = new TH1D("hdata_scphiwid_75_EE","", 120, 0., 0.15);
   vardata_75_EE[6] = new TH1D("hdata_r9_75_EE","", 120, 0., 1.);
@@ -191,12 +197,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_75_EE[8] = new TH1D("hdata_HoverE_75_EE","", 120, 0., 0.5);
   vardata_75_EE[9] = new TH1D("hdata_rho_75_EE","", 120, 0., 60.);
   vardata_75_EE[10] = new TH1D("hdata_BDToutput_75_EE","", 120, -1., 1.);
-  vardata_75_EE[11] = new TH1D("hdata_sigmaRR_75_EE","", 120, 0., 15.);
+  vardata_75_EE[11] = new TH1D("hdata_nvtx_75_EE","", 60, 0., 60.);
+  vardata_75_EE[12] = new TH1D("hdata_sigmaRR_75_EE","", 120, 0., 15.);
 
   vardata_90_EE[0] = new TH1D("hdata_ptPhot_90_EE","", 120, 0., 180.);
   vardata_90_EE[1] = new TH1D("hdata_etascPhot_90_EE","", 120, -2.5, 2.5);
   vardata_90_EE[2] = new TH1D("hdata_sEtaEta_90_EE","", 120, 0.01, 0.04);
-  vardata_90_EE[3] = new TH1D("hdata_sEtaPhi_90_EE","", 120, -0.01, 0.01);
+  vardata_90_EE[3] = new TH1D("hdata_sEtaPhi_90_EE","", 120, -0.001, 0.001);
   vardata_90_EE[4] = new TH1D("hdata_scetawid_90_EE","", 120, 0., 0.06);
   vardata_90_EE[5] = new TH1D("hdata_scphiwid_90_EE","", 120, 0., 0.15);
   vardata_90_EE[6] = new TH1D("hdata_r9_90_EE","", 120, 0., 1.);
@@ -204,32 +211,20 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   vardata_90_EE[8] = new TH1D("hdata_HoverE_90_EE","", 120, 0., 0.5);
   vardata_90_EE[9] = new TH1D("hdata_rho_90_EE","", 120, 0., 60.);
   vardata_90_EE[10] = new TH1D("hdata_BDToutput_90_EE","", 120, -1., 1.);
-  vardata_90_EE[11] = new TH1D("hdata_sigmaRR_90_EE","", 120, 0., 15.);
+  vardata_90_EE[11] = new TH1D("hdata_nvtx_90_EE","", 60, 0., 60.);
+  vardata_90_EE[12] = new TH1D("hdata_sigmaRR_90_EE","", 120, 0., 15.);
 
   cout << "defined histograms" << endl;
 
-  string variable[12];
-  variable[0] = "ptPhot";  
-  variable[1] = "etascPhot";  
-  variable[2] = "sEtaEta";  
-  variable[3] = "sEtaPhi";  
-  variable[4] = "scetawid";  
-  variable[5] = "scphiwid";  
-  variable[6] = "r9";  
-  variable[7] = "s4";  
-  variable[8] = "HoverE";
-  variable[9] = "rho";    
-  variable[10] = "BDT_output";  
-  variable[11] = "sigmaRR";  
 
   
-  for(int i=0; i<11; i++) {
+  for(int i=0; i<12; i++) {
     vardata_30_EB[i]->Sumw2();
     vardata_50_EB[i]->Sumw2();
     vardata_75_EB[i]->Sumw2();
     vardata_90_EB[i]->Sumw2();
   }
-  for(int i=0; i<12; i++) {
+  for(int i=0; i<13; i++) {
     vardata_30_EE[i]->Sumw2();
     vardata_50_EE[i]->Sumw2();
     vardata_75_EE[i]->Sumw2();
@@ -238,15 +233,15 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   
   cout << "sumw2 data" << endl;
   
-  TH1D* var_mc_2012_30_EB[1][11];   
-  TH1D* var_mc_2012_50_EB[1][11];   
-  TH1D* var_mc_2012_75_EB[1][11];   
-  TH1D* var_mc_2012_90_EB[1][11];
+  TH1D* var_mc_2012_30_EB[1][12];   
+  TH1D* var_mc_2012_50_EB[1][12];   
+  TH1D* var_mc_2012_75_EB[1][12];   
+  TH1D* var_mc_2012_90_EB[1][12];
    
-  TH1D* var_mc_2012_30_EE[1][12];   
-  TH1D* var_mc_2012_50_EE[1][12];   
-  TH1D* var_mc_2012_75_EE[1][12];   
-  TH1D* var_mc_2012_90_EE[1][12];
+  TH1D* var_mc_2012_30_EE[1][13];   
+  TH1D* var_mc_2012_50_EE[1][13];   
+  TH1D* var_mc_2012_75_EE[1][13];   
+  TH1D* var_mc_2012_90_EE[1][13];
 
   var_mc_2012_30_EB[0][0] = new TH1D("h_ptPhot_30_EB","", 120, 0., 180.);
   var_mc_2012_30_EB[0][1] = new TH1D("h_etascPhot_30_EB","", 120, -2.5, 2.5);
@@ -259,6 +254,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_30_EB[0][8] = new TH1D("h_HoverE_30_EB","", 120, 0., 0.5);
   var_mc_2012_30_EB[0][9] = new TH1D("h_rho_30_EB","", 120, 0., 60.);
   var_mc_2012_30_EB[0][10] = new TH1D("h_BDToutput_30_EB","", 120, -1., 1.);
+  var_mc_2012_30_EB[0][11] = new TH1D("h_nvtx_30_EB","", 60, 0., 60.);
 
   var_mc_2012_50_EB[0][0] = new TH1D("h_ptPhot_50_EB","", 120, 0., 180.);
   var_mc_2012_50_EB[0][1] = new TH1D("h_etascPhot_50_EB","", 120, -2.5, 2.5);
@@ -271,6 +267,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_50_EB[0][8] = new TH1D("h_HoverE_50_EB","", 120, 0., 0.5);
   var_mc_2012_50_EB[0][9] = new TH1D("h_rho_50_EB","", 120, 0., 60.);
   var_mc_2012_50_EB[0][10] = new TH1D("h_BDToutput_50_EB","", 120, -1., 1.);
+  var_mc_2012_50_EB[0][11] = new TH1D("h_nvtx_50_EB","", 60, 0., 60.);
 
   var_mc_2012_75_EB[0][0] = new TH1D("h_ptPhot_75_EB","", 120, 0., 180.);
   var_mc_2012_75_EB[0][1] = new TH1D("h_etascPhot_75_EB","", 120, -2.5, 2.5);
@@ -283,6 +280,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_75_EB[0][8] = new TH1D("h_HoverE_75_EB","", 120, 0., 0.5);
   var_mc_2012_75_EB[0][9] = new TH1D("h_rho_75_EB","", 120, 0., 60.);
   var_mc_2012_75_EB[0][10] = new TH1D("h_BDToutput_75_EB","", 120, -1., 1.);
+  var_mc_2012_75_EB[0][11] = new TH1D("h_nvtx_75_EB","", 60, 0., 60.);
 
   var_mc_2012_90_EB[0][0] = new TH1D("h_ptPhot_90_EB","", 120, 0., 180.);
   var_mc_2012_90_EB[0][1] = new TH1D("h_etascPhot_90_EB","", 120, -2.5, 2.5);
@@ -295,12 +293,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_90_EB[0][8] = new TH1D("h_HoverE_90_EB","", 120, 0., 0.5);
   var_mc_2012_90_EB[0][9] = new TH1D("h_rho_90_EB","", 120, 0., 60.);
   var_mc_2012_90_EB[0][10] = new TH1D("h_BDToutput_90_EB","", 120, -1., 1.);
+  var_mc_2012_90_EB[0][11] = new TH1D("h_nvtx_90_EB","", 60, 0., 60.);
   
   //endcap
   var_mc_2012_30_EE[0][0] = new TH1D("h_ptPhot_30_EE","", 120, 0., 180.);
   var_mc_2012_30_EE[0][1] = new TH1D("h_etascPhot_30_EE","", 120, -2.5, 2.5);
   var_mc_2012_30_EE[0][2] = new TH1D("h_sEtaEta_30_EE","", 120, 0.01, 0.04);
-  var_mc_2012_30_EE[0][3] = new TH1D("h_sEtaPhi_30_EE","", 120, -0.01, 0.01);
+  var_mc_2012_30_EE[0][3] = new TH1D("h_sEtaPhi_30_EE","", 120, -0.001, 0.001);
   var_mc_2012_30_EE[0][4] = new TH1D("h_scetawid_30_EE","", 120, 0., 0.06);
   var_mc_2012_30_EE[0][5] = new TH1D("h_scphiwid_30_EE","", 120, 0., 0.15);
   var_mc_2012_30_EE[0][6] = new TH1D("h_r9_30_EE","", 120, 0., 1.);
@@ -308,12 +307,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_30_EE[0][8] = new TH1D("h_HoverE_30_EE","", 120, 0., 0.5);
   var_mc_2012_30_EE[0][9] = new TH1D("h_rho_30_EE","", 120, 0., 60.);
   var_mc_2012_30_EE[0][10] = new TH1D("h_BDToutput_30_EE","", 120, -1., 1.);
-  var_mc_2012_30_EE[0][11] = new TH1D("h_sigmaRR_30_EE","", 120, 0., 15.);
+  var_mc_2012_30_EE[0][11] = new TH1D("h_nvtx_30_EE","", 60, 0., 60.);
+  var_mc_2012_30_EE[0][12] = new TH1D("h_sigmaRR_30_EE","", 120, 0., 15.);
 
   var_mc_2012_50_EE[0][0] = new TH1D("h_ptPhot_50_EE","", 120, 0., 180.);
   var_mc_2012_50_EE[0][1] = new TH1D("h_etascPhot_50_EE","", 120, -2.5, 2.5);
   var_mc_2012_50_EE[0][2] = new TH1D("h_sEtaEta_50_EE","", 120, 0.01, 0.04);
-  var_mc_2012_50_EE[0][3] = new TH1D("h_sEtaPhi_50_EE","", 120, -0.01, 0.01);
+  var_mc_2012_50_EE[0][3] = new TH1D("h_sEtaPhi_50_EE","", 120, -0.001, 0.001);
   var_mc_2012_50_EE[0][4] = new TH1D("h_scetawid_50_EE","", 120, 0., 0.06);
   var_mc_2012_50_EE[0][5] = new TH1D("h_scphiwid_50_EE","", 120, 0., 0.15);
   var_mc_2012_50_EE[0][6] = new TH1D("h_r9_50_EE","", 120, 0., 1.);
@@ -321,12 +321,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_50_EE[0][8] = new TH1D("h_HoverE_50_EE","", 120, 0., 0.5);
   var_mc_2012_50_EE[0][9] = new TH1D("h_rho_50_EE","", 120, 0., 60.);
   var_mc_2012_50_EE[0][10] = new TH1D("h_BDToutput_50_EE","", 120, -1., 1.);
-  var_mc_2012_50_EE[0][11] = new TH1D("h_sigmaRR_50_EE","", 120, 0., 15.);
+  var_mc_2012_50_EE[0][11] = new TH1D("h_nvtx_50_EE","", 60, 0., 60.);
+  var_mc_2012_50_EE[0][12] = new TH1D("h_sigmaRR_50_EE","", 120, 0., 15.);
 
   var_mc_2012_75_EE[0][0] = new TH1D("h_ptPhot_75_EE","", 120, 0., 180.);
   var_mc_2012_75_EE[0][1] = new TH1D("h_etascPhot_75_EE","", 120, -2.5, 2.5);
   var_mc_2012_75_EE[0][2] = new TH1D("h_sEtaEta_75_EE","", 120, 0.01, 0.04);
-  var_mc_2012_75_EE[0][3] = new TH1D("h_sEtaPhi_75_EE","", 120, -0.01, 0.01);
+  var_mc_2012_75_EE[0][3] = new TH1D("h_sEtaPhi_75_EE","", 120, -0.001, 0.001);
   var_mc_2012_75_EE[0][4] = new TH1D("h_scetawid_75_EE","", 120, 0., 0.06);
   var_mc_2012_75_EE[0][5] = new TH1D("h_scphiwid_75_EE","", 120, 0., 0.15);
   var_mc_2012_75_EE[0][6] = new TH1D("h_r9_75_EE","", 120, 0., 1.);
@@ -334,12 +335,13 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_75_EE[0][8] = new TH1D("h_HoverE_75_EE","", 120, 0., 0.5);
   var_mc_2012_75_EE[0][9] = new TH1D("h_rho_75_EE","", 120, 0., 60.);
   var_mc_2012_75_EE[0][10] = new TH1D("h_BDToutput_75_EE","", 120, -1., 1.);
-  var_mc_2012_75_EE[0][11] = new TH1D("h_sigmaRR_75_EE","", 120, 0., 15.);
+  var_mc_2012_75_EE[0][11] = new TH1D("h_nvtx_75_EE","", 60, 0., 60.);
+  var_mc_2012_75_EE[0][12] = new TH1D("h_sigmaRR_75_EE","", 120, 0., 15.);
 
   var_mc_2012_90_EE[0][0] = new TH1D("h_ptPhot_90_EE","", 120, 0., 180.);
   var_mc_2012_90_EE[0][1] = new TH1D("h_etascPhot_90_EE","", 120, -2.5, 2.5);
   var_mc_2012_90_EE[0][2] = new TH1D("h_sEtaEta_90_EE","", 120, 0.01, 0.04);
-  var_mc_2012_90_EE[0][3] = new TH1D("h_sEtaPhi_90_EE","", 120, -0.01, 0.01);
+  var_mc_2012_90_EE[0][3] = new TH1D("h_sEtaPhi_90_EE","", 120, -0.001, 0.001);
   var_mc_2012_90_EE[0][4] = new TH1D("h_scetawid_90_EE","", 120, 0., 0.06);
   var_mc_2012_90_EE[0][5] = new TH1D("h_scphiwid_90_EE","", 120, 0., 0.15);
   var_mc_2012_90_EE[0][6] = new TH1D("h_r9_90_EE","", 120, 0., 1.);
@@ -347,25 +349,38 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   var_mc_2012_90_EE[0][8] = new TH1D("h_HoverE_90_EE","", 120, 0., 0.5);
   var_mc_2012_90_EE[0][9] = new TH1D("h_rho_90_EE","", 120, 0., 60.);
   var_mc_2012_90_EE[0][10] = new TH1D("h_BDToutput_90_EE","", 120, -1., 1.);
-  var_mc_2012_90_EE[0][11] = new TH1D("h_sigmaRR_90_EE","", 120, 0., 15.);
+  var_mc_2012_90_EE[0][11] = new TH1D("h_nvtx_90_EE","", 60, 0., 60.);
+  var_mc_2012_90_EE[0][12] = new TH1D("h_sigmaRR_90_EE","", 120, 0., 15.);
    
   cout << "definition of histograms" << endl;
 
-
-
-  for (int i=0; i<11; i++) {
+  for (int i=0; i<12; i++) {
     var_mc_2012_30_EB[0][i]->Sumw2();
     var_mc_2012_50_EB[0][i]->Sumw2();
     var_mc_2012_75_EB[0][i]->Sumw2();
     var_mc_2012_90_EB[0][i]->Sumw2();
   }
-  for (int i=0; i<12; i++) {
+  for (int i=0; i<13; i++) {
     var_mc_2012_30_EE[0][i]->Sumw2();
     var_mc_2012_50_EE[0][i]->Sumw2();
     var_mc_2012_75_EE[0][i]->Sumw2();
     var_mc_2012_90_EE[0][i]->Sumw2();
   }
 
+  string variable[13];
+  variable[0] = "ptPhot";  
+  variable[1] = "etascPhot";  
+  variable[2] = "sEtaEta";  
+  variable[3] = "sEtaPhi";  
+  variable[4] = "scetawid";  
+  variable[5] = "scphiwid";  
+  variable[6] = "r9";  
+  variable[7] = "s4";  
+  variable[8] = "HoverE";
+  variable[9] = "rho";    
+  variable[10] = "BDT_output";  
+  variable[11] = "nvtx";  
+  variable[12] = "sigmaRR";  
 
   cout <<  "------------------------- all ------------------" << endl;
   cout <<   endl;
@@ -544,7 +559,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   cout << "scaling histograms" << endl;
   //scale to 1
 
-  for (int i=0; i<11; i++){
+  for (int i=0; i<12; i++){
     if((double)var_mc_2012_30_EB[0][i]->Integral()>0) var_mc_2012_30_EB[0][i]->Scale(1./(double)var_mc_2012_30_EB[0][i]->Integral());  
     if((double)var_mc_2012_50_EB[0][i]->Integral()>0) var_mc_2012_50_EB[0][i]->Scale(1./(double)var_mc_2012_50_EB[0][i]->Integral());  
     if((double)var_mc_2012_75_EB[0][i]->Integral()>0) var_mc_2012_75_EB[0][i]->Scale(1./(double)var_mc_2012_75_EB[0][i]->Integral());  
@@ -556,7 +571,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     if((double)vardata_90_EB[i]->Integral()>0) vardata_90_EB[i]->Scale(1./(double)vardata_90_EB[i]->Integral());  
   }  
   cout << "scaled barrel " << endl;
-  for (int i=0; i<12; i++){
+  for (int i=0; i<13; i++){
     if((double)var_mc_2012_30_EE[0][i]->Integral()>0) var_mc_2012_30_EE[0][i]->Scale(1./(double)var_mc_2012_30_EE[0][i]->Integral());  
     if((double)var_mc_2012_50_EE[0][i]->Integral()>0) var_mc_2012_50_EE[0][i]->Scale(1./(double)var_mc_2012_50_EE[0][i]->Integral());  
     if((double)var_mc_2012_75_EE[0][i]->Integral()>0) var_mc_2012_75_EE[0][i]->Scale(1./(double)var_mc_2012_75_EE[0][i]->Integral());  
@@ -571,7 +586,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
 
 
   cout << "colors of histograms" << endl;
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     var_mc_2012_30_EB[0][i]->SetTitle("");
     var_mc_2012_30_EB[0][i]->SetStats(0);
     var_mc_2012_30_EB[0][i]->SetTitleOffset(1.25,"Y");
@@ -609,7 +624,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     var_mc_2012_90_EB[0][i]->SetLineWidth(2);
 
   }
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     var_mc_2012_30_EE[0][i]->SetTitle("");
     var_mc_2012_30_EE[0][i]->SetStats(0);
     var_mc_2012_30_EE[0][i]->SetTitleOffset(1.25,"Y");
@@ -661,7 +676,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
 
   cout << "draw and save plots" << endl;
   // mc only plot: data vs background, HLT=30
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_30_EB[0][i]->SetFillColor(kBlue-9);
@@ -673,7 +688,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_30_EE[0][i]->SetFillColor(kBlue-9);
@@ -686,7 +701,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   }
 
   // mc only plot: data vs background, HLT=50
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_50_EB[0][i]->SetFillColor(kBlue-9);
@@ -698,7 +713,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_50_EE[0][i]->SetFillColor(kBlue-9);
@@ -712,7 +727,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
 
 
   // mc only plot: data vs background, HLT=75
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_75_EB[0][i]->SetFillColor(kBlue-9);
@@ -724,7 +739,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_75_EE[0][i]->SetFillColor(kBlue-9);
@@ -737,7 +752,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   }
 
   // mc only plot: data vs background, HLT=90
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_90_EB[0][i]->SetFillColor(kBlue-9);
@@ -749,7 +764,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     var_mc_2012_90_EE[0][i]->SetFillColor(kBlue-9);
@@ -763,7 +778,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
 
   // ------------------------------------
   // data only plot, HLT = 30
-  for(int i=0;i<11; i++){
+  for(int i=0;i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_30_EB[i]->SetXTitle(variable[i].c_str());
@@ -778,7 +793,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data_",(variable[i]).c_str(),"_HLT-30_EB.root");
     c0->SaveAs(name);
   }
-  for(int i=0;i<12; i++){
+  for(int i=0;i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_30_EE[i]->SetXTitle(variable[i].c_str());
@@ -793,7 +808,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data_",(variable[i]).c_str(),"_HLT-30_EE.root");
     c0->SaveAs(name);
   }
-  for(int i=0;i<11; i++){
+  for(int i=0;i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_50_EB[i]->SetXTitle(variable[i].c_str());
@@ -808,7 +823,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data_",(variable[i]).c_str(),"_HLT-50_EB.root");
     c0->SaveAs(name);
   }
-  for(int i=0;i<12; i++){
+  for(int i=0;i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_50_EE[i]->SetXTitle(variable[i].c_str());
@@ -824,7 +839,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0;i<11; i++){
+  for(int i=0;i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_75_EB[i]->SetXTitle(variable[i].c_str());
@@ -839,7 +854,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data_",(variable[i]).c_str(),"_HLT-75_EB.root");
     c0->SaveAs(name);
   }
-  for(int i=0;i<12; i++){
+  for(int i=0;i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_75_EE[i]->SetXTitle(variable[i].c_str());
@@ -855,7 +870,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
   
-  for(int i=0;i<11; i++){
+  for(int i=0;i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_90_EB[i]->SetXTitle(variable[i].c_str());
@@ -870,7 +885,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data_",(variable[i]).c_str(),"_HLT-90_EB.root");
     c0->SaveAs(name);
   }
-  for(int i=0;i<12; i++){
+  for(int i=0;i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_90_EE[i]->SetXTitle(variable[i].c_str());
@@ -891,7 +906,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
   legge = leg->AddEntry(vardata_30_EB[0], "data", "p");
 
   //
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_30_EB[i]->Draw("pe");
@@ -904,7 +919,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data-mc_",variable[i].c_str(),"_30_EB.png");
     c0->SaveAs(name);
   }
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_30_EE[i]->Draw("pe");
@@ -918,7 +933,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
 
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_50_EB[i]->Draw("pe");
@@ -931,7 +946,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data-mc_",variable[i].c_str(),"_50_EB.png");
     c0->SaveAs(name);
   }
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_50_EE[i]->Draw("pe");
@@ -945,7 +960,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
 
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_75_EB[i]->Draw("pe");
@@ -958,7 +973,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data-mc_",variable[i].c_str(),"_75_EB.png");
     c0->SaveAs(name);
   }
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_75_EE[i]->Draw("pe");
@@ -972,7 +987,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     c0->SaveAs(name);
   }
 
-  for(int i=0; i<11; i++){
+  for(int i=0; i<12; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_90_EB[i]->Draw("pe");
@@ -985,7 +1000,7 @@ vector <double> finalize2012_doubleEle(double int_exp_2012_30, double int_exp_20
     sprintf(name,"%s%s%s","results_doubleEle/data-mc_",variable[i].c_str(),"_90_EB.png");
     c0->SaveAs(name);
   }
-  for(int i=0; i<12; i++){
+  for(int i=0; i<13; i++){
     if(i==8) c0->SetLogy();
     if(i==9) c0->SetLogy(0);
     vardata_90_EE[i]->Draw("pe");
