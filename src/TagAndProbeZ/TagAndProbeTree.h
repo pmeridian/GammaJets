@@ -60,7 +60,7 @@ public:
   
   //photon selection
   //  bool photonIDCuts2012(int i, photonidcuts2012 const& pid, vector<bool*> vpass);
-  bool photonIDCuts2012(int i, photonidcuts2012 const& pid, bool* vpass[]);
+  bool photonIDCuts2012(int i, photonidcuts2012 const& pid, vector<bool>* vpass);
 
   // lepton tag
   bool leptonCutsEle2012(int i, electronidcuts2012 const& pid, vector<bool> *vpass);
@@ -88,6 +88,8 @@ private:
   
   const char* jsonFile;
   
+  void bookOutputTree();
+
   Int_t SampleID;
   Int_t  NtotEvents;
   float xsection;
@@ -876,10 +878,10 @@ private:
 private:
 
   
-  // gen level info
-  int countLOGenGamma();
-  int countISRGenGamma();
-  int countFSRGenGamma();
+/*   // gen level info */
+/*   int countLOGenGamma(); */
+/*   int countISRGenGamma(); */
+/*   int countFSRGenGamma(); */
 
   // vector of pu weights
   std::vector<Double_t> puweights_;
@@ -890,249 +892,13 @@ private:
 
   EnergyScaleCorrection* scaleCorrections_;
    
-  Int_t runRN;
-  Int_t eventRN;
-  Int_t lumi;
-  Float_t nvtx;
-  Float_t rhoPFRN;
-  Int_t npu;
-  Float_t pu_weight;
-  Float_t pu_weight30;
-  Float_t pu_weight50;
-  Float_t pu_weight75;
-  Float_t pu_weight90;  
 
+#include "TagAndProbeRedTreeVariables.h"
   
-  Int_t promptGamma;
-  Int_t LOGamma;
-  Int_t ISRGamma;
-  Int_t FSRGamma;
-  Bool_t H_event;
-  Bool_t Z_event;
-  Bool_t W_event;
-  Bool_t Vqq_event;
-
-  Float_t gen_pt_gamma1;
-  Float_t gen_pt_gamma2;
-  Float_t gen_eta_gamma1;
-  Float_t gen_eta_gamma2;
-  Float_t gen_phi_gamma1;
-  Float_t gen_phi_gamma2;
-
-  Float_t gen_pt_lep1,  gen_pt_lep2;
-  Float_t gen_eta_lep1, gen_eta_lep2;
-  Float_t gen_phi_lep1, gen_phi_lep2;
-  Int_t gen_pid_lep1, gen_pid_lep2;
-
-  Int_t njets;
-  Float_t ptjet[10];
-  Float_t ptcorrjet[10];
-  Float_t ecorrjet[10];
-  Float_t etajet[10];
-  Float_t phijet[10];
-  Float_t betajet[10];
-  Float_t betastarjet[10];
-  Float_t rmsjet[10];
-
-  Float_t ptphot1;
-  Float_t ptphot2;
-  Float_t deltaRToTrackphot1;
-  Float_t deltaRToTrackphot2;
-  Float_t etaphot1;
-  Float_t etaphot2;
-  Float_t phiphot1;
-  Float_t phiphot2;
-  Float_t etascphot1;
-  Float_t etascphot2;
-  Float_t E1phot1;
-  Float_t E1phot2;
-  Float_t E9phot1;
-  Float_t E9phot2;
-  Float_t energyErrphot1;
-  Float_t energyErrphot2;
-  Float_t energySmearingphot1;
-  Float_t energySmearingphot2;
-  Float_t r9phot1;
-  Float_t r9phot2;
-  Float_t idmvaphot1;
-  Float_t idmvaphot2;
-  Int_t idcicpfphot1;
-  Int_t idcicpfphot2;
-  Int_t idcicpfnoelvetophot1;
-  Int_t idcicpfnoelvetophot2;
-  Int_t   pid_haspixelseedphot1; 
-  Int_t   pid_haspixelseedphot2; 
-  Float_t pid_HoverEphot1;
-  Float_t pid_HoverEphot2;
-  Int_t   pid_hasMatchedConvphot1;
-  Int_t   pid_hasMatchedConvphot2;
-  Int_t   pid_hasMatchedPromptElephot1;
-  Int_t   pid_hasMatchedPromptElephot2;
-
-  Float_t massgg;
-  Float_t ptgg;
-  Float_t phigg;
-  Float_t etagg;
-  Float_t massggnewvtx;
-  Float_t ptggnewvtx;
-
-  Float_t eSmearedMet_;   
-  Float_t phiSmearedMet_;
-  Float_t eShiftedMet_;   
-  Float_t phiShiftedMet_;
-  Float_t eShiftedScaledMet_;   
-  Float_t phiShiftedScaledMet_;
-  Float_t eSmearedShiftedMet_;   
-  Float_t phiSmearedShiftedMet_;
-  Float_t eShiftedScaledMetPUcorr_;   
-  Float_t phiShiftedScaledMetPUcorr_;
-  Float_t eSmearedShiftedMetPUcorr_;   
-  Float_t phiSmearedShiftedMetPUcorr_;
-  Float_t spfMet_;
-  Float_t epfMet_;
-  Float_t phipfMet_;
-  Float_t signifpfMet_;
-  Float_t spfMetType1_;
-  Float_t epfMetType1_;
-  Float_t phipfMetType1_;
-  Float_t signifpfMetType1_;
-  Float_t sMetGen_;
-  Float_t eMetGen_;
-  Float_t phiMetGen_;
-  Float_t signifMetGen_;
-  Float_t sMetGen2_;
-  Float_t eMetGen2_;
-  Float_t phiMetGen2_;
-
-  Int_t vtxId;
-  Float_t vtxPos_x;
-  Float_t vtxPos_y;
-  Float_t vtxPos_z;
-
-   Float_t ptele1, ptele2;
-   Float_t etaele1, etaele2;
-   Float_t phiele1, phiele2;
-   Float_t eneele1, eneele2;
-   Float_t sIeIeele1, sIeIeele2;
-   Float_t dphiele1, dphiele2;
-   Float_t detaele1, detaele2;
-   Float_t hoeele1, hoeele2;
-   Int_t mhitsele1, mhitsele2;
-   Float_t d0ele1, d0ele2;
-   Float_t dzele1, dzele2;
-   Float_t oEmoPele1, mvanotrigele1, mvatrigele1; 
-   Int_t matchconvele1;
-   Float_t chHadIso03ele1, nHadIso03ele1, photIso03ele1;
-   Float_t oEmoPele2, mvanotrigele2, mvatrigele2; 
-   Int_t matchconvele2;
-   Float_t chHadIso03ele2, nHadIso03ele2, photIso03ele2;
-   Float_t ecalIso03ele1, hcalIso03ele1, trackerIso03ele1; 
-   Float_t ecalIso03ele2, hcalIso03ele2, trackerIso03ele2; 
-
-   Float_t pteleloose1, pteleloose2;
-   Float_t etaeleloose1, etaeleloose2;
-   Float_t phieleloose1, phieleloose2;
-   Float_t eneeleloose1, eneeleloose2;
-
-   Float_t ptelenontr901, ptelenontr902;
-   Float_t etaelenontr901, etaelenontr902;
-   Float_t phielenontr901, phielenontr902;
-   Float_t eneelenontr901, eneelenontr902;
-
-   Float_t ptrecomu1, ptrecomu2;
-   Float_t etarecomu1, etarecomu2;
-   Float_t phirecomu1, phirecomu2;
-   Float_t enerecomu1, enerecomu2;
-   Int_t pixhitsrecomu1, pixhitsrecomu2;
-   Int_t trkhitsrecomu1, trkhitsrecomu2;
-   Int_t hitsrecomu1, hitsrecomu2;
-   Float_t chi2recomu1, chi2recomu2;
-   Int_t matchrecomu1, matchrecomu2;
-   Float_t d0recomu1, d0recomu2;
-   Float_t dzrecomu1, dzrecomu2;
-   Float_t isorecomu1,isorecomu2;
-   Float_t chHadrecomu1, nHadrecomu1, photrecomu1, puptrecomu1;
-   Float_t chHadrecomu2, nHadrecomu2, photrecomu2, puptrecomu2;
-
-   Float_t ptmuloose1, ptmuloose2;
-   Float_t etamuloose1, etamuloose2;
-   Float_t phimuloose1, phimuloose2;
-   Float_t enemuloose1, enemuloose2;
-
-   Float_t ptmuvloose1, ptmuvloose2;
-   Float_t etamuvloose1, etamuvloose2;
-   Float_t phimuvloose1, phimuvloose2;
-   Float_t enemuvloose1, enemuvloose2;
-  
-  
-   //int nEle;
-  float electron_pt_tag;    
-  float electron_energy_tag;
-  float electron_phi_tag;   
-  float electron_eta_tag;   
-  int   isMatched_ele_tag;  
-  //shower shape tag 
-  float electron_EoP_tag;		    
-  float electron_OneOverEMinusOneOverP_tag; 
-  float electron_r9_tag;		    
-  float electron_SigmaIetaIeta_tag;	    
-  float electron_dEtaIn_tag;		    
-  float electron_dPhiIn_tag;		    
-  float electron_HoE_tag;		    
-  float electron_sc_eta_tag;                
-  //iso tag
-  float electron_trkIso_tag;
-  float electron_ecalIso_tag;
-  float electron_hcalIso_tag;
-  float electron_trkIso03_tag;
-  float electron_ecalIso03_tag;
-  float electron_hcalIso03_tag;
-  float electron_chHad03Iso_tag;
-  float electron_nHad03Iso_tag;
-  float electron_phot03Iso_tag;
-  float electron_chHad04Iso_tag;
-  float electron_nHad04Iso_tag;
-  float electron_phot04Iso_tag;
-  float electron_chHad05Iso_tag;
-  float electron_nHad05Iso_tag;
-  float electron_phot05Iso_tag;
-  //s4Ratio e sIetaIphi ?
-
-  float electron_pt_probe;
-  float electron_energy_probe;
-  float electron_phi_probe;
-  float electron_eta_probe;
-  int isMatched_ele_probe;
-  //shower shape probe 
-  float electron_EoP_probe;
-  float electron_OneOverEMinusOneOverP_probe;
-  float electron_r9_probe;
-  float electron_SigmaIetaIeta_probe;
-  float electron_dEtaIn_probe;
-  float electron_dPhiIn_probe;
-  float electron_HoE_probe;
-  float electron_sc_eta_probe;
-  //iso probe
-  float electron_trkIso_probe;	  
-  float electron_ecalIso_probe;	  
-  float electron_hcalIso_probe;	  
-  float electron_trkIso03_probe;  
-  float electron_ecalIso03_probe; 
-  float electron_hcalIso03_probe; 
-  float electron_chHad03Iso_probe;
-  float electron_nHad03Iso_probe; 
-  float electron_phot03Iso_probe; 
-  float electron_chHad04Iso_probe;
-  float electron_nHad04Iso_probe; 
-  float electron_phot04Iso_probe; 
-  float electron_chHad05Iso_probe;
-  float electron_nHad05Iso_probe; 
-  float electron_phot05Iso_probe; 
-  //s4Ratio e sIetaIphi ?
 
    std::vector<std::string>* aHLTNames;
 
-   float weight;
+
 
 
 };
