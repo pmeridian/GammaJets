@@ -13,7 +13,8 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
-if TYPE  == 'MC'    : INPUTFILE = "outFile.root"
+if TYPE  == 'MC'    : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_MCsmall.root"
+if TYPE  == 'DATA'  : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_DoubleElectron_nopt.root"
 
 process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(1),
@@ -34,6 +35,7 @@ process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
         numvtx = cms.vstring("Number of PV (DA)","0","100",""),
 
+        puW = cms.vstring("PU weight","0","10",""),
         puW30 = cms.vstring("weight for HLT30","0","10",""),
         puW50 = cms.vstring("weight for HLT50","0","10",""),
         puW75 = cms.vstring("weight for HLT75","0","10",""),
@@ -43,9 +45,19 @@ process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Categories = cms.PSet(
 
         ## Cuts Sequence
+        okLooseElePtEta = cms.vstring("okLooseElePtEta","dummy[pass=1,fail=0]"),  
+        okLooseEleID = cms.vstring("okLooseEleID","dummy[pass=1,fail=0]"),
+
         okMediumElePtEta = cms.vstring("okMediumElePtEta","dummy[pass=1,fail=0]"),  
         okMediumEleID = cms.vstring("okMediumEleID","dummy[pass=1,fail=0]"),  
 
+        okTightElePtEta = cms.vstring("okTightElePtEta","dummy[pass=1,fail=0]"),  
+        okTightEleID = cms.vstring("okTightEleID","dummy[pass=1,fail=0]"),  
+
+        okMVA_005 = cms.vstring("okMVA_005","dummy[pass=1,fail=0]"),
+        okMVA_01 = cms.vstring("okMVA_01","dummy[pass=1,fail=0]"),
+        okMVA_02 = cms.vstring("okMVA_02","dummy[pass=1,fail=0]"),
+ 
         # chiara: questo sarebbe da mettere
         # tag_HLT_HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC8_Mass30_TagLeg = cms.vstring("legTag1","dummy[pass=1,fail=0]"),
     ),
@@ -140,20 +152,31 @@ process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                     "signalFractionInPassing[0.9]"
                     ),
         
+        cruijffPlusExpo = cms.vstring(
+                    "EXPR::signal('(@1<@0)*exp(-(@0-@1)*(@0-@1)/(@2*@2 + @3*(@0-@1)*(@0-@1))) + (@1>=@0)*exp(-(@0-@1)*(@0-@1)/(@4*@4 + @5*(@0-@1)*(@0-@1)))',mean[91.2, 80.0, 100.0],mass, sigmaL[2.3, 0.5, 10.0],alphaL[0.23],sigmaR[2.3, 0.5, 10.0],alphaR[0.2,0,3])",
+                    "RooExponential::backgroundPass(mass, cPass[0,-10,10])",
+                    "RooExponential::backgroundFail(mass, cFail[0,-10,10])",
+                    "efficiency[0.5,0,1]",
+                    "signalFractionInPassing[0.9]"
+                    ),
     ),
 
     binnedFit = cms.bool(True),
     binsForFit = cms.uint32(21),
 
-    WeightVariable = cms.string("puW30"),          
+    WeightVariable = cms.string("puW"),          
 
     Efficiencies = cms.PSet(), # will be filled later
 )
 
 ONE_BIN = cms.PSet(
 
-    probe_pt  = cms.vdouble( 20, 25, 50, 200), 
-    probe_abseta = cms.vdouble( 0, 1.4442, 2.5), 
+    probe_pt  = cms.vdouble( 20, 30, 40, 50, 200),
+    #probe_pt  = cms.vdouble( 20, 30, 40), 
+    #probe_pt  = cms.vdouble( 40, 50, 200), 
+    probe_abseta = cms.vdouble( 0, 1.4442, 2.5),
+    #probe_abseta = cms.vdouble( 0, 1.4442),
+    #probe_abseta = cms.vdouble( 1.4442, 2.5),
 )
 
 OUTPUTFILE = "GJets_%s_TnP_Z_WEIGHTED.root" % (FUNC)
@@ -164,7 +187,7 @@ process.TnP_MuonID.Efficiencies.PASSING_all = cms.PSet(
     #EfficiencyCategoryAndState = cms.vstring("okMediumElePtEta","pass"),    # mettendone tanti si fa l'AND
     EfficiencyCategoryAndState = cms.vstring("okMediumEleID","pass"),        # mettendone tanti si fa l'AND
 
-    UnbinnedVariables = cms.vstring("mass","puW30"),
+    UnbinnedVariables = cms.vstring("mass","puW"),
     BinnedVariables = ONE_BIN.clone(
     ),
     BinToPDFmap = cms.vstring(FUNC),
