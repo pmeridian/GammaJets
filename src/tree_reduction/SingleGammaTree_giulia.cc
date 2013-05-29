@@ -732,15 +732,25 @@ bool SingleGammaTree_giulia::PhotonMITPreSelection( int photon_index, int vertex
 
   int photon_category = PhotonCategory(photon_index);
 
-  float mitCuts_hoe[4]                 = {0.082,0.075,0.075,0.075};                                        
+//   float mitCuts_hoe[4]                 = {0.082,0.075,0.075,0.075};                                        
+//   float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
+
+  float mitCuts_hoe[4]                 = {0.075,0.075,0.075,0.075};                                        
   float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
-  float mitCuts_ecaliso[4]             = {50,4,50,4};                                                      
-  float mitCuts_hcaliso[4]             = {50,4,50,4};                                                      
-  float mitCuts_trkiso[4]              = {50,4,50,4};                                                      
+
+//   float mitCuts_ecaliso[4]             = {50,4,50,4};                                                      
+//   float mitCuts_hcaliso[4]             = {50,4,50,4};                                                      
+//   float mitCuts_trkiso[4]              = {50,4,50,4};
+
+  //Applyling looser preselection for nonISO triggers
+  float mitCuts_ecaliso[4]             = {50,50,50,50};                                                      
+  float mitCuts_hcaliso[4]             = {50,50,50,50};                                                      
+  float mitCuts_trkiso[4]              = {50,50,50,50};                                                      
   //float mitCuts_hcalecal[4]            = {3,3,3,3};                                                        
   //float mitCuts_abstrkiso[4]           = {2.8,2.8,2.8,2.8};                                                
   //float mitCuts_trkiso_hollow03[4]     = {4,4,4,4};                                                       
   //float mitCuts_drtotk_25_99[4]	= {0.26,0.029,0.0062,0.0055};
+
   float mitCuts_pfiso[4]               = {4,4,4,4};
   
   float val_hoe        = pid_HoverE[photon_index];

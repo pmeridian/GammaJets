@@ -384,15 +384,17 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
       float preselECAL    = pid_jurECAL03_presel[photons[ipho]]  - 0.012*ptPhot_presel[photons[ipho]];  
       float preselHCAL    = pid_twrHCAL03_presel[photons[ipho]]  - 0.005*ptPhot_presel[photons[ipho]]; 
       float preselTracker = pid_hlwTrack03_presel[photons[ipho]] - 0.002*ptPhot_presel[photons[ipho]]; 
-      if ( preselECAL > 5.5)    continue;
-      if ( preselHCAL > 3.5)    continue;
-      if ( preselTracker > 3.5) continue;
+
+      if ( preselECAL > 10.)    continue;
+      if ( preselHCAL > 10.)    continue;
+      if ( preselTracker > 10) continue;
+
       if ( theEAregion<2) {  // EB
-	if ( pid_HoverE_presel[photons[ipho]]>0.15 )   continue;
-	if ( sEtaEtaPhot_presel[photons[ipho]]>0.024 ) continue;
+	if ( pid_HoverE_presel[photons[ipho]]>0.075 )   continue;
+	if ( sEtaEtaPhot_presel[photons[ipho]]>0.014 ) continue;
       } else {     // EE
-	if(pid_HoverE_presel[photons[ipho]]>0.10)      continue;
-	if (sEtaEtaPhot_presel[photons[ipho]]>0.040)   continue;
+	if(pid_HoverE_presel[photons[ipho]]>0.075)      continue;
+	if (sEtaEtaPhot_presel[photons[ipho]]>0.034)   continue;
       }
       selPhotons.push_back(photons[ipho]);
     }
@@ -415,10 +417,12 @@ std::vector<int> GammaJetAnalysis::selectedPhotons(const std::vector<int>& photo
 
       //selection 0.9 eff for signal
       if(theEAregion<2){//EB
-	if(theIdMva < mva_cut_EB[mvaIDWP]) continue;
+	if(mvaIDWP>0 && theIdMva < mva_cut_EB[mvaIDWP-1]) continue;
+	if(mvaIDWP<0 && theIdMva > mva_cut_EB[abs(mvaIDWP)-1]) continue;
       }
       else{//EE
-	if(theIdMva < mva_cut_EE[mvaIDWP]) continue;
+	if(mvaIDWP>0 && theIdMva < mva_cut_EE[mvaIDWP-1]) continue;
+	if(mvaIDWP<0 && theIdMva > mva_cut_EE[abs(mvaIDWP)-1]) continue;
       }
       
       selPhotons.push_back(photons[ipho]);
