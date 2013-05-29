@@ -16,7 +16,7 @@ if [ "$domain" == "cern.ch" ]; then
     ## rfmkdir ${castordir}   chiara!
     xrootdir=/cms/local/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
     echo "Creating dir root://${redirector}//${xrootdir}"
-    xrd mkdir ${redirector} ${xrootdir}
+    xrd ${redirector} mkdir ${xrootdir}
     echo "Output ${filename} will be copied in root://${redirector}/${xrootdir}"
 else
     filename=$2

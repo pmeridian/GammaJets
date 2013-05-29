@@ -92,8 +92,8 @@ if ($#argv > 9) then
 endif 
 
 
-#foreach class ( 53xv2_extra 53xv3_data )
-foreach class ( 53xv3_data )
+foreach class ( 53xv2_extra 53xv3_data )
+#foreach class ( 53xv3_data )
 #foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
 
     foreach preseltype ( tandp2012 )

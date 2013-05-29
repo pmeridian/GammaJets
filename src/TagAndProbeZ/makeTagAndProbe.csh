@@ -1,5 +1,5 @@
 #!/bin/tcsh
-# $Id: makeTagAndProbe.csh,v 1.1 2013/05/14 11:34:51 gdimperi Exp $
+# $Id: makeTagAndProbe.csh,v 1.2 2013/05/29 22:55:00 meridian Exp $
 
 # change if needed
 set castordir = /castor/cern.ch/user/m/meridian/Higgs/reduced
@@ -27,7 +27,7 @@ if($#argv == 0 || $#argv < 5 || $#argv > 12 ) then
   exit 0
 endif
 
-# submit the job only if the 2nd argument is 1
+# submit the job only if the cmscaf1nd argument is 1
 set listdir  = list.V27.41x 
 if ($#argv > 0) then
   set listdir = $1
@@ -126,7 +126,7 @@ if($run == 1) mkdir -p $logdir
 
 # choose queue, location based on location
 if ($location == "cern" ) then
-  set queue = 2nd
+  set queue = cmscaf1nd
   set outdir = $castordir/$outdir
   set prefix = ""
   echo "chiara: " $outdir
