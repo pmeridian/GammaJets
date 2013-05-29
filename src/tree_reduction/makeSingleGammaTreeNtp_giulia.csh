@@ -1,12 +1,11 @@
 #!/bin/tcsh
-# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.1 2013/02/05 18:03:02 gdimperi Exp $
+# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.2 2013/03/26 10:20:33 crovelli Exp $
 
 # change if needed
-set castordir = /castor/cern.ch/user/c/crovelli/GammaJets/reduced
+#set castordir = /castor/cern.ch/user/c/crovelli/GammaJets/reduced
+set castordir = /t3/users/meridian/GammaJets/reduced
 
-set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
-set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
-set preselections      = ( cicpfloose cicpfloosenoeleveto cicpfmedium cicpftight cicpfsuper cicpfhyper mcass preselectionMVA preselectionMVAnoeleveto)
+set preselections      = ( gjetpresel )
 
 if($#argv == 0 || $#argv < 5 || $#argv > 12 ) then
   echo "usage: makeSingleGammaTreeNtp.csh <inlist> <outdir> <pre-selection> <location> <run if 1> <jsonfile> <puweight> <energy correction/smearing> <puweight_HLT30> <puweight_HLT50> <puweight_HLT75> <puweight_HLT90>"
@@ -127,6 +126,8 @@ if($run == 1) mkdir -p $logdir
 
 # choose queue, location based on location
 if ($location == "cern" ) then
+	set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
+	set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
   set queue = 8nh
   set outdir = $castordir/$outdir
   set prefix = ""
@@ -134,8 +135,10 @@ if ($location == "cern" ) then
   #if($run == 1) rfmkdir $outdir  # chiara
   echo "$outdir created on castor"
 else if ($location == "roma" ) then
-  set queue = "cmsshort"
-  set outdir = ./$outdir
+  set photonIDweights_EB = /cmshome/meridian/photonIDweights/TMVA_EBpf_BDT.weights.xml
+  set photonIDweights_EE = /cmshome/meridian/photonIDweights/TMVA_EEpf_BDT.weights.xml
+  set queue = "cmsan"
+  set outdir = $castordir/$outdir
   set prefix = ""
   if($run == 1) mkdir -p $outdir
 else if ($location == "eth" ) then
@@ -170,9 +173,9 @@ if(-f $listdir) then
    set listfile = "${listdir}/${sample}.list"
 
    if ($location == "cern" || $location == "roma") then  
-     set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "bsub -q ${queue} -o $logfile  -e $logerrfile -J ${jobname} `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    else if ($location == "eth" ) then
-     set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "qsub -q ${queue} -o $logfile -e $logerrfile `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    endif  
 
    echo "---------------------------"
@@ -200,9 +203,9 @@ else if(-d $listdir) then
    setenv listfile  "${listdir}/${sample}.list"
 
    if ($location == "cern" || $location == "roma") then  
-     set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "bsub -q ${queue} -o $logfile -e $logerrfile -J ${jobname} `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    else if ($location == "eth" ) then
-     set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "qsub -q ${queue} -o $logfile -e $logerrfile `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    endif  
 
    echo "---------------------------"

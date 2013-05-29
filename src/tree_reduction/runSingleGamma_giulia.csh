@@ -86,7 +86,7 @@ foreach class ( 53xv2_data 53xv2 )
 #foreach class ( 53xv2_data )
 #foreach class ( 53xv2_extra )
 #    foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
-    foreach preseltype ( cicpfloose )
+    foreach preseltype ( gjetpresel )
 	if ( "`echo ${class} | grep data`XXX" != "XXX" ) then
 	    set command="./makeSingleGammaTreeNtp_giulia.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 -1 -1 -1 -1 ${energyCorrection}"
 	else 
