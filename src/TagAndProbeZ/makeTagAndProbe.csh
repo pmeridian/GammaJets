@@ -1,12 +1,12 @@
 #!/bin/tcsh
-# $Id: makeRedNtp.csh,v 1.34 2012/09/27 15:16:42 meridian Exp $
+# $Id: makeTagAndProbe.csh,v 1.1 2013/05/14 11:34:51 gdimperi Exp $
 
 # change if needed
-set castordir = /castor/cern.ch/user/g/gdimperi/Higgs/reduced
+set castordir = /castor/cern.ch/user/m/meridian/Higgs/reduced
 
 set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
 set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
-set preselections      = ( cicpfloose cicpfloosenoeleveto cicpfmedium cicpftight cicpfsuper cicpfhyper mcass preselectionMVA preselectionMVAnoeleveto)
+set preselections      = ( tandp2012 )
 
 if($#argv == 0 || $#argv < 5 || $#argv > 12 ) then
 #  echo "usage: makeTagAndProbeTreeNtp.csh <inlist> <outdir> <pre-selection> <location> <run if 1> <jsonfile> <puweight> <energy correction/smearing>"

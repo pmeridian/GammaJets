@@ -92,51 +92,54 @@ if ($#argv > 9) then
 endif 
 
 
-foreach class ( 53xv2_extra 53xv3_data )
+#foreach class ( 53xv2_extra 53xv3_data )
+foreach class ( 53xv3_data )
 #foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
 
-    foreach preseltype ( cicpfloose )
+    foreach preseltype ( tandp2012 )
+
 	if ( "`echo ${class} | grep data`XXX" != "XXX" ) then
             set command="./makeTagAndProbe.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 -1 -1 -1 -1 ${energyCorrection}"
-	else if ( $puweight !=  -1 ) then
-	      if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
+	else 
+	    if ( $puweight !=  -1 ) then
+#	      if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
 		    set puweightFile = ${puweight_53x}
-	      endif
-	      else
-		    set puweightFile = -1
+#	      endif
+#	      else
+#		    set puweightFile = -1
 	      endif
  
  	if ( $puweight30 != -1 ) then
- 	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
+# 	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
  	        set puweightFile30 = ${puweight_53x_HLT30}
- 	     endif
- 	     else
- 	         set puweightFile30 = -1
+# 	     endif
+# 	     else
+# 	         set puweightFile30 = -1
  	     endif
  	
         if ( $puweight50 != -1 ) then
-	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
+#	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
 	        set puweightFile50 = ${puweight_53x_HLT50}
-	     endif
-	     else
-	         set puweightFile50 = -1
+#	     endif
+#	     else
+#	         set puweightFile50 = -1
 	     endif
 	
         if ( $puweight75 != -1 ) then
-	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
+#	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
 	         set puweightFile75 = ${puweight_53x_HLT75}
+#	     endif
+#	     else
+#	         set puweightFile75 = -1
 	     endif
-	     else
-	         set puweightFile75 = -1
-	     endif
-	
+#	
  	if ( $puweight90 != -1 ) then
- 	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
+# 	     if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
  	         set puweightFile90 = ${puweight_53x_HLT90}
- 	     endif
- 	     else
- 	         set puweightFile90 = -1
- 	     endif
+# 	     endif
+# 	     else
+# 	         set puweightFile90 = -1
+	endif
  	
 	     echo $puweightFile
 	     echo $puweightFile30
