@@ -1026,7 +1026,7 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("event",&event,"event/I");
   ana_tree->Branch("lumi",&lbn,"lumi/I");
   ana_tree->Branch("isMC",&isMC,"isMC/I");
-  ana_tree->Branch("nvtx",&nvertex,"nvtx/F");
+  ana_tree->Branch("nvtx",&nvertex,"nvtx/I");
   // vertex
   ana_tree->Branch("vtxId",   &vtxId,   "vtxId/I");
 
