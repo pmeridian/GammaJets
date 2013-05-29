@@ -1,9 +1,17 @@
 #!/bin/tcsh
-# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.2 2013/03/26 10:20:33 crovelli Exp $
+# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.3 2013/05/29 08:37:44 meridian Exp $
 
 # change if needed
-#set castordir = /castor/cern.ch/user/c/crovelli/GammaJets/reduced
-set castordir = /t3/users/meridian/GammaJets/reduced
+
+#set castordir = /castor/cern.ch/user/c/
+#to stageout locally in rome
+#set castordir = /t3/users/meridian/GammaJets/reduced
+
+#to stageout in rome (need to have key authentication with RomeT2) 
+set castordir = sftp://meridian@cmsrm-an.roma1.infn.it///t3/users/meridian/GammaJets/reduced
+
+#to stageout in xrootd
+#set castordir = root://pccmsrm27.cern.ch///cms/local/crovelli/GammaJets/reduced
 
 set preselections      = ( gjetpresel )
 
@@ -126,8 +134,8 @@ if($run == 1) mkdir -p $logdir
 
 # choose queue, location based on location
 if ($location == "cern" ) then
-	set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
-	set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
+  set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
+  set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
   set queue = 8nh
   set outdir = $castordir/$outdir
   set prefix = ""

@@ -2,9 +2,10 @@
 
 domain=`dnsdomainname`
 stagein='true'
-nconcurrent_copies=3
+stagein_nconcurrent_copies=3
 main_dir=$1
-
+ssh_opts="-x -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+scp_opts="-v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 function xrdcopy {
 #    echo "xrdcp $1 `pwd`/`basename $1`"
 #    (xrdcp $1 `pwd`/`basename $1`)&
@@ -23,7 +24,7 @@ function xrdcopy {
 function copy_list {
     for file in `cat $1 | egrep -v "^#"`; do
 	echo "Copying $file"
-	    while [ `jobs | wc -l` -ge ${nconcurrent_copies} ];
+	    while [ `jobs | wc -l` -ge ${stagein_nconcurrent_copies} ];
 	      do
 #         echo "Sleeping 5"                                                                                                                                                                                                                                                                       
 	      sleep 5
@@ -49,7 +50,6 @@ function modify_list {
 }
 
 
-
 if [ "$domain" == "psi.ch" ]; then
     . $HOME/.bash_profile
 fi
@@ -57,14 +57,31 @@ fi
 cd $1
 eval `scramv1 runtime -sh`
 
+protocol=`echo $3 | awk -F ':' '{print $1}'`
+echo "Stageout protocol is ${protocol}"
+
 if [ "$domain" == "cern.ch" ]; then
-    redirector=pccmsrm27.cern.ch
-    castordir=`dirname $3`
-    filename=`basename $3`
-    xrootdir=/cms/local/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
-    echo "Creating dir root://${redirector}//${xrootdir}"
-    xrd mkdir ${redirector} ${xrootdir}
-    echo "Output ${filename} will be copied in root://${redirector}/${xrootdir}"
+    if [ "${protocol}" == "root" ]; then
+	redirector=`echo "$3" | awk -F '//' '{print $2}'`
+#	castordir=`dirname $3`
+#	filename=`basename $3`
+#	xrootdir=/cms/local/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
+	fullpath=`echo $3 | awk -F '//' '{print $3}' | sed -e 's%^%/%g' | sed -e "s%//%/%g"`
+	xrootdir=`dirname ${fullpath}`
+	filename=`basename ${fullpath}`
+	echo "Creating dir ${protocol}://${redirector}//${xrootdir}"
+	xrd ${redirector} mkdir  ${xrootdir}
+	echo "Output ${filename} will be copied in ${protocol}://${redirector}/${xrootdir}"
+    elif [ "${protocol}" == "sftp" ]; then
+	redirector=`echo "$3" | awk -F '//' '{print $2}'`
+#	xrootdir=/cms/local/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
+	fullpath=`echo $3 | awk -F '//' '{print $3}' | sed -e 's%^%/%g' | sed -e "s%//%/%g"`
+	xrootdir=`dirname ${fullpath}`
+	filename=`basename ${fullpath}`
+	echo "Creating dir ${protocol}://${redirector}//${xrootdir}"
+	ssh ${ssh_opts} ${redirector} mkdir -p ${xrootdir}
+	echo "Output ${filename} will be copied in ${protocol}://${redirector}/${xrootdir}"
+    fi
 elif [ "$domain" == "roma1.infn.it" ]; then
     rootdir=`dirname $3`
     filename=`basename $3`
@@ -108,14 +125,27 @@ if [ "$domain" == "cern.ch" ]; then
     fi
 fi
 
+
 if [ "$domain" == "cern.ch" ]; then
-    xrdcp ${filename} root://${redirector}//${xrootdir}/${filename}
-    exit_stat1=$?
-    if [ ${exit_stat1} != 0 ]; then
-	echo `date` `hostname` ${xrootdir}/${filename} ${exit_stat1} >> $1/log/xrootcopyerror.jobs
-    else
-	echo `date` `hostname` ${xrootdir}/${filename} >> $1/log/copysuccess.jobs
+    if [ "${protocol}" == "root" ]; then
+	xrdcp ${filename} root://${redirector}//${xrootdir}/${filename}
+	exit_stat1=$?
+	if [ ${exit_stat1} != 0 ]; then
+	    echo `date` `hostname` ${xrootdir}/${filename} ${exit_stat1} >> $1/log/xrootcopyerror.jobs
+	else
+	    echo `date` `hostname` ${xrootdir}/${filename} >> $1/log/xrootcopysuccess.jobs
+	fi
+    elif [ "${protocol}" == "sftp" ]; then
+	ssh ${ssh_opts} ${redirector} rm -rf ${redirector}:${xrootdir}/${filename}
+	scp ${scp_opts} ${filename} ${redirector}:${xrootdir}/${filename}
+	exit_stat1=$?
+	if [ ${exit_stat1} != 0 ]; then
+	    echo `date` `hostname` ${xrootdir}/${filename} ${exit_stat1} >> $1/log/scpcopyerror.jobs
+	else
+	    echo `date` `hostname` ${xrootdir}/${filename} >> $1/log/scpcopysuccess.jobs
+	fi
     fi
+
 elif [ "$domain" == "roma1.infn.it" ]; then
     cp ${filename} ${rootdir}/${filename}
     exit_stat1=$?
