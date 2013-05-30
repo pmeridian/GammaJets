@@ -13,7 +13,7 @@ void riduttore::Loop()
   if (fChain == 0) return;
 
   // hardcoded
-  bool runOnMC = false;
+  bool runOnMC = true;
 
   // output file
   TFile *outFile[5];
@@ -32,6 +32,8 @@ void riduttore::Loop()
 
   float mass;
   float probe_eta, probe_abseta, probe_phi, probe_pt;
+  float probe_bdt;
+  float probe_sRR;
   float numvtx;
   float puW;
   float puW30, puW50, puW75, puW90;  
@@ -46,6 +48,8 @@ void riduttore::Loop()
     myTree[ii] -> Branch("probe_abseta",&probe_abseta,"probe_abseta/F");
     myTree[ii] -> Branch("probe_phi",&probe_phi,"probe_phi/F");
     myTree[ii] -> Branch("probe_pt",&probe_pt,"probe_pt/F");
+    myTree[ii] -> Branch("probe_bdt",&probe_bdt,"probe_bdt/F");
+    myTree[ii] -> Branch("probe_sRR",&probe_sRR,"probe_sRR/F");
     myTree[ii] -> Branch("numvtx",&numvtx,"numvtx/F");
     myTree[ii] -> Branch("puW",  &puW,  "puW/F");
     myTree[ii] -> Branch("puW30",&puW30,"puW30/F");
@@ -70,6 +74,7 @@ void riduttore::Loop()
   cout << "Going to loop over " << nentries << " events" << endl;
   cout << endl;
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+  // for (Long64_t jentry=0; jentry<1700000;jentry++) {
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry%5000==0) cout << "entry " << ientry << endl;
@@ -101,6 +106,8 @@ void riduttore::Loop()
 	  probe_abseta = fabs(etaPhot[iPho]);
 	  probe_phi    = phiPhot[iPho];
 	  probe_pt     = ptPhot[iPho];
+	  probe_bdt    = BDT_output[iPho];
+	  probe_sRR    = sigmaRRPhot[iPho];
 
 	  numvtx = nvtx;
 

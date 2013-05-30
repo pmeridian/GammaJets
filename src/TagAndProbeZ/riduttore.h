@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri May 17 16:40:23 2013 by ROOT version 5.30/02
+// Wed May 29 18:40:11 2013 by ROOT version 5.32/00
 // from TTree AnaTree/Reduced tree for final analysis
-// found on file: redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1.root
+// found on file: /xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose..DrellYan_v1_BDTbug/redntp_DoubleElectron_Run2012A-13Jul2012-v1_00.root
 //////////////////////////////////////////////////////////
 
 #ifndef riduttore_h
@@ -11,6 +11,11 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+
+// Header file for the classes stored in the TTree if any.
+#include <vector>
+
+// Fixed size dimensions of array or collections stored in the TTree if any.
 
 class riduttore {
 public :
@@ -118,7 +123,9 @@ public :
    Float_t         pid_HoverE[50];   //[nPhot]
    Float_t         pid_hlwTrack[50];   //[nPhot]
    Float_t         pid_hlwTrackNoDz[50];   //[nPhot]
-   Float_t         BDT_output[50];   //[nPhot]
+   Float_t         r9Phot[50];   //[nPhot]
+   Float_t         s4RatioPhot[50];   //[nPhot]
+   Float_t         sigmaRRPhot[50];   //[nPhot]
    Float_t         pid_etawid[50];   //[nPhot]
    Float_t         pid_jurECAL03[50];   //[nPhot]
    Float_t         pid_twrHCAL03[50];   //[nPhot]
@@ -160,7 +167,7 @@ public :
    Float_t         sMinMinPhot[50];   //[nPhot]
    Float_t         alphaPhot[50];   //[nPhot]
    Float_t         sEtaEtaPhot[50];   //[nPhot]
-   Float_t         sEtaPhiPhot;
+   Float_t         sEtaPhiPhot[50];   //[nPhot]
    Float_t         sPhiPhiPhot[50];   //[nPhot]
    Float_t         E1Phot[50];   //[nPhot]
    Float_t         E2OverE9Phot[50];   //[nPhot]
@@ -169,6 +176,7 @@ public :
    Float_t         E25Phot[50];   //[nPhot]
    Int_t           ieleassocPhot[50];   //[nPhot]
    Float_t         pid_deltaRToTrackPhot[50];   //[nPhot]
+   Int_t           passPreselection[50];   //[nPhot]
    Int_t           isEleTag_match[50];   //[nEle]
    Int_t           isEleProbe_match[50];   //[nPhot]
    Int_t           isEleProbe_ele_match[50];   //[nEle]
@@ -211,6 +219,7 @@ public :
    Int_t           passTightEleIsoRel[50];   //[nPhot]
    Int_t           passTightEleMinHits[50];   //[nPhot]
    Float_t         invMassEle[50];
+   Float_t         BDT_output[50];   //[nPhot]
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
@@ -315,7 +324,9 @@ public :
    TBranch        *b_pid_HoverE;   //!
    TBranch        *b_pid_hlwTrack;   //!
    TBranch        *b_pid_hlwTrackNoDz;   //!
-   TBranch        *b_BDT_output;   //!
+   TBranch        *b_r9Phot;   //!
+   TBranch        *b_s4RatioPhot;   //!
+   TBranch        *b_sigmaRRPhot;   //!
    TBranch        *b_pid_etawid;   //!
    TBranch        *b_pid_jurECAL03;   //!
    TBranch        *b_pid_twrHCAL03;   //!
@@ -366,6 +377,7 @@ public :
    TBranch        *b_E25Phot;   //!
    TBranch        *b_ieleassocPhot;   //!
    TBranch        *b_pid_deltaRToTrackPhot;   //!
+   TBranch        *b_passPreselection;   //!
    TBranch        *b_isEleTag_match;   //!
    TBranch        *b_isEleProbe_match;   //!
    TBranch        *b_isEleProbe_ele_match;   //!
@@ -408,6 +420,7 @@ public :
    TBranch        *b_passTightEleIsoRel;   //!
    TBranch        *b_passTightEleMinHits;   //!
    TBranch        *b_invMassEle;   //!
+   TBranch        *b_BDT_output;   //!
    TBranch        *b_firedHLTNames;   //!
    TBranch        *b_epfMet;   //!
 
@@ -433,12 +446,12 @@ public :
 #ifdef riduttore_cxx
 riduttore::riduttore(TTree *tree) : fChain(0)
 {
-  // if parameter tree is not specified (or zero), connect the file
-  // used to generate this class and read the Tree.
+  // if parameter tree is not specified (or zero), connect the file 
+  // used to generate this class and read the Tree.                                                
   if (tree == 0) {
     TChain * chain = new TChain("AnaTree","");
-    // chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose.DoubleElectron_withpt/redntp_*.root/AnaTree");
-    chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose..DrellYan_v1/redntp_DoubleElectron_Run2012A*.root/AnaTree");
+    // chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv3_data.cicpfloose..DrellYan_v1_BDTbug/redntp_DoubleElectron_Run2012*.root/AnaTree");
+    chain->Add("/xrootdfs/cms/local/gdimperi/Higgs/reduced/redntp.53xv2_extra.cicpfloose..DrellYan_v1_BDTbug/redntp_DYJetsToLL_M-50*.root/AnaTree");
     tree = chain;
   }
   Init(tree);
@@ -587,7 +600,9 @@ void riduttore::Init(TTree *tree)
    fChain->SetBranchAddress("pid_HoverE", pid_HoverE, &b_pid_HoverE);
    fChain->SetBranchAddress("pid_hlwTrack", pid_hlwTrack, &b_pid_hlwTrack);
    fChain->SetBranchAddress("pid_hlwTrackNoDz", pid_hlwTrackNoDz, &b_pid_hlwTrackNoDz);
-   fChain->SetBranchAddress("BDT_output", BDT_output, &b_BDT_output);
+   fChain->SetBranchAddress("r9Phot", r9Phot, &b_r9Phot);
+   fChain->SetBranchAddress("s4RatioPhot", s4RatioPhot, &b_s4RatioPhot);
+   fChain->SetBranchAddress("sigmaRRPhot", sigmaRRPhot, &b_sigmaRRPhot);
    fChain->SetBranchAddress("pid_etawid", pid_etawid, &b_pid_etawid);
    fChain->SetBranchAddress("pid_jurECAL03", pid_jurECAL03, &b_pid_jurECAL03);
    fChain->SetBranchAddress("pid_twrHCAL03", pid_twrHCAL03, &b_pid_twrHCAL03);
@@ -629,7 +644,7 @@ void riduttore::Init(TTree *tree)
    fChain->SetBranchAddress("sMinMinPhot", sMinMinPhot, &b_sMinMinPhot);
    fChain->SetBranchAddress("alphaPhot", alphaPhot, &b_alphaPhot);
    fChain->SetBranchAddress("sEtaEtaPhot", sEtaEtaPhot, &b_sEtaEtaPhot);
-   fChain->SetBranchAddress("sEtaPhiPhot", &sEtaPhiPhot, &b_sEtaPhiPhot);
+   fChain->SetBranchAddress("sEtaPhiPhot", sEtaPhiPhot, &b_sEtaPhiPhot);
    fChain->SetBranchAddress("sPhiPhiPhot", sPhiPhiPhot, &b_sPhiPhiPhot);
    fChain->SetBranchAddress("E1Phot", E1Phot, &b_E1Phot);
    fChain->SetBranchAddress("E2OverE9Phot", E2OverE9Phot, &b_E2OverE9Phot);
@@ -638,6 +653,7 @@ void riduttore::Init(TTree *tree)
    fChain->SetBranchAddress("E25Phot", E25Phot, &b_E25Phot);
    fChain->SetBranchAddress("ieleassocPhot", ieleassocPhot, &b_ieleassocPhot);
    fChain->SetBranchAddress("pid_deltaRToTrackPhot", pid_deltaRToTrackPhot, &b_pid_deltaRToTrackPhot);
+   fChain->SetBranchAddress("passPreselection", passPreselection, &b_passPreselection);
    fChain->SetBranchAddress("isEleTag_match", isEleTag_match, &b_isEleTag_match);
    fChain->SetBranchAddress("isEleProbe_match", isEleProbe_match, &b_isEleProbe_match);
    fChain->SetBranchAddress("isEleProbe_ele_match", isEleProbe_ele_match, &b_isEleProbe_ele_match);
@@ -680,6 +696,7 @@ void riduttore::Init(TTree *tree)
    fChain->SetBranchAddress("passTightEleIsoRel", passTightEleIsoRel, &b_passTightEleIsoRel);
    fChain->SetBranchAddress("passTightEleMinHits", passTightEleMinHits, &b_passTightEleMinHits);
    fChain->SetBranchAddress("invMassEle", invMassEle, &b_invMassEle);
+   fChain->SetBranchAddress("BDT_output", BDT_output, &b_BDT_output);
    fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
    fChain->SetBranchAddress("epfMet", &epfMet, &b_epfMet);
    Notify();
