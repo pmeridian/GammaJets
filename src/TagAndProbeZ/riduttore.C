@@ -16,16 +16,12 @@ void riduttore::Loop()
   bool runOnMC = true;
 
   // output file
-  TFile *outFile[5];
+  TFile *outFile[1];
   outFile[0] = new TFile("outFile.root","RECREATE");
-  outFile[1] = new TFile("outFile30.root","RECREATE");
-  outFile[2] = new TFile("outFile50.root","RECREATE");
-  outFile[3] = new TFile("outFile75.root","RECREATE");
-  outFile[4] = new TFile("outFile90.root","RECREATE");
 
   // output trees declaration
-  TTree *myTree[5];
-  for (int ii=0; ii<5; ii++) {
+  TTree *myTree[1];
+  for (int ii=0; ii<1; ii++) {
     myTree[ii] = new TTree();
     myTree[ii] -> SetName("myTree");
   }
@@ -33,13 +29,9 @@ void riduttore::Loop()
   float mass;
   float probe_eta, probe_abseta, probe_phi, probe_pt;
   float probe_bdt;
-  float probe_sRR;
   float numvtx;
   float puW;
-  float puW30, puW50, puW75, puW90;  
-  int okLooseElePtEta,  okLooseEleID;
-  int okMediumElePtEta, okMediumEleID; 
-  int okTightElePtEta,  okTightEleID; 
+  int okLooseEleID, okMediumEleID, okTightEleID;  
   int okMVA_005, okMVA_01, okMVA_02;
 
   for (int ii=0; ii<5; ii++) {
@@ -49,18 +41,10 @@ void riduttore::Loop()
     myTree[ii] -> Branch("probe_phi",&probe_phi,"probe_phi/F");
     myTree[ii] -> Branch("probe_pt",&probe_pt,"probe_pt/F");
     myTree[ii] -> Branch("probe_bdt",&probe_bdt,"probe_bdt/F");
-    myTree[ii] -> Branch("probe_sRR",&probe_sRR,"probe_sRR/F");
     myTree[ii] -> Branch("numvtx",&numvtx,"numvtx/F");
     myTree[ii] -> Branch("puW",  &puW,  "puW/F");
-    myTree[ii] -> Branch("puW30",&puW30,"puW30/F");
-    myTree[ii] -> Branch("puW50",&puW50,"puW50/F");
-    myTree[ii] -> Branch("puW75",&puW75,"puW75/F");
-    myTree[ii] -> Branch("puW90",&puW90,"puW90/F");
-    myTree[ii] -> Branch("okLooseElePtEta",&okLooseElePtEta,"okLooseElePtEta/I");
     myTree[ii] -> Branch("okLooseEleID",&okLooseEleID,"okLooseEleID/I");
-    myTree[ii] -> Branch("okMediumElePtEta",&okMediumElePtEta,"okMediumElePtEta/I");
     myTree[ii] -> Branch("okMediumEleID",&okMediumEleID,"okMediumEleID/I");
-    myTree[ii] -> Branch("okTightElePtEta",&okTightElePtEta,"okTightElePtEta/I");
     myTree[ii] -> Branch("okTightEleID",&okTightEleID,"okTightEleID/I");
     myTree[ii] -> Branch("okMVA_005",&okMVA_005,"okMVA_005/I");
     myTree[ii] -> Branch("okMVA_01",&okMVA_01,"okMVA_01/I");
@@ -73,8 +57,8 @@ void riduttore::Loop()
 
   cout << "Going to loop over " << nentries << " events" << endl;
   cout << endl;
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
-  // for (Long64_t jentry=0; jentry<1700000;jentry++) {
+  // for (Long64_t jentry=0; jentry<nentries;jentry++) {
+  for (Long64_t jentry=0; jentry<1700000;jentry++) {
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry%5000==0) cout << "entry " << ientry << endl;
@@ -82,21 +66,20 @@ void riduttore::Loop()
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
 
-    for (int iEle=0; iEle<nEle; iEle++) {
-      if ( runOnMC && !isEleTag_match[iEle]) continue;
-      if (!runOnMC && !isEleTag[iEle]) continue;
+    for (int iEle=0; iEle<nEle; iEle++) {  // Tight => Medium
+      if ( runOnMC && (!isGenMatchEle[iEle] || !isTagTightEle[iEle]) ) continue;
+      if (!runOnMC && !isTagTightEle[iEle]) continue;  
       TLorentzVector theEle;
-      theEle.SetPtEtaPhiE(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], electron_energy[iEle]);
+      theEle.SetPtEtaPhiM(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], 0.);
 
       for (int iPho=0; iPho<nPhot; iPho++) {
-	if ( runOnMC && !isEleProbe_match[iPho]) continue;
-	if (!runOnMC && !isEleProbe[iPho]) continue;
+	if ( runOnMC &&( !isGenMatchPhot[iPho] || !isProbePreselPhot[iPho])) continue;
+	if (!runOnMC && !isProbePreselPhot[iPho]) continue;
 	TLorentzVector thePho;
-	thePho.SetPtEtaPhiE(ptPhot[iPho], etaPhot[iPho], phiPhot[iPho], ePhot[iPho]);
+	thePho.SetPtEtaPhiM(ptPhot[iPho], etaPhot[iPho], phiPhot[iPho], 0.);
       
 	TLorentzVector theTaP = theEle + thePho;
 	float theMass = theTaP.M();
-      
 	if (theMass<120 && theMass>60) {
 
 	  // filling the tree
@@ -106,69 +89,36 @@ void riduttore::Loop()
 	  probe_abseta = fabs(etaPhot[iPho]);
 	  probe_phi    = phiPhot[iPho];
 	  probe_pt     = ptPhot[iPho];
-	  probe_bdt    = BDT_output[iPho];
-	  probe_sRR    = sigmaRRPhot[iPho];
+	  probe_bdt    = mvaIDPhot[iPho];
 
 	  numvtx = nvtx;
 
-	  if(runOnMC) {
-	    puW   = pu_weight;
-	    puW30 = pu_weight30;
-	    puW50 = pu_weight50;
-	    puW75 = pu_weight75;
-	    puW90 = pu_weight90;
-	  } else {
-	    puW   = 1.;
-	    puW30 = 1.;
-	    puW50 = 1.;
-	    puW75 = 1.;
-	    puW90 = 1.;
-	  }
-
-	  if(runOnMC) {
-	    okLooseElePtEta  = passLooseElePtEta_match[iPho];
-	    okLooseEleID     = passLooseEleID_match[iPho];
-	    okMediumElePtEta = passMediumElePtEta_match[iPho];
-	    okMediumEleID    = passMediumEleID_match[iPho];
-	    okTightElePtEta  = passTightElePtEta_match[iPho];
-	    okTightEleID     = passTightEleID_match[iPho];
-	  } else {
-	    okLooseElePtEta  = passLooseElePtEta[iPho];
-	    okLooseEleID     = passLooseEleID[iPho];
-	    okMediumElePtEta = passMediumElePtEta[iPho];
-	    okMediumEleID    = passMediumEleID[iPho];
-	    okTightElePtEta  = passTightElePtEta[iPho];
-	    okTightEleID     = passTightEleID[iPho];
-	  }
+	  if(runOnMC) puW = pu_weight;
+	  else puW = 1.;
+	  
+	  okLooseEleID  = isProbeLoosePhot[iPho];
+	  okMediumEleID = isProbeMediumPhot[iPho];
+	  okTightEleID  = isProbeTightPhot[iPho];
 
 	  // MVA WPs
 	  okMVA_005 = 0;
 	  okMVA_01  = 0;
 	  okMVA_02  = 0;
 	  if (fabs(etaPhot[iPho])<1.5) {
-	    if ( BDT_output[iPho]>0.711099 ) okMVA_005 = 1;
-	    if ( BDT_output[iPho]>0.812948 ) okMVA_01  = 1;
-	    if ( BDT_output[iPho]>0.878893 ) okMVA_02  = 1;
+	    if ( mvaIDPhot[iPho]>0.711099 ) okMVA_005 = 1;
+	    if ( mvaIDPhot[iPho]>0.812948 ) okMVA_01  = 1;
+	    if ( mvaIDPhot[iPho]>0.878893 ) okMVA_02  = 1;
 	  } else {
-	    if ( BDT_output[iPho]>0.581733 ) okMVA_005 = 1;
-	    if ( BDT_output[iPho]>0.73721  ) okMVA_01  = 1;
-	    if ( BDT_output[iPho]>0.850808 ) okMVA_02  = 1;
+	    if ( mvaIDPhot[iPho]>0.581733 ) okMVA_005 = 1;
+	    if ( mvaIDPhot[iPho]>0.73721  ) okMVA_01  = 1;
+	    if ( mvaIDPhot[iPho]>0.850808 ) okMVA_02  = 1;
 	  }
 
 	  // check HLT and pT range
 	  if (!runOnMC) {
-	    if ( isHLT_TandP() )                                           myTree[0]->Fill();
-	    if ( isHLT_30() && ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
-	    if ( isHLT_50() && ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
-	    if ( isHLT_75() && ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
-	    if ( isHLT_90() && ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )  myTree[4]->Fill();
-	    }
-	  if (runOnMC) {
+	    if ( isHLT_TandP() ) myTree[0]->Fill();
+	  } else {
 	    myTree[0]->Fill();
-	    if ( ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
-	    if ( ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
-	    if ( ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
-	    if ( ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )  myTree[4]->Fill();
 	  }
 
 	}  // ok mass
@@ -176,7 +126,7 @@ void riduttore::Loop()
     }   // loop over electrons
   }  // entries
 
-  for (int ii=0; ii<5; ii++) {
+  for (int ii=0; ii<1; ii++) {
     outFile[ii]->cd();
     TDirectory* outputDirectory = outFile[ii]->mkdir("myTaPDir");
     outputDirectory->cd();
@@ -203,50 +153,3 @@ bool riduttore::isHLT_TandP() {
   return isok;
 }
 
-bool riduttore::isHLT_30() {
-
-  bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v18") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v19") isok=true;
-  }
-  return isok;
-}
-
-bool riduttore::isHLT_50() {
-
-  bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v17") isok=true;
-  }
-  return isok;
-}
-
-bool riduttore::isHLT_75() {
-
-  bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v16") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v17") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v18") isok=true;
-  }
-  return isok;
-}
-
-bool riduttore::isHLT_90() {
-
-  bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v13") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v14") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v15") isok=true;
-  }
-  return isok;
-}
