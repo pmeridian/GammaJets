@@ -3,63 +3,171 @@
 #include "TFile.h"
 #include "TH2D.h"
 #include "TLegend.h"
+#include "TStyle.h"
 #include <iostream>
 
 void plotsEff() {
   
   // -------------------------------------
-  // hardcoded: efficiency on data
+  // hardcoded: efficiency on data (95%)
+  /*
   Float_t dataEffPtEB[4];
-  dataEffPtEB[0] = 0.958273; 
-  dataEffPtEB[1] = 0.976137;
-  dataEffPtEB[2] = 0.983786;
-  dataEffPtEB[3] = 0.988693; 
+  dataEffPtEB[0] = 0.788216;
+  dataEffPtEB[1] = 0.868873;
+  dataEffPtEB[2] = 0.909119;
+  dataEffPtEB[3] = 0.937142;
 
   Float_t dataErrPtEB[4];
-  dataErrPtEB[0] = 0.00123849;
-  dataErrPtEB[1] = 0.000265797;
-  dataErrPtEB[2] = 0.00018067;
-  dataErrPtEB[3] = 0.000235874;
+  dataErrPtEB[0] = 0.0022248;
+  dataErrPtEB[1] = 0.00557281;
+  dataErrPtEB[2] = 0.000410552;
+  dataErrPtEB[3] = 0.0317504;
   
   Float_t dataEffPtEE[4];
-  dataEffPtEE[0] = 0.960188;
-  dataEffPtEE[1] = 0.977903;
-  dataEffPtEE[2] = 0.987079;
-  dataEffPtEE[3] = 0.993108;
+  dataEffPtEE[0] = 0.667278;
+  dataEffPtEE[1] = 0.789731;
+  dataEffPtEE[2] = 0.861867;
+  dataEffPtEE[3] = 0.91869;
 
   Float_t dataErrPtEE[4];
-  dataErrPtEE[0] = 0.00112677;
-  dataErrPtEE[1] = 0.00039788;
-  dataErrPtEE[2] = 0.00659875;
-  dataErrPtEE[3] = 0.000379205;
+  dataErrPtEE[0] = 0.00288854;
+  dataErrPtEE[1] = 0.00113707;
+  dataErrPtEE[2] = 0.0008856;
+  dataErrPtEE[3] = 0.00125012;
+  */
 
+  // hardcoded: efficiency on data (90%)
+  Float_t dataEffPtEB[4];
+  dataEffPtEB[0] = 0.6809;
+  dataEffPtEB[1] = 0.774901;
+  dataEffPtEB[2] = 0.826641;
+  dataEffPtEB[3] = 0.87309;
+
+  Float_t dataErrPtEB[4];
+  dataErrPtEB[0] = 0.002289;
+  dataErrPtEB[1] = 0.0006833;
+  dataErrPtEB[2] = 0.085946;
+  dataErrPtEB[3] = 0.0004758;
+  
+  Float_t dataEffPtEE[4];
+  dataEffPtEE[0] = 0.547962;
+  dataEffPtEE[1] = 0.670435;
+  dataEffPtEE[2] = 0.753952;
+  dataEffPtEE[3] = 0.83594;
+
+  Float_t dataErrPtEE[4];
+  dataErrPtEE[0] = 0.003029;
+  dataErrPtEE[1] = 0.0012858;
+  dataErrPtEE[2] = 0.001035;
+  dataErrPtEE[3] = 0.001670;
 
   // -------------------------------------
-  // hardcoded: efficiency on mc
+  // hardcoded: efficiency on mc (95%)
+  /*
   Float_t mcEffPtEB[4];
-  mcEffPtEB[0] = 0.960261;
-  mcEffPtEB[1] = 0.978493;
-  mcEffPtEB[2] = 0.986679;
-  mcEffPtEB[3] = 0.990685;
+  mcEffPtEB[0] = 0.806962;
+  mcEffPtEB[1] = 0.884942;
+  mcEffPtEB[2] = 0.921844;
+  mcEffPtEB[3] = 0.946614;
 
   Float_t mcErrPtEB[4];
-  mcErrPtEB[0] = 0.000545127;
-  mcErrPtEB[1] = 0.000257207;
-  mcErrPtEB[2] = 0.000179208;
-  mcErrPtEB[3] = 0.000298668;
+  mcErrPtEB[0] = 0.00183663;
+  mcErrPtEB[1] = 0.000726529;
+  mcErrPtEB[2] = 0.0005429;
+  mcErrPtEB[3] = 0.0008690;
   
   Float_t mcEffPtEE[4];
-  mcEffPtEE[0] = 0.952608;
-  mcEffPtEE[1] = 0.973922;
-  mcEffPtEE[2] = 0.9845;
-  mcEffPtEE[3] = 0.990536;
+  mcEffPtEE[0] = 0.740969;
+  mcEffPtEE[1] = 0.86685;
+  mcEffPtEE[2] = 0.924042;
+  mcEffPtEE[3] = 0.961009;
 
   Float_t mcErrPtEE[4];
-  mcErrPtEE[0] = 0.00103929;
-  mcErrPtEE[1] = 0.000221474;
-  mcErrPtEE[2] = 0.00790882;
-  mcErrPtEE[3] = 0.000445383;
+  mcErrPtEE[0] = 0.00258916;
+  mcErrPtEE[1] = 0.00123024;
+  mcErrPtEE[2] = 0.000874;
+  mcErrPtEE[3] = 0.00113995;
+  */
 
+  // hardcoded: efficiency on mc (90%)
+  Float_t mcEffPtEB[4];
+  mcEffPtEB[0] = 0.70395;
+  mcEffPtEB[1] = 0.796202;
+  mcEffPtEB[2] = 0.845931;
+  mcEffPtEB[3] = 0.886863;
+
+  Float_t mcErrPtEB[4];
+  mcErrPtEB[0] = 0.00204;
+  mcErrPtEB[1] = 0.000917;
+  mcErrPtEB[2] = 0.000730;
+  mcErrPtEB[3] = 0.00119625;
+  
+  Float_t mcEffPtEE[4];
+  mcEffPtEE[0] = 0.626057;
+  mcEffPtEE[1] = 0.770266;
+  mcEffPtEE[2] = 0.846824;
+  mcEffPtEE[3] = 0.909447;
+
+  Float_t mcErrPtEE[4];
+  mcErrPtEE[0] = 0.002778;
+  mcErrPtEE[1] = 0.001529;
+  mcErrPtEE[2] = 0.07719;
+  mcErrPtEE[3] = 0.001755;
+
+  // -------------------------------------
+  // hardcoded: efficiency on MC (90%), high R9 (nome misleading...)
+  /*
+  Float_t dataEffPtEB[4];
+  dataEffPtEB[0] = 0.933638;
+  dataEffPtEB[1] = 0.954063;
+  dataEffPtEB[2] = 0.964888;
+  dataEffPtEB[3] = 0.97694;
+
+  Float_t dataErrPtEB[4];
+  dataErrPtEB[0] = 0.002329;
+  dataErrPtEB[1] = 0.0009391;
+  dataErrPtEB[2] = 0.0006698;
+  dataErrPtEB[3] = 0.0120207;
+  
+  Float_t dataEffPtEE[4];
+  dataEffPtEE[0] = 0.930876;
+  dataEffPtEE[1] = 0.96969;
+  dataEffPtEE[2] = 0.980841;
+  dataEffPtEE[3] = 0.987945;
+
+  Float_t dataErrPtEE[4];
+  dataErrPtEE[0] = 0.002852;
+  dataErrPtEE[1] = 0.001196;
+  dataErrPtEE[2] = 0.0007996;
+  dataErrPtEE[3] = 0.00111779;
+  */
+
+  // hardcoded: efficiency on MC (90%), low R9 (nome misleading...)
+  /*
+  Float_t mcEffPtEB[4];
+  mcEffPtEB[0] = 0.64763;
+  mcEffPtEB[1] = 0.741015;
+  mcEffPtEB[2] = 0.792764;
+  mcEffPtEB[3] = 0.835521;
+
+  Float_t mcErrPtEB[4];
+  mcErrPtEB[0] = 0.002352;
+  mcErrPtEB[1] = 0.001158;
+  mcErrPtEB[2] = 0.000986;
+  mcErrPtEB[3] = 0.001738;
+  
+  Float_t mcEffPtEE[4];
+  mcEffPtEE[0] = 0.540286;
+  mcEffPtEE[1] = 0.694782;
+  mcEffPtEE[2] = 0.783672;
+  mcEffPtEE[3] = 0.861586;
+
+  Float_t mcErrPtEE[4];
+  mcErrPtEE[0] = 0.23148;
+  mcErrPtEE[1] = 0.001958;
+  mcErrPtEE[2] = 0.001649;
+  mcErrPtEE[3] = 0.002647;
+  */
 
   // -------------------------------------
   // histograms: 2D plots
@@ -115,15 +223,15 @@ void plotsEff() {
   DataEffVsPt_barrel->SetLineColor(4);
   DataEffVsPt_barrel->SetMarkerStyle(20);
   DataEffVsPt_barrel->SetMarkerSize(0.9);
-  DataEffVsPt_barrel->SetTitle("data");
   DataEffVsPt_barrel->GetXaxis()->SetTitle("probe pT [GeV]");
+  DataEffVsPt_barrel->SetTitle("photonID efficiency");
 
   DataEffVsPt_endcap->SetLineColor(4);
   DataEffVsPt_endcap->SetMarkerColor(4);
   DataEffVsPt_endcap->SetMarkerStyle(20);
   DataEffVsPt_endcap->SetMarkerSize(0.9);
-  DataEffVsPt_endcap->SetTitle("data");
   DataEffVsPt_endcap->GetXaxis()->SetTitle("probe pT [GeV]");
+  DataEffVsPt_endcap->SetTitle("photonID efficiency");
 
 
   // ---------------------------------------
@@ -141,14 +249,14 @@ void plotsEff() {
   McEffVsPt_barrel->SetLineColor(2);
   McEffVsPt_barrel->SetMarkerStyle(21);
   McEffVsPt_barrel->SetMarkerSize(0.9);
-  McEffVsPt_barrel->SetTitle("mc");
+  McEffVsPt_barrel->SetTitle("photonID efficiency");
   McEffVsPt_barrel->GetXaxis()->SetTitle("probe pT [GeV]");
 
   McEffVsPt_endcap->SetMarkerColor(2);
   McEffVsPt_endcap->SetLineColor(2);
   McEffVsPt_endcap->SetMarkerStyle(21);
   McEffVsPt_endcap->SetMarkerSize(0.9);
-  McEffVsPt_endcap->SetTitle("mc");
+  McEffVsPt_endcap->SetTitle("photonID efficiency");
   McEffVsPt_endcap->GetXaxis()->SetTitle("probe pT [GeV]");
 
 
@@ -156,13 +264,15 @@ void plotsEff() {
   gStyle->SetOptStat(0);
 
   TLegend *leg;
-  leg = new TLegend(0.6,0.6,0.85,0.85);
+  leg = new TLegend(0.4,0.4,0.65,0.65);
   leg->SetFillStyle(0);
   leg->SetBorderSize(0);
   leg->SetTextSize(0.05);
   leg->SetFillColor(0);
-  leg->AddEntry(DataEffVsPt_endcap, "data", "l");
-  leg->AddEntry(McEffVsPt_endcap,   "MC",   "l");
+  // leg->AddEntry(DataEffVsPt_endcap, "MC, highR9", "lp");
+  // leg->AddEntry(McEffVsPt_endcap,   "MC, low R9", "lp");
+  leg->AddEntry(DataEffVsPt_endcap, "data", "lp");
+  leg->AddEntry(McEffVsPt_endcap,   "MC",   "lp");
 
   TCanvas myC1("c1", "c1", 1);
   DataEffMap->Draw("colz");
@@ -175,22 +285,26 @@ void plotsEff() {
   myC1b.SaveAs("mcMap.png");
 
   TCanvas myC2("c2", "c2", 1);
-  DataEffVsPt_barrel->SetMinimum(0.9);
+  DataEffVsPt_barrel->SetMinimum(0.5);
+  DataEffVsPt_barrel->SetMaximum(1.);
   DataEffVsPt_barrel->Draw();
   myC2.SaveAs("dataEffVsPt_barrel.png");
 
   TCanvas myC3("c3", "c3", 1);
-  DataEffVsPt_endcap->SetMinimum(0.9);
+  DataEffVsPt_endcap->SetMinimum(0.5);
+  DataEffVsPt_endcap->SetMaximum(1.);
   DataEffVsPt_endcap->Draw();
   myC3.SaveAs("dataEffVsPt_endcap.png");
 
   TCanvas myC4("c4", "c4", 1);
-  McEffVsPt_barrel->SetMinimum(0.9);
+  McEffVsPt_barrel->SetMinimum(0.5);
+  McEffVsPt_barrel->SetMaximum(1.);
   McEffVsPt_barrel->Draw();
   myC4.SaveAs("mcEffVsPt_barrel.png");
 
   TCanvas myC5("c5", "c5", 1);
-  McEffVsPt_endcap->SetMinimum(0.9);
+  McEffVsPt_endcap->SetMinimum(0.5);
+  McEffVsPt_endcap->SetMaximum(1.);
   McEffVsPt_endcap->Draw();
   myC5.SaveAs("mcEffVsPt_endcap.png");
 
