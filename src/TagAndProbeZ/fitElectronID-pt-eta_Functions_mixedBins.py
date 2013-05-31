@@ -13,8 +13,8 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
-if TYPE  == 'MC'    : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_MCsmall.root"
-if TYPE  == 'DATA'  : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_DoubleElectron_nopt.root"
+if TYPE  == 'MC'    : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_MCsmall_tagTight.root"
+if TYPE  == 'DATA'  : INPUTFILE = "/afs/cern.ch/user/c/crovelli/myWorkspace/gammaJets/CMSSW_5_3_6/src/GammaJets/src/TagAndProbeZ/outFile_DoubleElectron_tagTight.root"
 
 process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(1),
@@ -36,28 +36,19 @@ process.TnP_MuonID = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         numvtx = cms.vstring("Number of PV (DA)","0","100",""),
 
         puW = cms.vstring("PU weight","0","10",""),
-        puW30 = cms.vstring("weight for HLT30","0","10",""),
-        puW50 = cms.vstring("weight for HLT50","0","10",""),
-        puW75 = cms.vstring("weight for HLT75","0","10",""),
-        puW90 = cms.vstring("weight for HLT90","0","10",""),
     ),
 
     Categories = cms.PSet(
 
         ## Cuts Sequence
-        okLooseElePtEta = cms.vstring("okLooseElePtEta","dummy[pass=1,fail=0]"),  
         okLooseEleID = cms.vstring("okLooseEleID","dummy[pass=1,fail=0]"),
-
-        okMediumElePtEta = cms.vstring("okMediumElePtEta","dummy[pass=1,fail=0]"),  
         okMediumEleID = cms.vstring("okMediumEleID","dummy[pass=1,fail=0]"),  
-
-        okTightElePtEta = cms.vstring("okTightElePtEta","dummy[pass=1,fail=0]"),  
         okTightEleID = cms.vstring("okTightEleID","dummy[pass=1,fail=0]"),  
 
         okMVA_005 = cms.vstring("okMVA_005","dummy[pass=1,fail=0]"),
         okMVA_01 = cms.vstring("okMVA_01","dummy[pass=1,fail=0]"),
         okMVA_02 = cms.vstring("okMVA_02","dummy[pass=1,fail=0]"),
- 
+
         # chiara: questo sarebbe da mettere
         # tag_HLT_HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC8_Mass30_TagLeg = cms.vstring("legTag1","dummy[pass=1,fail=0]"),
     ),
@@ -184,8 +175,10 @@ process.TnP_MuonID.OutputFileName = cms.string(OUTPUTFILE)
 
 process.TnP_MuonID.Efficiencies.PASSING_all = cms.PSet(
 
-    #EfficiencyCategoryAndState = cms.vstring("okMediumElePtEta","pass"),    # mettendone tanti si fa l'AND
-    EfficiencyCategoryAndState = cms.vstring("okMediumEleID","pass"),        # mettendone tanti si fa l'AND
+    #EfficiencyCategoryAndState = cms.vstring("okMediumEleID","pass"),        # mettendone tanti si fa l'AND
+    #EfficiencyCategoryAndState = cms.vstring("okMVA_005","pass"),
+    EfficiencyCategoryAndState = cms.vstring("okMVA_01","pass"),
+    #EfficiencyCategoryAndState = cms.vstring("okMVA_02","pass"),
 
     UnbinnedVariables = cms.vstring("mass","puW"),
     BinnedVariables = ONE_BIN.clone(
