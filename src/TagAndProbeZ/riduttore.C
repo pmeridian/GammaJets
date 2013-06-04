@@ -34,7 +34,7 @@ void riduttore::Loop()
   int okLooseEleID, okMediumEleID, okTightEleID;  
   int okMVA_005, okMVA_01, okMVA_02;
 
-  for (int ii=0; ii<5; ii++) {
+  for (int ii=0; ii<1; ii++) {
     myTree[ii] -> Branch("mass",&mass,"mass/F");
     myTree[ii] -> Branch("probe_eta",&probe_eta,"probe_eta/F");
     myTree[ii] -> Branch("probe_abseta",&probe_abseta,"probe_abseta/F");
@@ -75,6 +75,10 @@ void riduttore::Loop()
       for (int iPho=0; iPho<nPhot; iPho++) {
 	if ( runOnMC &&( !isGenMatchPhot[iPho] || !isProbePreselPhot[iPho])) continue;
 	if (!runOnMC && !isProbePreselPhot[iPho]) continue;
+
+	// if (r9Phot[iPho]<0.94) continue;  // high R9 only
+	// if (r9Phot[iPho]>0.94) continue;  // low R9 only
+
 	TLorentzVector thePho;
 	thePho.SetPtEtaPhiM(ptPhot[iPho], etaPhot[iPho], phiPhot[iPho], 0.);
       
