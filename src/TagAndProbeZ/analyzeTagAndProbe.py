@@ -9,16 +9,17 @@ import multiprocessing
 import glob
 from itertools import repeat
 
+#Example: how to run it:
+#./analyzeTagAndProbe.py --samplesDat=samples_paolo.dat --cuts=cuts.dat
+
 #Some global options
 xrootd_server="pccmsrm27.cern.ch"
 output_dir="/cms/local/meridian/GammaJets/TandP"
 tmp_dir="/tmp/"+str(os.environ['USER'])
 
-#mc_dir="root://pccmsrm27.cern.ch///cms/local/crovelli/GammaJets/reduced/redntp.53xv2.cicpfloose.noCorrections.GammaJets_newNtuples_v5/merged2/"
-#data_dir="root://pccmsrm27.cern.ch///cms/local/crovelli/GammaJets/reduced/redntp.53xv2_data.cicpfloose.noCorrections.GammaJets_newNtuples_v5/merged2"
+
 
 cuts={}
-#The cuts will be passed as parameters
 samples={}
 
 def main(options,args):
