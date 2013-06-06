@@ -119,12 +119,12 @@ void TagAndProbeTree::Loop() {
   int nNoReco = 0;
   int nEleEvents = 0;
   int nEleTag_tot(0), nEleProbe_tot(0);
-
+  
   TH1F* h_genNotMatched = new TH1F("h_genNotMatched", "", 120, -2.5, 2.5 );
-
+  
   float lowEdges[6] = {0., 20., 30., 40., 50., 100.};
-
-
+  
+  
 
   //cout << "Set MVA variables" << endl;
   /*******************************************************
@@ -135,127 +135,127 @@ void TagAndProbeTree::Loop() {
   tmvaReaderID_Single_Endcap=0;
   tmvaReaderID_Single_Barrel=0;
   if (!tmvaReaderID_Single_Barrel || !tmvaReaderID_Single_Endcap) SetAllMVA();
-
-    // Photon ID selection 2012
-    // this is the tight WP  (for probe electron) 
-    // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
-    photonidcuts2012 eleprobe_tight2012;
-    eleprobe_tight2012.eta       = 2.5;
-    eleprobe_tight2012.crack1    = 1.4442;
-    eleprobe_tight2012.crack2    = 1.566;
-    eleprobe_tight2012.pt        = 20.;
-    eleprobe_tight2012.setaetaEB = 0.011;
-    eleprobe_tight2012.setaetaEE = 0.031;
-    eleprobe_tight2012.hoeEB     = 0.05;
-    eleprobe_tight2012.hoeEE     = 0.05;
-    
-    // Photon ID selection 2012
-    // this is the medium WP  (for probe electron) 
-    // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
-    photonidcuts2012 eleprobe_medium2012;
-    eleprobe_medium2012.eta       = 2.5;
-    eleprobe_medium2012.crack1    = 1.4442;
-    eleprobe_medium2012.crack2    = 1.566;
-    eleprobe_medium2012.pt        = 20.;
-    eleprobe_medium2012.setaetaEB = 0.011;
-    eleprobe_medium2012.setaetaEE = 0.033;
-    eleprobe_medium2012.hoeEB     = 0.05;
-    eleprobe_medium2012.hoeEE     = 0.05;
-    
-    // Photon ID selection 2012
-    // this is the loose WP (for probe electron) 
-    // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
-    photonidcuts2012 eleprobe_loose2012;
-    eleprobe_loose2012.eta       = 2.5;
-    eleprobe_loose2012.crack1    = 1.4442;
-    eleprobe_loose2012.crack2    = 1.566;
-    eleprobe_loose2012.pt        = 20.;
-    eleprobe_loose2012.setaetaEB = 0.012;
-    eleprobe_loose2012.setaetaEE = 0.034;
-    eleprobe_loose2012.hoeEB     = 0.05;
-    eleprobe_loose2012.hoeEE     = 0.05;
   
-
-    // Lepton tag selection 2012: electrons
-    // this is the tight WP (for  the tag and probe) 
-    // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
-    electronidcuts2012 eletag_tight2012;
-    eletag_tight2012.eta       = 2.5;
-    eletag_tight2012.crack1    = 1.4442;
-    eletag_tight2012.crack2    = 1.566;
-    eletag_tight2012.pt        = 20.;
-    eletag_tight2012.setaetaEB = 0.01;
-    eletag_tight2012.setaetaEE = 0.03;
-    eletag_tight2012.dphiEB    = 0.03;   
-    eletag_tight2012.dphiEE    = 0.02;   
-    eletag_tight2012.detaEB    = 0.004;
-    eletag_tight2012.detaEE    = 0.005;
-    eletag_tight2012.hoeEB     = 0.12;
-    eletag_tight2012.hoeEE     = 0.10;
-    eletag_tight2012.oemopEB   = 0.05;
-    eletag_tight2012.oemopEE   = 0.05;
-    eletag_tight2012.d0EB      = 0.02;
-    eletag_tight2012.d0EE      = 0.02;
-    eletag_tight2012.dzEB      = 0.1;
-    eletag_tight2012.dzEE      = 0.1;
-    eletag_tight2012.minhitsEB = 0;
-    eletag_tight2012.minhitsEE = 0;
-    eletag_tight2012.iso_relEB = 0.10;  
-    eletag_tight2012.iso_relEE = 0.10;
-
-    // Lepton tag selection 2012: electrons
-    // this is the medium WP
-    // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
-    electronidcuts2012 eletag_medium2012;
-    eletag_medium2012.eta       = 2.5;
-    eletag_medium2012.crack1    = 1.4442;
-    eletag_medium2012.crack2    = 1.566;
-    eletag_medium2012.pt        = 20.;
-    eletag_medium2012.setaetaEB = 0.01;
-    eletag_medium2012.setaetaEE = 0.03;
-    eletag_medium2012.dphiEB    = 0.06;   
-    eletag_medium2012.dphiEE    = 0.03;   
-    eletag_medium2012.detaEB    = 0.004;
-    eletag_medium2012.detaEE    = 0.007;
-    eletag_medium2012.hoeEB     = 0.12;
-    eletag_medium2012.hoeEE     = 0.10;
-    eletag_medium2012.oemopEB   = 0.05;
-    eletag_medium2012.oemopEE   = 0.05;
-    eletag_medium2012.d0EB      = 0.02;
-    eletag_medium2012.d0EE      = 0.02;
-    eletag_medium2012.dzEB      = 0.1;
-    eletag_medium2012.dzEE      = 0.1;
-    eletag_medium2012.minhitsEB = 1;
-    eletag_medium2012.minhitsEE = 1;
-    eletag_medium2012.iso_relEB = 0.15;  
-    eletag_medium2012.iso_relEE = 0.15;
-
-    // Lepton tag selection 2012: electrons
-    // this is the loose WP
-    // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
-    electronidcuts2012 eletag_loose2012;
-    eletag_loose2012.eta       = 2.5;
-    eletag_loose2012.crack1    = 1.4442;
-    eletag_loose2012.crack2    = 1.566;
-    eletag_loose2012.pt        = 20.;
-    eletag_loose2012.setaetaEB = 0.01;
-    eletag_loose2012.setaetaEE = 0.03;
-    eletag_loose2012.dphiEB    = 0.15;   
-    eletag_loose2012.dphiEE    = 0.10;   
-    eletag_loose2012.detaEB    = 0.007;
-    eletag_loose2012.detaEE    = 0.009;
-    eletag_loose2012.hoeEB     = 0.12;
-    eletag_loose2012.hoeEE     = 0.10;
-    eletag_loose2012.oemopEB   = 0.05;
-    eletag_loose2012.oemopEE   = 0.05;
-    eletag_loose2012.d0EB      = 0.02;
-    eletag_loose2012.d0EE      = 0.02;
-    eletag_loose2012.dzEB      = 0.2;
-    eletag_loose2012.dzEE      = 0.2;
-    eletag_loose2012.minhitsEB = 1;
-    eletag_loose2012.minhitsEE = 1;
-    eletag_loose2012.iso_relEB = 0.15;  
-    eletag_loose2012.iso_relEE = 0.15;
+  // Photon ID selection 2012
+  // this is the tight WP  (for probe electron) 
+  // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
+  photonidcuts2012 eleprobe_tight2012;
+  eleprobe_tight2012.eta       = 2.5;
+  eleprobe_tight2012.crack1    = 1.4442;
+  eleprobe_tight2012.crack2    = 1.566;
+  eleprobe_tight2012.pt        = 20.;
+  eleprobe_tight2012.setaetaEB = 0.011;
+  eleprobe_tight2012.setaetaEE = 0.031;
+  eleprobe_tight2012.hoeEB     = 0.05;
+  eleprobe_tight2012.hoeEE     = 0.05;
+  
+  // Photon ID selection 2012
+  // this is the medium WP  (for probe electron) 
+  // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
+  photonidcuts2012 eleprobe_medium2012;
+  eleprobe_medium2012.eta       = 2.5;
+  eleprobe_medium2012.crack1    = 1.4442;
+  eleprobe_medium2012.crack2    = 1.566;
+  eleprobe_medium2012.pt        = 20.;
+  eleprobe_medium2012.setaetaEB = 0.011;
+  eleprobe_medium2012.setaetaEE = 0.033;
+  eleprobe_medium2012.hoeEB     = 0.05;
+  eleprobe_medium2012.hoeEE     = 0.05;
+  
+  // Photon ID selection 2012
+  // this is the loose WP (for probe electron) 
+  // in https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedPhotonID2012
+  photonidcuts2012 eleprobe_loose2012;
+  eleprobe_loose2012.eta       = 2.5;
+  eleprobe_loose2012.crack1    = 1.4442;
+  eleprobe_loose2012.crack2    = 1.566;
+  eleprobe_loose2012.pt        = 20.;
+  eleprobe_loose2012.setaetaEB = 0.012;
+  eleprobe_loose2012.setaetaEE = 0.034;
+  eleprobe_loose2012.hoeEB     = 0.05;
+  eleprobe_loose2012.hoeEE     = 0.05;
+  
+  
+  // Lepton tag selection 2012: electrons
+  // this is the tight WP (for  the tag and probe) 
+  // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
+  electronidcuts2012 eletag_tight2012;
+  eletag_tight2012.eta       = 2.5;
+  eletag_tight2012.crack1    = 1.4442;
+  eletag_tight2012.crack2    = 1.566;
+  eletag_tight2012.pt        = 20.;
+  eletag_tight2012.setaetaEB = 0.01;
+  eletag_tight2012.setaetaEE = 0.03;
+  eletag_tight2012.dphiEB    = 0.03;   
+  eletag_tight2012.dphiEE    = 0.02;   
+  eletag_tight2012.detaEB    = 0.004;
+  eletag_tight2012.detaEE    = 0.005;
+  eletag_tight2012.hoeEB     = 0.12;
+  eletag_tight2012.hoeEE     = 0.10;
+  eletag_tight2012.oemopEB   = 0.05;
+  eletag_tight2012.oemopEE   = 0.05;
+  eletag_tight2012.d0EB      = 0.02;
+  eletag_tight2012.d0EE      = 0.02;
+  eletag_tight2012.dzEB      = 0.1;
+  eletag_tight2012.dzEE      = 0.1;
+  eletag_tight2012.minhitsEB = 0;
+  eletag_tight2012.minhitsEE = 0;
+  eletag_tight2012.iso_relEB = 0.10;  
+  eletag_tight2012.iso_relEE = 0.10;
+  
+  // Lepton tag selection 2012: electrons
+  // this is the medium WP
+  // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
+  electronidcuts2012 eletag_medium2012;
+  eletag_medium2012.eta       = 2.5;
+  eletag_medium2012.crack1    = 1.4442;
+  eletag_medium2012.crack2    = 1.566;
+  eletag_medium2012.pt        = 20.;
+  eletag_medium2012.setaetaEB = 0.01;
+  eletag_medium2012.setaetaEE = 0.03;
+  eletag_medium2012.dphiEB    = 0.06;   
+  eletag_medium2012.dphiEE    = 0.03;   
+  eletag_medium2012.detaEB    = 0.004;
+  eletag_medium2012.detaEE    = 0.007;
+  eletag_medium2012.hoeEB     = 0.12;
+  eletag_medium2012.hoeEE     = 0.10;
+  eletag_medium2012.oemopEB   = 0.05;
+  eletag_medium2012.oemopEE   = 0.05;
+  eletag_medium2012.d0EB      = 0.02;
+  eletag_medium2012.d0EE      = 0.02;
+  eletag_medium2012.dzEB      = 0.1;
+  eletag_medium2012.dzEE      = 0.1;
+  eletag_medium2012.minhitsEB = 1;
+  eletag_medium2012.minhitsEE = 1;
+  eletag_medium2012.iso_relEB = 0.15;  
+  eletag_medium2012.iso_relEE = 0.15;
+  
+  // Lepton tag selection 2012: electrons
+  // this is the loose WP
+  // in https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
+  electronidcuts2012 eletag_loose2012;
+  eletag_loose2012.eta       = 2.5;
+  eletag_loose2012.crack1    = 1.4442;
+  eletag_loose2012.crack2    = 1.566;
+  eletag_loose2012.pt        = 20.;
+  eletag_loose2012.setaetaEB = 0.01;
+  eletag_loose2012.setaetaEE = 0.03;
+  eletag_loose2012.dphiEB    = 0.15;   
+  eletag_loose2012.dphiEE    = 0.10;   
+  eletag_loose2012.detaEB    = 0.007;
+  eletag_loose2012.detaEE    = 0.009;
+  eletag_loose2012.hoeEB     = 0.12;
+  eletag_loose2012.hoeEE     = 0.10;
+  eletag_loose2012.oemopEB   = 0.05;
+  eletag_loose2012.oemopEE   = 0.05;
+  eletag_loose2012.d0EB      = 0.02;
+  eletag_loose2012.d0EE      = 0.02;
+  eletag_loose2012.dzEB      = 0.2;
+  eletag_loose2012.dzEE      = 0.2;
+  eletag_loose2012.minhitsEB = 1;
+  eletag_loose2012.minhitsEE = 1;
+  eletag_loose2012.iso_relEB = 0.15;  
+  eletag_loose2012.iso_relEE = 0.15;
   
   /********************************************************
    *                                                      *
@@ -263,16 +263,13 @@ void TagAndProbeTree::Loop() {
    *                                                      *
    ********************************************************/
 
-
+  cout << "starting the loop" << endl;
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-
+    
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
-
-    if (myjson && nMC<=0) 
-      if (!myjson->isGoodLS(run,lbn)) continue;
-
+    
   
     //if (scaleCorrections_) correctPhotons(true);
     
@@ -292,6 +289,10 @@ void TagAndProbeTree::Loop() {
     nprocessed++;
     
 
+    if (myjson && nMC<=0) 
+      if (!myjson->isGoodLS(run,lbn)) continue;
+    
+
     int nGenElectrons(0);
     int isElectronFromZ[nMC];
     int isElectronFromZIndex[nMC];
@@ -302,10 +303,13 @@ void TagAndProbeTree::Loop() {
     float r9_phot[nPhot];      
     float s4Ratio_phot[nPhot];
     float sigmaRR[nPhot];     
-
-    
+   
 
     nEleMC=0;
+
+    /**********************************
+     *       PU WEIGHT                *
+     **********************************/
 
     // pu weights
     int npu = pu_n;
@@ -339,6 +343,41 @@ void TagAndProbeTree::Loop() {
       else
 	pu_weight90 = 1.;
     }
+
+    /**********************************
+     *       R9 WEIGHT                *
+     **********************************/
+    double r9Phot_;
+    double weightr9;
+    
+    //nbin of r9weights histogram is 2100
+    const int nbins_r9weight = 2100;
+    const double binwidth_r9weight = 5.00000000000000010e-04;
+
+
+
+    for(int iPhot=0; iPhot<nPhot; iPhot++){
+      
+      r9Phot_  = E9Phot[iPhot] / escRawPhot[iPhot];
+      for(int i=0; i< nbins_r9weight; i++){
+	weightr9 = 1.;
+	
+	if(r9Phot_>(i*binwidth_r9weight) && r9Phot_<((i+1)*binwidth_r9weight) && isEBPhot[i])  {
+	  weightr9 = vec_r9_weight_EB[i];
+	  r9_weight_[iPhot] = weightr9;
+	  //cout << "r9 weight EB : " << weightr9 << endl;	
+	  continue;
+	}
+	else if(r9Phot_>(i*binwidth_r9weight) && r9Phot_<((i+1)*binwidth_r9weight) && isEEPhot[i]) {
+	  weightr9 = vec_r9_weight_EE[i];
+	  r9_weight_[iPhot] = weightr9;
+	  //cout << "r9 weight EE : " << weightr9 << endl;
+	  continue;
+	}
+      }
+      
+    }     
+
 
     //cout << "set weight" << endl;
     float weight=pu_weight;
@@ -381,7 +420,7 @@ void TagAndProbeTree::Loop() {
     //----------------------------------------------
     //            cluster shape corrections
     //----------------------------------------------
-    
+    //cout << "cluster shape corrections" << endl;
     
     for (int i=0; i<nPhot; i++)
       {
@@ -407,6 +446,7 @@ void TagAndProbeTree::Loop() {
 	pid_pfIsoCharged06ForCiCVtx0[i]=pid_pfIsoCharged03ForCiC[i][0];
       }
 	
+    //cout << "done cluster shape corrections" << endl;
 
     //int countPreselPhot = 0;  
     TLorentzVector  ele, phot;
@@ -435,9 +475,9 @@ void TagAndProbeTree::Loop() {
      *                 REAL LOOP (after ini)           *
      *                                                 *
      ***************************************************/
-    
-    if(isMC) {
 
+    if(isMC) {
+      //cout << "generator level matching" <<endl;
       /*---------------------------------------------------------------
 	
                          Generator level matching
@@ -527,6 +567,8 @@ void TagAndProbeTree::Loop() {
     Tag&Probe tags for electrons and photons
     
     ---------------------------------------------------------------*/
+    //cout << "saving variables in tree" << endl;
+
     bool atLeastOneTag=false;
 
     for(int j=0; j<nEle; j++) 
@@ -549,6 +591,7 @@ void TagAndProbeTree::Loop() {
 	isProbeMediumPhot[j]= photonIDCuts2012(j, eleprobe_medium2012, &idpass_photonID_2012);
 	isProbeLoosePhot[j]= photonIDCuts2012(j, eleprobe_loose2012, &idpass_photonID_2012);
 	mvaIDPhot[j] = PhotonIDMVA(j);   
+	r9_weight[j] = r9_weight_[j];
       }
 
     vtxId=0;
@@ -607,6 +650,44 @@ bool TagAndProbeTree::PhotonMITPreSelection( int photon_index, int vertex_index,
   return true;
 }
 
+
+void TagAndProbeTree::SetR9Weights(std::string r9WeightFile)
+{
+  if(r9WeightFile == "") {                                      
+    std::cout << "you need a weights file to use this function" << std::endl;
+    return;                                                   
+  }
+  std::cout << "R9 REWEIGHTING:: Using file " << r9WeightFile << std::endl;
+  
+  TFile *f_r9  = new TFile(r9WeightFile.c_str(),"READ");
+  f_r9->cd();
+  
+  TH1F *r9weights_EB = 0;
+  TH1F *r9weights_EE = 0;
+
+  r9weights_EB= (TH1F*) f_r9->Get("R9WeightEBAll");
+  r9weights_EE= (TH1F*) f_r9->Get("R9WeightEEAll");
+  
+  float weightr9;
+
+  if (!r9weights_EB || !r9weights_EE) {
+    std::cout << "weights histograms  not found in file " << r9WeightFile << std::endl;
+    return;
+  }
+  
+
+  for(int i=0; i<2100; i++){
+    vec_r9_weight_EB[i] = 1.;
+    vec_r9_weight_EE[i] = 1.;
+
+    vec_r9_weight_EB[i] = r9weights_EB->GetBinContent(i+1);
+    vec_r9_weight_EE[i] = r9weights_EE->GetBinContent(i+1);
+
+    cout << "vec_r9_weight_EB[" << i << "] = " << vec_r9_weight_EB[i] << endl;
+
+  }
+
+}
 
 void TagAndProbeTree::SetPuWeights(std::string puWeightFile)
 {
@@ -1035,11 +1116,15 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("xsection",&xsection,"xsection/F");
   ana_tree->Branch("EquivLumi",&EquivLumi,"EquivLumi/F");
   ana_tree->Branch("SampleID",&SampleID,"SampleID/I");
+
   ana_tree->Branch("pu_weight",&pu_weight,"pu_weight/F");
   ana_tree->Branch("pu_weight30",&pu_weight30,"pu_weight30/F");
   ana_tree->Branch("pu_weight50",&pu_weight50,"pu_weight50/F");
   ana_tree->Branch("pu_weight75",&pu_weight75,"pu_weight75/F");
   ana_tree->Branch("pu_weight90",&pu_weight90,"pu_weight90/F");
+
+  ana_tree->Branch("nPhot", &nPhot, "nPhot/I");
+  ana_tree->Branch("r9_weight",r9_weight,"r9_weight[nPhot]/F");
 
   ana_tree->Branch("rhoAllJets",&rhoAllJets,"rhoAllJets/F");
   ana_tree->Branch("rhoPF",&rhoPF,"rhoPF/F");		   
@@ -1054,7 +1139,6 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("etaEleMC",etaEleMC,"etaEleMC[nEleMC]/F");
   ana_tree->Branch("phiEleMC",phiEleMC,"phiEleMC[nEleMC]/F");
 
-  ana_tree->Branch("nPhot", &nPhot, "nPhot/I");
   ana_tree->Branch("ptPhot", ptPhot , "ptPhot[nPhot]/F" );
   ana_tree->Branch("isGenMatchPhot", isGenMatchPhot , "isGenMatchPhot[nPhot]/I" );
   ana_tree->Branch("genMatchIndexPhot", genMatchIndexPhot , "genMatchIndexPhot[nPhot]/I" );
@@ -1081,7 +1165,7 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("eseedPhot", eseedPhot, "eseedPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("etaPhot", etaPhot, "etaPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("phiPhot", phiPhot, "phiPhot[nPhot]/F");   //[nPhot]
-  ana_tree->Branch("timePhot", timePhot, "timePhot/F"[nPhot]);   //[nPhot]
+  ana_tree->Branch("timePhot", timePhot, "timePhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("e4SwissCrossPhot",e4SwissCrossPhot, "e4SwissCrossPhot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("hasPixelSeedPhot", hasPixelSeedPhot, "hasPixelSeedPhot[nPhot]/I");   //[nPhot]
   ana_tree->Branch("hasMatchedPromptElePhot", hasMatchedPromptElePhot, "hasMatchedPromptElePhot[nPhot]/I");   //[nPhot]

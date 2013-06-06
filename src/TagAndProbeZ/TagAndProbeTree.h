@@ -24,6 +24,12 @@
 
 #include "TMVA/Reader.h"
 
+
+//#include "TagAndProbeRedTreeVariables.h"
+//#include "fillPlot_paolo.h"
+
+
+
 using std::string;
 using std::vector;
 
@@ -41,6 +47,8 @@ public:
   void SetJsonFile(const char* json) { jsonFile = json; };
   void SetPuWeights(std::string puWeightFile);
   void SetPuWeightsHLT(std::string puWeightFileHLT, int hltThresh);
+  void SetR9Weights(std::string r9WeightFile);
+
   double ErrEt(double Et, double Eta);
   void SetNtotXsection(int ntot, float xsec) {      
     NtotEvents = ntot;
@@ -103,64 +111,205 @@ private:
   void correctPhotons(bool energyRegression);
   TLorentzVector correctMet(TLorentzVector uncormet, bool smearing = 1, bool scale = 0, bool PUremoval = 0);
   TLorentzVector shiftMet(TLorentzVector uncormet);
-  
+
+   Int_t           run;
+   Int_t           event;
+   Int_t           lumi;
+   Int_t           isMC;
+   Int_t           nvtx;
+   Int_t           vtxId;
+   Int_t           npu;
+
+
+   Float_t         pu_weight;
+   Float_t         pu_weight30;
+   Float_t         pu_weight50;
+   Float_t         pu_weight75;
+   Float_t         pu_weight90;
+   Float_t         r9_weight[20]; //nPhot
+   //Float_t         rhoAllJets;
+   //Float_t         rhoPF;
+   Int_t           nEleMC;
+   Int_t           idEleMC[10];   //[nEleMC]
+   Int_t           pdgIdEleMC[10];   //[nEleMC]
+   Int_t           statusEleMC[10];   //[nEleMC]
+   Int_t           motherIDEleMC[10];   //[nEleMC]
+   Float_t         ptEleMC[10];   //[nEleMC]
+   Float_t         eEleMC[10];   //[nEleMC]
+   Float_t         etaEleMC[10];   //[nEleMC]
+   Float_t         phiEleMC[10];   //[nEleMC]
+   //Int_t           nPhot;
+   //Float_t         ptPhot[20];   //[nPhot]
+   Int_t           isGenMatchPhot[20];   //[nPhot]
+   Int_t           genMatchIndexPhot[20];   //[nPhot]
+   Int_t           isProbePreselPhot[20];   //[nPhot]
+   Int_t           isProbeTightPhot[20];   //[nPhot]
+   Int_t           isProbeMediumPhot[20];   //[nPhot]
+   Int_t           isProbeLoosePhot[20];   //[nPhot]
+   Float_t         mvaIDPhot[20];   //[nPhot]
+   /*
+   Float_t         ePhot[20];   //[nPhot]
+   Float_t         escPhot[20];   //[nPhot]
+   Float_t         escRegrPhot[20];   //[nPhot]
+   Float_t         escRegrPhotError[20];   //[nPhot]
+   Float_t         escPhFixPhot[20];   //[nPhot]
+   Float_t         escPhFixPhotError[20];   //[nPhot]
+   Float_t         escRawPhot[20];   //[nPhot]
+   Float_t         etascPhot[20];   //[nPhot]
+   Float_t         phiscPhot[20];   //[nPhot]
+   Float_t         xscPhot[20];   //[nPhot]
+   Float_t         yscPhot[20];   //[nPhot]
+   Float_t         zscPhot[20];   //[nPhot]
+   Float_t         xcaloPhot[20];   //[nPhot]
+   Float_t         ycaloPhot[20];   //[nPhot]
+   Float_t         zcaloPhot[20];   //[nPhot]
+   Float_t         eseedPhot[20];   //[nPhot]
+   Float_t         etaPhot[20];   //[nPhot]
+   Float_t         phiPhot[20];   //[nPhot]
+   Float_t         timePhot;
+   Float_t         e4SwissCrossPhot[20];   //[nPhot]
+   Int_t           hasPixelSeedPhot[20];   //[nPhot]
+   Int_t           hasMatchedPromptElePhot[20];   //[nPhot]
+   Int_t           hasMatchedConvPhot[20];   //[nPhot]
+   Bool_t          isEBPhot[20];   //[nPhot]
+   Bool_t          isEEPhot[20];   //[nPhot]
+   Bool_t          isEBEEGapPhot[20];   //[nPhot]
+   Float_t         pid_scetawid[20];   //[nPhot]
+   Float_t         pid_scphiwid[20];   //[nPhot]
+   Float_t         pid_lambdaRatio[20];   //[nPhot]
+   Float_t         pid_esXwidth[20];   //[nPhot]
+   Float_t         pid_esYwidth[20];   //[nPhot]
+   Float_t         sMajMajPhot[20];   //[nPhot]
+   Float_t         sMinMinPhot[20];   //[nPhot]
+   Float_t         alphaPhot[20];   //[nPhot]
+   Float_t         sEtaEtaPhot[20];   //[nPhot]
+   Float_t         sEtaPhiPhot[20];   //[nPhot]
+   Float_t         sPhiPhiPhot[20];   //[nPhot]
+   Float_t         E1Phot[20];   //[nPhot]
+   Float_t         E2OverE9Phot[20];   //[nPhot]
+   Float_t         E4Phot[20];   //[nPhot]
+   Float_t         E9Phot[20];   //[nPhot]
+   Float_t         E25Phot[20];   //[nPhot]
+   */  
+   Float_t         r9Phot[20];   //[nPhot]
+   Float_t         s4RatioPhot[20];   //[nPhot]
+   Float_t         sigmaRRPhot[20];   //[nPhot]
+   /*
+   Float_t         pid_deltaRToTrackPhot[20];   //[nPhot]
+   Bool_t          pid_isEMPhot[20];   //[nPhot]
+   Bool_t          pid_isLoosePhot[20];   //[nPhot]
+   Bool_t          pid_isTightPhot[20];   //[nPhot]
+   Float_t         pid_jurECALPhot[20];   //[nPhot]
+   Float_t         pid_twrHCALPhot[20];   //[nPhot]
+   Float_t         pid_HoverE[20];   //[nPhot]
+   Float_t         pid_hlwTrackPhot[20];   //[nPhot]
+   Float_t         pid_hlwTrackNoDz[20];   //[nPhot]
+   Float_t         pid_etawid[20];   //[nPhot]
+   Float_t         pid_jurECAL03[20];   //[nPhot]
+   Float_t         pid_twrHCAL03[20];   //[nPhot]
+   */
+   Float_t         pid_hlwTrack03Vtx0[20];   //[nPhot]
+   //Float_t         pid_hlwTrack0oDz[20];   //[nPhot]
+   //Float_t         pid_hlwTrack03NoDz[20];   //[nPhot]
+   Float_t         pid_hlwTrack03ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_hlwTrackForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged01ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged02ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged03ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged04ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged05ForCiCVtx0[20];   //[nPhot]
+   Float_t         pid_pfIsoCharged06ForCiCVtx0[20];   //[nPhot]
+   /*
+   Float_t         pid_pfIsoPhotons01ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoPhotons02ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoPhotons03ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoPhotons04ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoPhotons05ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoPhotons06ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals01ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals02ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals03ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals04ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals05ForCiC[20];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals06ForCiC[20];   //[nPhot]
+   Float_t         ptiso004Phot[20];   //[nPhot]
+   Int_t           ntrkiso004Phot[20];   //[nPhot]
+   Float_t         ptiso035Phot[20];   //[nPhot]
+   Int_t           ntrkiso035Phot[20];   //[nPhot]
+   Float_t         ptiso04Phot[20];   //[nPhot]
+   Int_t           ntrkiso04Phot[20];   //[nPhot]
+   Float_t         hcalovecal04Phot[20];   //[nPhot]
+   Float_t         ecaliso04Phot[20];   //[nPhot]
+   Int_t           nEle;
+   */
+   Int_t           isGenMatchEle[20];   //[nEle]
+   Int_t           genMatchIndexEle[20];   //[nEle]
+   //Float_t         electron_pt[20];   //[nEle]
+   //Float_t         electron_eta[20];   //[nEle]
+   //Float_t         electron_phi[20];   //[nEle]
+   Int_t           isTagTightEle[20];   //[nEle]
+   Int_t           isTagMediumEle[20];   //[nEle]
+   Int_t           isTagLooseEle[20];   //[nEle]
+   vector<string>  *firedHLTNames;
+   Float_t         epfMet;
+
 
 //electrons
   /*Int_t           nEle;
-   Float_t         electron_px[10];   //[nEle]
-   Float_t         electron_py[10];   //[nEle]
-   Float_t         electron_pz[10];   //[nEle]
-   Float_t         electron_vx[10];   //[nEle]
-   Float_t         electron_vy[10];   //[nEle]
-   Float_t         electron_vz[10];   //[nEle]
-   Float_t         electron_pt[10];   //[nEle]
-   Float_t         electron_eta[10];   //[nEle]
-   Float_t         electron_phi[10];   //[nEle]
-   Float_t         electron_energy[10];   //[nEle]
-   Float_t         electron_ecalEnergy[10];   //[nEle]
-   Float_t         electron_trackPatVtx[10];   //[nEle]
-   Float_t         electron_charge[10];   //[nEle]
-   Float_t         electron_fBrem[10];   //[nEle]
-   Float_t         electron_dist[10];   //[nEle]
-   Float_t         electron_dcot[10];   //[nEle]
-   Int_t           electron_misHits[10];   //[nEle]
-   Int_t           electron_matchedConv[10];   //[nEle]
-   Int_t           electron_seedType[10];   //[nEle]
-   Float_t         electron_EoP[10];   //[nEle]
-   Float_t         electron_OneOverEMinusOneOverP[10];   //[nEle]
-   Float_t         electron_r9[10];   //[nEle]
-   Int_t           electron_nSubClusters[10];   //[nEle]
-   Float_t         electron_trkIso[10];   //[nEle]
-   Float_t         electron_ecalIso[10];   //[nEle]
-   Float_t         electron_hcalIso[10];   //[nEle]
-   Float_t         electron_trkIso03[10];   //[nEle]
-   Float_t         electron_ecalIso03[10];   //[nEle]
-   Float_t         electron_hcalIso03[10];   //[nEle]
-   Float_t         electron_SigmaIetaIeta[10];   //[nEle]
-   Float_t         electron_SigmaIphiIphi[10];   //[nEle]
-   Float_t         electron_dEtaIn[10];   //[nEle]
-   Float_t         electron_dPhiIn[10];   //[nEle]
-   Float_t         electron_HoE[10];   //[nEle]
-   Float_t         electron_pFlowMVA[10];   //[nEle]
-   Float_t         electron_sc_energy[10];   //[nEle]
-   Float_t         electron_sc_eta[10];   //[nEle]
-   Float_t         electron_sc_phi[10];   //[nEle]
-   Float_t         electron_mvaNonTrig[10];   //[nEle]
-   Float_t         electron_mvaTrig[10];   //[nEle]
-   Float_t         electron_chHad03Iso[10];   //[nEle]
-   Float_t         electron_nHad03Iso[10];   //[nEle]
-   Float_t         electron_phot03Iso[10];   //[nEle]
-   Float_t         electron_chHad04Iso[10];   //[nEle]
-   Float_t         electron_nHad04Iso[10];   //[nEle]
-   Float_t         electron_phot04Iso[10];   //[nEle]
-   Float_t         electron_chHad05Iso[10];   //[nEle]
-   Float_t         electron_nHad05Iso[10];   //[nEle]
-   Float_t         electron_phot05Iso[10];   //[nEle]
+   Float_t         electron_px[20];   //[nEle]
+   Float_t         electron_py[20];   //[nEle]
+   Float_t         electron_pz[20];   //[nEle]
+   Float_t         electron_vx[20];   //[nEle]
+   Float_t         electron_vy[20];   //[nEle]
+   Float_t         electron_vz[20];   //[nEle]
+   Float_t         electron_pt[20];   //[nEle]
+   Float_t         electron_eta[20];   //[nEle]
+   Float_t         electron_phi[20];   //[nEle]
+   Float_t         electron_energy[20];   //[nEle]
+   Float_t         electron_ecalEnergy[20];   //[nEle]
+   Float_t         electron_trackPatVtx[20];   //[nEle]
+   Float_t         electron_charge[20];   //[nEle]
+   Float_t         electron_fBrem[20];   //[nEle]
+   Float_t         electron_dist[20];   //[nEle]
+   Float_t         electron_dcot[20];   //[nEle]
+   Int_t           electron_misHits[20];   //[nEle]
+   Int_t           electron_matchedConv[20];   //[nEle]
+   Int_t           electron_seedType[20];   //[nEle]
+   Float_t         electron_EoP[20];   //[nEle]
+   Float_t         electron_OneOverEMinusOneOverP[20];   //[nEle]
+   Float_t         electron_r9[20];   //[nEle]
+   Int_t           electron_nSubClusters[20];   //[nEle]
+   Float_t         electron_trkIso[20];   //[nEle]
+   Float_t         electron_ecalIso[20];   //[nEle]
+   Float_t         electron_hcalIso[20];   //[nEle]
+   Float_t         electron_trkIso03[20];   //[nEle]
+   Float_t         electron_ecalIso03[20];   //[nEle]
+   Float_t         electron_hcalIso03[20];   //[nEle]
+   Float_t         electron_SigmaIetaIeta[20];   //[nEle]
+   Float_t         electron_SigmaIphiIphi[20];   //[nEle]
+   Float_t         electron_dEtaIn[20];   //[nEle]
+   Float_t         electron_dPhiIn[20];   //[nEle]
+   Float_t         electron_HoE[20];   //[nEle]
+   Float_t         electron_pFlowMVA[20];   //[nEle]
+   Float_t         electron_sc_energy[20];   //[nEle]
+   Float_t         electron_sc_eta[20];   //[nEle]
+   Float_t         electron_sc_phi[20];   //[nEle]
+   Float_t         electron_mvaNonTrig[20];   //[nEle]
+   Float_t         electron_mvaTrig[20];   //[nEle]
+   Float_t         electron_chHad03Iso[20];   //[nEle]
+   Float_t         electron_nHad03Iso[20];   //[nEle]
+   Float_t         electron_phot03Iso[20];   //[nEle]
+   Float_t         electron_chHad04Iso[20];   //[nEle]
+   Float_t         electron_nHad04Iso[20];   //[nEle]
+   Float_t         electron_phot04Iso[20];   //[nEle]
+   Float_t         electron_chHad05Iso[20];   //[nEle]
+   Float_t         electron_nHad05Iso[20];   //[nEle]
+   Float_t         electron_phot05Iso[20];   //[nEle]
 
-   Int_t           isEleTag[10];
-   Int_t           isEleProbe[10];
-   Int_t           genEleMatched_index[10];
-   Float_t         deltaR_EleGenReco[10];
+   Int_t           isEleTag[20];
+   Int_t           isEleProbe[20];
+   Int_t           genEleMatched_index[20];
+   Float_t         deltaR_EleGenReco[20];
    Float_t         invMassEle;
    */
    // List of branches
@@ -890,16 +1039,16 @@ private:
   std::vector<Double_t> puweights75_;
   std::vector<Double_t> puweights90_;
 
+  float r9_weight_[20];
+
+  float vec_r9_weight_EB[2100];
+  float vec_r9_weight_EE[2100];
+
+
   EnergyScaleCorrection* scaleCorrections_;
    
-
-#include "TagAndProbeRedTreeVariables.h"
   
-
    std::vector<std::string>* aHLTNames;
-
-
-
 
 };
 #endif
