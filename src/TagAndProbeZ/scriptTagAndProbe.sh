@@ -27,7 +27,7 @@ if [ "$domain" == "cern.ch" ]; then
 fi
 
 echo dir is ${CMSSW_BASE} 
-echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
+echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11}
 # $1   --->   ${PWD} 
 # $2   --->   ${PWD}/${listfile} 
 # $3   --->   ${rootfile} 
@@ -38,18 +38,19 @@ echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10}
 # $8   --->   ${puweight_HLT50}
 # $9   --->   ${puweight_HLT75}
 # $10   --->   ${puweight_HLT90}
+# $11   --->   ${r9weight} 
 
-# $11   --->   ${energyCorrection} 
-# $12   --->   ${photonIDweights_EB} 
-# $13   --->   ${photonIDweights_EE}
+# $12   --->   ${energyCorrection} 
+# $13   --->   ${photonIDweights_EB} 
+# $14   --->   ${photonIDweights_EE}
 
-echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} #$4 ${8} ${9} $5 $6 $7
+echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} #$4 ${8} ${9} $5 $6 $7
 
 #echo ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 
 #echo ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 ${8} ${9} $5 $6 $7 
 
 
-${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} 
+${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11}
 #${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 $8 $9 $5 $6 $7 
 
 exit_stat=$?

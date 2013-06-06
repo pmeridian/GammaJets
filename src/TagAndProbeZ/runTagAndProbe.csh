@@ -7,14 +7,14 @@ set puweight_53x_HLT30 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT30_Calo
 set puweight_53x_HLT50 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT50_CaloIdVL_IsoL.root"
 set puweight_53x_HLT75 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT75_CaloIdVL_IsoL.root"
 set puweight_53x_HLT90 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT90_CaloIdVL_IsoL.root"
-
+set r9weight_ = "/afs/cern.ch/user/m/meridian/public/R9Weights.root"
 
 
 set location = "eth"
 set version  = "v1"
 set run = 0
 
-if($#argv == 0 || $#argv < 3 || $#argv > 10 ) then
+if($#argv == 0 || $#argv < 3 || $#argv > 11 ) then
 #  echo "usage:  makeTagAndProbeTreeNtp.csh <location> <version> <run if 1> <jsonfile> <pureweight>  <energy correction/smearing> "
   echo "usage:  makeTagAndProbeTreeNtp.csh <location> <version> <run if 1> <jsonfile> <pureweight> <pureweight_HLT30> <pureweight_HLT50> <pureweight_HLT75> <pureweight_HLT90> <energy correction/smearing>"
   echo "        locations: cern roma eth"
@@ -26,6 +26,7 @@ if($#argv == 0 || $#argv < 3 || $#argv > 10 ) then
   echo "        pu weight for MC, corresponding to HLT = 50: default=-1  set to 1 to store them"
   echo "        pu weight for MC, corresponding to HLT = 75: default=-1  set to 1 to store them"
   echo "        pu weight for MC, corresponding to HLT = 90: default=-1  set to 1 to store them"
+  echo "        r9 weight for MC and data: default=-1  set to 1 to store them"
   echo "        energy corrections"
   exit -1
 endif
@@ -74,6 +75,12 @@ if ($#argv > 8 ) then
   echo "pu weight 90: ${puweight90}"
 endif
 
+set r9weight = -1
+if ($#argv > 9 ) then
+  set r9weight = ${r9weight_}
+  echo "r9 weight : ${r9weight}"
+endif
+
 #set energyCorrection = -1
 #set energyCorrectionName = "noCorrections"
 #if ($#argv > 9 && ${10}>0) then
@@ -85,8 +92,8 @@ endif
 #endif
 
 set energyCorrection = -1
-if ($#argv > 9) then
-  set energyCorrection = $10
+if ($#argv > 10) then
+  set energyCorrection = $11
   set energyCorrectionName = `basename ${energyCorrection} .dat`
   echo "energyCorrection: ${energyCorrection}"
 endif 
@@ -99,7 +106,7 @@ foreach class ( 53xv2_extra 53xv3_data )
     foreach preseltype ( tandp2012 )
 
 	if ( "`echo ${class} | grep data`XXX" != "XXX" ) then
-            set command="./makeTagAndProbe.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 -1 -1 -1 -1 ${energyCorrection}"
+            set command="./makeTagAndProbe.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} $data_json -1 -1 -1 -1 -1 ${r9weight} ${energyCorrection}"
 	else 
 	    if ( $puweight !=  -1 ) then
 #	      if ( "`echo ${class} | grep 53x`XXX" != "XXX" ) then
@@ -141,14 +148,19 @@ foreach class ( 53xv2_extra 53xv3_data )
 # 	         set puweightFile90 = -1
 	endif
  	
+ 	if ( $r9weight != -1 ) then
+ 	     set r9weightFile = ${r9weight_}
+ 	endif
+
 	     echo $puweightFile
 	     echo $puweightFile30
 	     echo $puweightFile50
 	     echo $puweightFile75
 	     echo $puweightFile90
+             echo $r9weightFile
 	    
          
-	     set command="./makeTagAndProbe.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} -1 ${puweightFile} ${puweightFile30} ${puweightFile50} ${puweightFile75} ${puweightFile90} ${energyCorrection}.MC"
+	     set command="./makeTagAndProbe.csh ../../data/list.${class}/ redntp.${class}.${preseltype}.${energyCorrectionName}.${version} ${preseltype} ${location} ${run} -1 ${puweightFile} ${puweightFile30} ${puweightFile50} ${puweightFile75} ${puweightFile90} ${r9weightFile} ${energyCorrection}.MC"
 	
         endif
 	echo ${command}
