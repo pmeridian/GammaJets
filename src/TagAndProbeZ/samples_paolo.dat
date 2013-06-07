@@ -1,0 +1,21 @@
+#This datacard defines the samples used in the analysis
+
+samples={}
+
+#now mc_dir and data_dir are useless since directory is defined in the file list...
+mc_dir="/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/merged3/"
+data_dir="root://pccmsrm27.cern.ch///cms/local/meridian/Higgs/reduced/redntp.53xv3_data.tandp2012.paolo.v2/merged3/"
+
+#mc_dir="/tmp/meridian"
+#data_dir="/tmp/meridian"
+
+             #  name                #index                          #fileList                                                                #xsec          #kfac    #directory
+samples["DYJetsToLL_M-50_madgraph"]=[1,"list/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1.list",288600000 * 0.0101 ,1., mc_dir]
+
+#data sampleIndex=0 for data
+samples["DoubleElectron_Run2012A-13Jul2012"]=[0, "list/DoubleElectron_Run2012A-13Jul2012-v1.list" , 1, 1 ,data_dir]
+samples["DoubleElectron_Run2012B-13Jul2012"] = [0,"list/DoubleElectron_Run2012B-13Jul2012-v1.list",1,1,data_dir]
+samples["DoubleElectron_Run2012C-24Aug2012"] = [0,"list/DoubleElectron_Run2012C-24Aug2012-v1.list",1,1,data_dir]
+samples["DoubleElectron_Run2012C-EcalRecover_11Dec2012"] = [0,"list/DoubleElectron_Run2012C-EcalRecover_11Dec2012-v1.list",1,1,data_dir]
+samples["DoubleElectron_Run2012C-PromptReco"] = [0,"list/DoubleElectron_Run2012C-PromptReco-v2.list",1,1,data_dir]
+samples["DoubleElectron_Run2012D-PromptReco"] = [0,"list/DoubleElectron_Run2012D-PromptReco-v1.list",1,1,data_dir]

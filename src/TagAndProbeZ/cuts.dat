@@ -1,0 +1,9 @@
+#This datacard defines the cuts used in the analysis
+
+cuts={}
+
+cuts['tagLevel']='Tight'
+cuts['mcMatch']=0
+cuts['r9Reweight']=1
+cuts['r9WeightsFile']='/afs/cern.ch/user/m/meridian/public/R9Weights.root'
+cuts['DeltaMZ']=30
