@@ -107,28 +107,6 @@ def declareRooRealVars(argSet):
         rooRealVars[fitVariables[str(variable)]['name']] = RooRealVar(fitVariables[str(variable)]['name'], fitVariables[str(variable)]['name'], fitVariables[str(variable)]['xmin'], fitVariables[str(variable)]['xmax'])
         argSet.add(rooRealVars[fitVariables[str(variable)]['name']])
 
-def signalPdf(var):    
-    landaumean = RooRealVar("landaumean", "landaumean" , -1.8, -7., 5.) 
-    landausigma = RooRealVar("landausigma", "landausigma" , 1.0, 0.1, 4.0) 
-    my_landau = RooLandau("my_landau", "landau distribution", var, landaumean, landausigma)
-    Lambda = RooRealVar("Lambda", "Lambda", -1., -100., 0.)
-    A = RooRealVar("A", "A", 0.01, 0.001, 1.)
-    m = RooRealVar("m", "m", -100., -10000., 0.)
-    my_expo = RooGenericPdf("my_expo", "my shifted expo", "A*exp(lambda*(var-m))", RooArgList(var, A, Lambda, m))
-    sig_pdf = RooProdPdf("sig_pdf","expo (X) landau", RooArgSet(var,my_expo,my_landau), RooLinkedList()) 
-    return sig_pdf
-
-def backgroundPdf(var):    
-    gaussmean = RooRealVar("gaussmean", "gaussmean" , -1.8, -7., 5.) 
-    gausssigma = RooRealVar("gausssigma", "gausssigma" , 1.0, 0.1, 4.0) 
-    my_gauss = RooGaussian("my_gauss", "gauss distribution", var, gaussmean, gausssigma)
-    Lambda = RooRealVar("Lambda", "Lambda", -1., -100., 0.)
-    A = RooRealVar("A", "A", 0.01, 0.001, 1.)
-    m = RooRealVar("m", "m", -100., -10000., 0.)
-    my_expo = RooGenericPdf("my_expo", "my shifted expo", "A*exp(lambda*(var-m))", RooArgList(var, A, Lambda, m))
-    bkg_pdf = RooProdPdf("bkg_pdf","expo (X) gauss",RooArgSet(my_expo,my_gauss), RooLinkedList()) 
-    return bkg_pdf
-
 #def plot(variable,plotsDir,additional_cuts="1",pars['additional_text']="",savefmts=[".C",".png",".pdf"]):
 def plot(pars,savefmts=[".C",".png",".pdf",".root"]):
     print "preparing ArgSet"
