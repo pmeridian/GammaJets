@@ -1,0 +1,11 @@
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon-Run2012A-recover-06Aug2012_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012A-13Jul2012_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012B-13Jul2012_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012C-24Aug2012_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012C-EcalRecover_11Dec2012_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012C-PromptReco-v2_hltcut30_hltiso0_mvaWP3.root
+root://pccmsrm27.cern.ch///cms/local/vtavolar/GammaJets/output_mvaWithRho2/Photon_Run2012D-PromptReco-v1_hltcut30_hltiso0_mvaWP3.root
+
+
+
+							      
