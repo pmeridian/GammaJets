@@ -1,5 +1,5 @@
 #!/bin/tcsh
-# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.3 2013/05/29 08:37:44 meridian Exp $
+# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.4 2013/05/29 14:23:09 meridian Exp $
 
 # change if needed
 
@@ -71,7 +71,7 @@ set location = ""
 if ($#argv > 3) then
   set location = $4
   echo "location : $location "
-  if( $location != roma && $location != cern && $location != eth) then
+  if( $location != roma && $location != cern && $location != eth &&  $location != fnal) then
     echo "bad location. options: roma or cern or eth"
     exit -1
 endif 
@@ -154,6 +154,13 @@ else if ($location == "eth" ) then
   set outdir = $outdir
   set prefix = ""
   if($run == 1) mkdir -p $outdir
+else if ($location == "fnal" ) then
+  set photonIDweights_EB = /uscms/home/meridian/photonIDWeights/TMVA_EBpf_BDT.weights.xml
+  set photonIDweights_EE = /uscms/home/meridian/photonIDWeights/TMVA_EEpf_BDT.weights.xml
+  set queue = "condor"
+  set outdir = $castordir/$outdir
+  set prefix = ""
+  if($run == 1) mkdir -p $outdir
 endif 
 
 echo "queue : $queue "
@@ -212,6 +219,21 @@ else if(-d $listdir) then
 
    if ($location == "cern" || $location == "roma") then  
      set command = "bsub -q ${queue} -o $logfile -e $logerrfile -J ${jobname} `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
+   else if ($location == "fnal") then  
+     cat <<EOF >! job_condor
+universe = vanilla
+Executable = `pwd`/scriptSingleGamma_giulia.sh
+Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
+#Should_Transfer_Files = NO
+#WhenToTransferOutput = ON_EXIT
+Output = $logfile
+Error = $logerrfile
+Log = $logfile
+notify_user = ${LOGNAME}@FNAL.GOV
+Arguments =  ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}
+Queue
+EOF
+     set command = "condor_submit job_condor"
    else if ($location == "eth" ) then
      set command = "qsub -q ${queue} -o $logfile -e $logerrfile `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    endif  
@@ -222,8 +244,5 @@ else if(-d $listdir) then
    if($run == 1) then
      ${command}
    endif
-
-
   end
-
 endif

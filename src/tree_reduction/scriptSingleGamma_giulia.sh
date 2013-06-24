@@ -1,11 +1,12 @@
 #!/bin/bash
 
 domain=`dnsdomainname`
-stagein='true'
+stagein='false'
 stagein_nconcurrent_copies=3
 main_dir=$1
 ssh_opts="-x -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-scp_opts="-v -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+scp_opts="-o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
 function xrdcopy {
 #    echo "xrdcp $1 `pwd`/`basename $1`"
 #    (xrdcp $1 `pwd`/`basename $1`)&
@@ -52,15 +53,26 @@ function modify_list {
 
 if [ "$domain" == "psi.ch" ]; then
     . $HOME/.bash_profile
+elif [ "$domain" == "fnal.gov" ]; then
+    echo "Sourcing FNAL CMSSW environment"
+    source /uscmst1/prod/sw/cms/shrc uaf
 fi
 
+
+echo "Sourcing specific CMSSW release environment from $1"
 cd $1
+pwd
 eval `scramv1 runtime -sh`
+if [[ -z "${CMSSW_BASE}" ]]; then
+    echo "Problem setting the CMSSW environment. Exit"
+    exit -1
+fi
+echo "Done"
 
 protocol=`echo $3 | awk -F ':' '{print $1}'`
 echo "Stageout protocol is ${protocol}"
 
-if [ "$domain" == "cern.ch" ]; then
+if [ "$domain" != "roma1.infn.it" ]; then
     if [ "${protocol}" == "root" ]; then
 	redirector=`echo "$3" | awk -F '//' '{print $2}'`
 #	castordir=`dirname $3`
@@ -82,7 +94,7 @@ if [ "$domain" == "cern.ch" ]; then
 	ssh ${ssh_opts} ${redirector} mkdir -p ${xrootdir}
 	echo "Output ${filename} will be copied in ${protocol}://${redirector}/${xrootdir}"
     fi
-elif [ "$domain" == "roma1.infn.it" ]; then
+else
     rootdir=`dirname $3`
     filename=`basename $3`
 #    rootdir=/t3/`echo $castordir | awk -F '/' '{for (i=NF-3; i<=NF; i++) { printf "%s/",$i};}'`
@@ -93,18 +105,19 @@ elif [ "$domain" == "roma1.infn.it" ]; then
     if [ "$stagein" == "true" ]; then
 	copy_list $2 $tempdir
     fi
-else
-    filename=$2
 fi
+#else
+#    filename=$2
+#fi
 
-if [ "$domain" == "cern.ch" ]; then
+if [ "$domain" != "roma1.infn.it" ]; then
     cd -
-elif [ "$domain" == "roma1.infn.it" ]; then
+else
     cd $tempdir
 fi
 
 echo dir is ${PWD}
-echo dir2 is $CMSSW_BASE 
+echo dir2 is ${CMSSW_BASE} 
 echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
 list=$2
 if [ "$stagein" == "true" ] &&  [ "$domain" == "roma1.infn.it" ]; then
@@ -113,20 +126,25 @@ if [ "$stagein" == "true" ] &&  [ "$domain" == "roma1.infn.it" ]; then
 fi
 echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} #$4 ${8} ${9} $5 $6 $7 
 
+if [ ! -f  ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ]; then
+    echo "Executable  ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia not found. Exit"
+    exit -1
+fi
+
 ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} #$4 $8 $9 $5 $6 $7 
 exit_stat=$?
 
-if [ "$domain" == "cern.ch" ]; then
-    if [ ${exit_stat} != 0 ]; then
-	echo `date` ${xrootdir}/${filename} ${exit_stat} >> $1/log/runerror.jobs
-	exit ${exit_stat}
-    else
-	echo `date` ${xrootdir}/${filename} >> $1/log/runsuccess.jobs
-    fi
+#if [ "$domain" == "cern.ch" ]; then
+if [ ${exit_stat} != 0 ]; then
+    echo `date` ${xrootdir}/${filename} ${exit_stat} >> $1/log/runerror.jobs
+    exit ${exit_stat}
+else
+    echo `date` ${xrootdir}/${filename} >> $1/log/runsuccess.jobs
 fi
+#fi
 
 
-if [ "$domain" == "cern.ch" ]; then
+if [ "$domain" != "roma1.infn.it" ]; then
     if [ "${protocol}" == "root" ]; then
 	xrdcp ${filename} root://${redirector}//${xrootdir}/${filename}
 	exit_stat1=$?
@@ -145,8 +163,7 @@ if [ "$domain" == "cern.ch" ]; then
 	    echo `date` `hostname` ${xrootdir}/${filename} >> $1/log/scpcopysuccess.jobs
 	fi
     fi
-
-elif [ "$domain" == "roma1.infn.it" ]; then
+else 
     cp ${filename} ${rootdir}/${filename}
     exit_stat1=$?
     if [ ${exit_stat1} != 0 ]; then
