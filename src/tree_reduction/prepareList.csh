@@ -1,5 +1,5 @@
 #!/bin/csh
-# $Id: prepareList.csh,v 1.9 2012/06/24 10:31:18 meridian Exp $
+# $Id: prepareList.csh,v 1.1 2013/06/20 07:53:17 meridian Exp $
 
 if( $#argv<3  ) then
   echo "usage:  prepareList.csh  <inputfile> <listname> <location>  [run if 1]"
@@ -28,6 +28,8 @@ else if ( $location == "xrootd" ) then
   set prepend="root://pccmsrm27.cern.ch:1094/"
 else if ( $location == "eos" ) then
   set prepend="root://eoscms.cern.ch/"
+else if ( $location == "eosfnal" ) then
+  set prepend="root://cmseos.fnal.gov/"
 else if ( $location == "eth" ) then
   set prepend="dcap://t3se01.psi.ch/"
 endif 
