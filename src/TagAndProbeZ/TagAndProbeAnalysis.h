@@ -17,6 +17,8 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
 class TagAndProbeAnalysis {
@@ -318,6 +320,8 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+   vector<int>      preselectedPhotons();
+   int              effectiveAreaRegion(float theEta) ;
 
    bool     isHLT_TandP();
    bool     isHLT_30();
