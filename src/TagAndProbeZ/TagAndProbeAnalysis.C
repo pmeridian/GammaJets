@@ -192,15 +192,13 @@ void TagAndProbeAnalysis::Loop()
 	    r9weight_EE=1.;
 	  }
 
-	okLoosePresel = 0;
+	okLoosePresel =	PhotonNewPreSelection(iPho, 0, 0);
 
-	for(int j=0; j<preselectedPhotIndex.size(); j++){
-	  //cout << "iPho : " << iPho << "   preselectedPhotIndex[" << j <<"] : " << preselectedPhotIndex[j] << endl;
-	  if(preselectedPhotIndex[j] == iPho) {
-	    okLoosePresel = 1;
-	    //cout << "okLoosePresel ["<< iPho << "]: " << okLoosePresel << endl;
-	  }
-	}
+	//for(int j=0; j<preselectedPhotIndex.size(); j++){
+	//  if(preselectedPhotIndex[j] == iPho) {
+	//    okLoosePresel = 1;
+	//  }
+	//}
 
 	//ok(Loose,Medium,Tight)ElePtEta -> isProbePreselPhot also contains loose cuts on isolation
 	okLooseElePtEta  = isProbePreselPhot[iPho];
@@ -343,11 +341,80 @@ void TagAndProbeAnalysis::readR9Weights()
   r9weights_EE->Smooth(4);
 }
 
+
+bool TagAndProbeAnalysis::PhotonNewPreSelection( int photon_index, int vertex_index, bool electronVeto) {
+
+  int photon_category = PhotonCategory(photon_index);
+
+  //   float mitCuts_hoe[4]                 = {0.082,0.075,0.075,0.075};                                        
+  //   float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
+
+  float mitCuts_hoe[4]                 = {0.075,0.075,0.075,0.075};                                        
+  float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
+
+  //   float mitCuts_ecaliso[4]             = {50,4,50,4};                                                      
+  //   float mitCuts_hcaliso[4]             = {50,4,50,4};                                                      
+  //   float mitCuts_trkiso[4]              = {50,4,50,4};
+
+  //Applyling looser preselection for nonISO triggers
+  float mitCuts_ecaliso[4]             = {50,50,50,50};                                                      
+  float mitCuts_hcaliso[4]             = {50,50,50,50};                                                      
+  float mitCuts_trkiso[4]              = {50,50,50,50};                                                      
+  //float mitCuts_hcalecal[4]            = {3,3,3,3};                                                        
+  //float mitCuts_abstrkiso[4]           = {2.8,2.8,2.8,2.8};                                                
+  //float mitCuts_trkiso_hollow03[4]     = {4,4,4,4};                                                       
+  //float mitCuts_drtotk_25_99[4]= {0.26,0.029,0.0062,0.0055};
+
+  float mitCuts_pfiso[4]               = {4,4,4,4};
+  
+  float val_hoe        = pid_HoverE[photon_index];
+  float val_sieie      = pid_etawid[photon_index];                                                          
+  float val_ecaliso = pid_jurECAL03[photon_index] - 0.012*ptPhot[photon_index];                              
+  float val_hcaliso = pid_twrHCAL03[photon_index] - 0.005*ptPhot[photon_index]; 
+  float val_trkiso  = pid_hlwTrack03[photon_index] - 0.002*ptPhot[photon_index]; 
+  
+  //float val_hcalecal   = (pho_ecalsumetconedr03[photon_index]+pho_hcalsumetconedr03[photon_index]-rho_algo1*rhofac);                                             
+  //float val_abstrkiso  = (*pho_tkiso_recvtx_030_002_0000_10_01)[photon_index][vertex_index];                
+  //float val_trkiso_hollow03 = pho_trksumpthollowconedr03[photon_index];                                    
+  //float val_drtotk_25_99 = pho_drtotk_25_99[photon_index];
+  int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
+  float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index];
+
+  if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false; 
+  if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
+  if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
+  if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false; 
+  if (val_trkiso          >= mitCuts_trkiso[photon_category]      ) return false;
+
+  if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
+
+  if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
+  
+  return true;
+}
+
+
+int TagAndProbeAnalysis::PhotonCategory(int photonindex) { 
+  return PhotonR9Category(photonindex) + 2*PhotonEtaCategory(photonindex);
+}
+Int_t TagAndProbeAnalysis::PhotonR9Category(int photonindex) { 
+  if(photonindex < 0) return -1;
+  int r9cat = (Int_t)(E9Phot[photonindex]/escRawPhot[photonindex]<0.94);// 0, 1(high r9 --> low r9)
+  return r9cat;
+}
+int TagAndProbeAnalysis::PhotonEtaCategory(int photonindex) {
+  if(photonindex < 0) return -1;
+  int etacat = (Int_t)(TMath::Abs(etascPhot[photonindex])>1.479);   // 0, 1 (barrel --> endcap)
+  return  etacat;
+}
+
+
+//don't use this preselection 
 std::vector<int> TagAndProbeAnalysis::preselectedPhotons()
 {
 
   std::vector<int> selPhotons;
-
+  
   for (int iPhot=0;iPhot<nPhot;++iPhot)
     {
       /////////////////////???????
@@ -392,3 +459,4 @@ int TagAndProbeAnalysis::effectiveAreaRegion(float theEta) {
   if (fabs(theEta)>2.4) theEAregion = 6;
   return theEAregion;
 }
+
