@@ -111,7 +111,9 @@ fi
 #fi
 
 if [ "$domain" != "roma1.infn.it" ]; then
+    pwd
     cd -
+    echo "Now I'm working in ${PWD}"
 else
     cd $tempdir
 fi

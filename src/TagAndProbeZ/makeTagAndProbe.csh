@@ -1,5 +1,5 @@
 #!/bin/tcsh
-# $Id: makeTagAndProbe.csh,v 1.3 2013/05/29 23:06:33 meridian Exp $
+# $Id: makeTagAndProbe.csh,v 1.4 2013/06/06 16:25:59 gdimperi Exp $
 
 # change if needed
 #set castordir = /castor/cern.ch/user/m/meridian/Higgs/reduced

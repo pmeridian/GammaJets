@@ -1,5 +1,5 @@
 #!/bin/tcsh
-# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.4 2013/05/29 14:23:09 meridian Exp $
+# $Id: makeSingleGammaTreeNtp_giulia.csh,v 1.5 2013/06/24 13:30:15 meridian Exp $
 
 # change if needed
 
@@ -130,7 +130,9 @@ echo "------   ready ro run at $location ------------------"
 
 # logfiles always stored locally
 set logdir = "$PWD/log/$outdir"
+set jobdir = "$PWD/jobs/$outdir"
 if($run == 1) mkdir -p $logdir
+mkdir -p $jobdir
 
 # choose queue, location based on location
 if ($location == "cern" ) then
@@ -220,7 +222,8 @@ else if(-d $listdir) then
    if ($location == "cern" || $location == "roma") then  
      set command = "bsub -q ${queue} -o $logfile -e $logerrfile -J ${jobname} `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    else if ($location == "fnal") then  
-     cat <<EOF >! job_condor
+#    echo "Creating  ${jobdir}/job_condor_${jobname}"
+     cat <<EOF >! ${jobdir}/job_condor_${jobname}
 universe = vanilla
 Executable = `pwd`/scriptSingleGamma_giulia.sh
 Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
@@ -233,7 +236,7 @@ notify_user = ${LOGNAME}@FNAL.GOV
 Arguments =  ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}
 Queue
 EOF
-     set command = "condor_submit job_condor"
+     set command = "condor_submit ${jobdir}/job_condor_${jobname}"
    else if ($location == "eth" ) then
      set command = "qsub -q ${queue} -o $logfile -e $logerrfile `pwd`/scriptSingleGamma_giulia.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
    endif  

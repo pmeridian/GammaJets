@@ -5,7 +5,6 @@
 #include <TCanvas.h>
 #include <iostream>
 #include <TLorentzVector.h>
-#include <vector>
 
 using namespace std;
 
@@ -15,15 +14,14 @@ void TagAndProbeAnalysis::Loop()
 
   readR9Weights();
   
-  // output file -> change
+  // output file
   TFile *outFile[5];
+  outFile[0] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+".root","RECREATE");
+  outFile[1] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"30.root","RECREATE");
+  outFile[2] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"50.root","RECREATE");
+  outFile[3] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"75.root","RECREATE");
+  outFile[4] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"90.root","RECREATE");
 
-  outFile[0] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"_ptTag35.root","RECREATE");
-  outFile[1] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"30_ptTag35.root","RECREATE");
-  outFile[2] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"50_ptTag35.root","RECREATE");
-  outFile[3] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"75_ptTag35.root","RECREATE");
-  outFile[4] = new TFile(outFileNamePrefix+"_tag"+tagTightnessLevel+(mcMatch==0 ? "" : "_mcMatch"+TString::Format("%d",mcMatch))+"_HLT"+"90_ptTag35.root","RECREATE");
-																	   
   // output trees declaration
   TTree *myTree[5];
   for (int ii=0; ii<5; ii++) {
@@ -45,8 +43,6 @@ void TagAndProbeAnalysis::Loop()
   int okLooseElePtEta,  okLooseEleID;
   int okMediumElePtEta, okMediumEleID; 
   int okTightElePtEta,  okTightEleID; 
-  int okPresel;
-  int okLoosePresel;
   int okMVA_005, okMVA_01, okMVA_02;
   int hasPromptElectronMatched;
   
@@ -73,8 +69,6 @@ void TagAndProbeAnalysis::Loop()
     myTree[ii] -> Branch("okMediumEleID",&okMediumEleID,"okMediumEleID/I");
     myTree[ii] -> Branch("okTightElePtEta",&okTightElePtEta,"okTightElePtEta/I");
     myTree[ii] -> Branch("okTightEleID",&okTightEleID,"okTightEleID/I");
-    myTree[ii] -> Branch("okPresel",&okPresel,"okPresel/I");
-    myTree[ii] -> Branch("okLoosePresel",&okLoosePresel,"okLoosePresel/I");
     myTree[ii] -> Branch("okMVA_005",&okMVA_005,"okMVA_005/I");
     myTree[ii] -> Branch("okMVA_01",&okMVA_01,"okMVA_01/I");
     myTree[ii] -> Branch("okMVA_02",&okMVA_02,"okMVA_02/I");
@@ -100,20 +94,19 @@ void TagAndProbeAnalysis::Loop()
 	if (!isGenMatchEle[iEle])
 	  continue;
 
-      //adding extra threshold in ptto match the trigger
       if (tagTightnessLevel=="Tight")
 	{
-	  if (!isTagTightEle[iEle] && electron_pt[iEle]>35.)
+	  if (!isTagTightEle[iEle])
 	    continue;
 	}
       else if (tagTightnessLevel=="Medium")
 	{
-	  if (!isTagMediumEle[iEle] && electron_pt[iEle]>35.)
+	  if (!isTagMediumEle[iEle])
 	    continue;
 	}
       else if (tagTightnessLevel=="Loose")
 	{
-	  if (!isTagLooseEle[iEle] && electron_pt[iEle]>35.)
+	  if (!isTagLooseEle[iEle])
 	    continue;
 	}
       else
@@ -126,24 +119,14 @@ void TagAndProbeAnalysis::Loop()
       //      theEle.SetPtEtaPhiE(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], electron_energy[iEle]);
       theEle.SetPtEtaPhiM(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], 0.);
 
-      //save preselected photon's indexes in a vector
-      vector<int> preselectedPhotIndex = preselectedPhotons();
-      /*
-      cout << "preselectedPhotIndex = " ;
-      for (int i=0; i<preselectedPhotIndex.size(); i++) {
-	cout << preselectedPhotIndex[i] << " , " ;
-      }
-      cout << endl;
-      */
-
       for (int iPho=0; iPho<nPhot; iPho++) {
 	if (isMC && mcMatch)
 	  if (!isGenMatchPhot[iPho])
 	    continue;
 
 	//apply preselection as probe selection for photons (should be loosened to measure preselection SF)
-	//if (!isProbePreselPhot[iPho])
-	//  continue;
+	if (!isProbePreselPhot[iPho])
+	  continue;
 
 	TLorentzVector thePho;
 	thePho.SetPtEtaPhiE(ptPhot[iPho], etaPhot[iPho], phiPhot[iPho], ePhot[iPho]);
@@ -192,35 +175,25 @@ void TagAndProbeAnalysis::Loop()
 	    r9weight_EE=1.;
 	  }
 
-	okLoosePresel =	PhotonNewPreSelection(iPho, 0, 0);
 
-	//for(int j=0; j<preselectedPhotIndex.size(); j++){
-	//  if(preselectedPhotIndex[j] == iPho) {
-	//    okLoosePresel = 1;
-	//  }
-	//}
-
-	//ok(Loose,Medium,Tight)ElePtEta -> isProbePreselPhot also contains loose cuts on isolation
-	okLooseElePtEta  = isProbePreselPhot[iPho];
-	okLooseEleID     = isProbePreselPhot[iPho] && isProbeLoosePhot[iPho];
-	okMediumElePtEta = isProbePreselPhot[iPho];
-	okMediumEleID    = isProbePreselPhot[iPho] && isProbeMediumPhot[iPho];
-	okTightElePtEta  = isProbePreselPhot[iPho];
-	okTightEleID     = isProbePreselPhot[iPho] && isProbeTightPhot[iPho];
+	okLooseElePtEta  = 1;
+	okLooseEleID     = isProbeLoosePhot[iPho];
+	okMediumElePtEta = 1;
+	okMediumEleID    = isProbeMediumPhot[iPho];
+	okTightElePtEta  = 1;
+	okTightEleID     = isProbeTightPhot[iPho];
 
 	hasPromptElectronMatched = hasMatchedPromptElePhot[iPho];
-
-	okPresel = isProbePreselPhot[iPho];
 
 	// MVA WPs
 	okMVA_005 = 0;
 	okMVA_01  = 0;
 	okMVA_02  = 0;
-	if (okLoosePresel && isEBPhot[iPho]) {
+	if (isEBPhot[iPho]) {
 	  if ( mvaIDPhot[iPho]>0.711099 ) okMVA_005 = 1;
 	  if ( mvaIDPhot[iPho]>0.812948 ) okMVA_01  = 1;
 	  if ( mvaIDPhot[iPho]>0.878893 ) okMVA_02  = 1;
-	} else if (okLoosePresel && isEEPhot[iPho]) {
+	} else {
 	  if ( mvaIDPhot[iPho]>0.581733 ) okMVA_005 = 1;
 	  if ( mvaIDPhot[iPho]>0.73721  ) okMVA_01  = 1;
 	  if ( mvaIDPhot[iPho]>0.850808 ) okMVA_02  = 1;
@@ -258,19 +231,16 @@ bool TagAndProbeAnalysis::isHLT_TandP() {
 
   bool isok = false;
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    /*
     if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v3") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v4") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v5") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v6") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v7") isok=true;
-    */
     if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v3")   isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v4")   isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v5")   isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v6")   isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v7")   isok=true;
-    
   }
   return isok;
 }
@@ -340,123 +310,3 @@ void TagAndProbeAnalysis::readR9Weights()
   r9weights_EB->Smooth(4);
   r9weights_EE->Smooth(4);
 }
-
-
-bool TagAndProbeAnalysis::PhotonNewPreSelection( int photon_index, int vertex_index, bool electronVeto) {
-
-  int photon_category = PhotonCategory(photon_index);
-
-  //   float mitCuts_hoe[4]                 = {0.082,0.075,0.075,0.075};                                        
-  //   float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
-
-  float mitCuts_hoe[4]                 = {0.075,0.075,0.075,0.075};                                        
-  float mitCuts_sieie[4]               = {0.014,0.014,0.034,0.034};                                        
-
-  //   float mitCuts_ecaliso[4]             = {50,4,50,4};                                                      
-  //   float mitCuts_hcaliso[4]             = {50,4,50,4};                                                      
-  //   float mitCuts_trkiso[4]              = {50,4,50,4};
-
-  //Applyling looser preselection for nonISO triggers
-  float mitCuts_ecaliso[4]             = {50,50,50,50};                                                      
-  float mitCuts_hcaliso[4]             = {50,50,50,50};                                                      
-  float mitCuts_trkiso[4]              = {50,50,50,50};                                                      
-  //float mitCuts_hcalecal[4]            = {3,3,3,3};                                                        
-  //float mitCuts_abstrkiso[4]           = {2.8,2.8,2.8,2.8};                                                
-  //float mitCuts_trkiso_hollow03[4]     = {4,4,4,4};                                                       
-  //float mitCuts_drtotk_25_99[4]= {0.26,0.029,0.0062,0.0055};
-
-  float mitCuts_pfiso[4]               = {4,4,4,4};
-  
-  float val_hoe        = pid_HoverE[photon_index];
-  float val_sieie      = pid_etawid[photon_index];                                                          
-  float val_ecaliso = pid_jurECAL03[photon_index] - 0.012*ptPhot[photon_index];                              
-  float val_hcaliso = pid_twrHCAL03[photon_index] - 0.005*ptPhot[photon_index]; 
-  float val_trkiso  = pid_hlwTrack03[photon_index] - 0.002*ptPhot[photon_index]; 
-  
-  //float val_hcalecal   = (pho_ecalsumetconedr03[photon_index]+pho_hcalsumetconedr03[photon_index]-rho_algo1*rhofac);                                             
-  //float val_abstrkiso  = (*pho_tkiso_recvtx_030_002_0000_10_01)[photon_index][vertex_index];                
-  //float val_trkiso_hollow03 = pho_trksumpthollowconedr03[photon_index];                                    
-  //float val_drtotk_25_99 = pho_drtotk_25_99[photon_index];
-  int val_pho_isconv = !hasMatchedPromptElePhot[photon_index];
-  float val_pfiso02 = pid_pfIsoCharged02ForCiC[photon_index];
-
-  if (val_hoe             >= mitCuts_hoe[photon_category]         ) return false; 
-  if (val_sieie           >= mitCuts_sieie[photon_category]       ) return false;
-  if (val_ecaliso         >= mitCuts_ecaliso[photon_category]     ) return false;
-  if (val_hcaliso         >= mitCuts_hcaliso[photon_category]     ) return false; 
-  if (val_trkiso          >= mitCuts_trkiso[photon_category]      ) return false;
-
-  if ((!val_pho_isconv && electronVeto) ) return false; // Electron Rejection based Conversion Safe Veto
-
-  if (val_pfiso02 >= mitCuts_pfiso[photon_category]) return false;            
-  
-  return true;
-}
-
-
-int TagAndProbeAnalysis::PhotonCategory(int photonindex) { 
-  return PhotonR9Category(photonindex) + 2*PhotonEtaCategory(photonindex);
-}
-Int_t TagAndProbeAnalysis::PhotonR9Category(int photonindex) { 
-  if(photonindex < 0) return -1;
-  int r9cat = (Int_t)(E9Phot[photonindex]/escRawPhot[photonindex]<0.94);// 0, 1(high r9 --> low r9)
-  return r9cat;
-}
-int TagAndProbeAnalysis::PhotonEtaCategory(int photonindex) {
-  if(photonindex < 0) return -1;
-  int etacat = (Int_t)(TMath::Abs(etascPhot[photonindex])>1.479);   // 0, 1 (barrel --> endcap)
-  return  etacat;
-}
-
-
-//don't use this preselection 
-std::vector<int> TagAndProbeAnalysis::preselectedPhotons()
-{
-
-  std::vector<int> selPhotons;
-  
-  for (int iPhot=0;iPhot<nPhot;++iPhot)
-    {
-      /////////////////////???????
-      if(ptPhot[iPhot]<20.) continue;
-      if((TMath::Abs(etascPhot[iPhot])>1.4442 && TMath::Abs(etascPhot[iPhot])<1.566) || TMath::Abs(etascPhot[iPhot])>2.5) continue;
-      /////////////////////////////////////////
-
-      int theEAregion = effectiveAreaRegion(etaPhot[iPhot]); 
-      if (theEAregion>6) continue;
-      
-      float preselECAL    = pid_jurECAL03[iPhot]  - 0.012*ptPhot[iPhot];  
-      float preselHCAL    = pid_twrHCAL03[iPhot]  - 0.005*ptPhot[iPhot]; 
-      float preselTracker = pid_hlwTrack03[iPhot] - 0.002*ptPhot[iPhot]; 
-
-      if ( preselECAL > 10.)    continue;
-      if ( preselHCAL > 10.)    continue;
-      if ( preselTracker > 10) continue;
-
-      if ( theEAregion<2) {  // EB
-	if ( pid_HoverE[iPhot]>0.075 )   continue;
-	if ( pid_etawid[iPhot]>0.014 ) continue;
-      } else {     // EE
-	if(pid_HoverE[iPhot]>0.075)      continue;
-	if (pid_etawid[iPhot]>0.034)   continue;
-      }
-      selPhotons.push_back(iPhot);
-      //cout  << "iPhot preselezione loose: " << iPhot << endl; 
-    }
-  return selPhotons;
-}
-
-// for effective area calculation
-int TagAndProbeAnalysis::effectiveAreaRegion(float theEta) {
-
-  int theEAregion = 999;
-  if (fabs(theEta)<1.) theEAregion = 0;      
-  if (fabs(theEta)<1.479 && fabs(theEta)>1.)    theEAregion = 1;
-  if (fabs(theEta)<2.    && fabs(theEta)>1.479) theEAregion = 2;
-  if (fabs(theEta)<2.2   && fabs(theEta)>2.0)   theEAregion = 3;
-  if (fabs(theEta)<2.3   && fabs(theEta)>2.2)   theEAregion = 4;
-  if (fabs(theEta)<2.4   && fabs(theEta)>2.3)   theEAregion = 5;
-  if (fabs(theEta)>2.4) theEAregion = 6;
-  return theEAregion;
-}
-

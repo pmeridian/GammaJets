@@ -1,5 +1,5 @@
 #!/bin/csh
-## $Id: mergeRedNtp.csh,v 1.1 2011/05/07 16:21:43 rahatlou Exp $
+## $Id: mergeRedNtp.csh,v 1.1 2013/05/29 08:48:35 meridian Exp $
 
 if($#argv == 0 || $#argv < 2) then
   echo "usage:  mergeRedNtp.csh  <indir>  <run if 1>"
