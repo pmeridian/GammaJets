@@ -19,7 +19,7 @@ echo "creating $outdir for output"
 if($run == 1) mkdir  $outdir
 
 ## list of samples to merge
-set samples  = ( `/bin/ls -1 $indir | awk 'BEGIN{FS="."}{print  $1}' | awk 'BEGIN{FS="_[0-9][0-9]$"}{print  $1}' | grep -v merged | uniq ` )
+set samples  = ( `/bin/ls -1 $indir | awk 'BEGIN{FS="."}{print  $1}' | awk 'BEGIN{FS="_[0-9][0-9][0-9][0-9]$"}{print  $1}' | grep -v merged | uniq ` )
 
 foreach i ( $samples )
   echo "-----------  sample: $i"
@@ -33,7 +33,7 @@ foreach i ( $samples )
   endif
 
   # hadd command
-  set comm = "hadd  $outfile $indir/${i}_??.root"
+  set comm = "hadd  $outfile $indir/${i}_????.root"
   if($run == 1) then
      $comm
   else 
