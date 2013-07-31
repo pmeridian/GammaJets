@@ -1,7 +1,7 @@
 #ifndef SingleGammaTree_giulia_h
 #define SingleGammaTree_giulia_h
 
-#include "tree_reader_V8.h"
+#include "tree_reader_V9.h"
 //#include "PhotonIdCuts.h"
 #include "LeptonIdCuts.h"
 #include "EnergyScaleCorrection.h"
@@ -29,7 +29,7 @@ using std::vector;
 #define NGENJETS 200
 #define NMC 150
 
-class SingleGammaTree_giulia : public tree_reader_V8 {
+class SingleGammaTree_giulia : public tree_reader_V9 {
 
 public:
   

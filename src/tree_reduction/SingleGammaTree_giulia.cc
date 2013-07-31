@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 
 
-SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader_V8(tree), jsonFile(0) //, scaleCorrections_(0)
+SingleGammaTree_giulia::SingleGammaTree_giulia(TTree *tree, const TString& outname) : tree_reader_V9(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
@@ -97,19 +97,33 @@ void SingleGammaTree_giulia::Loop() {
    *                                                      *
    ********************************************************/
 
-
   int nPhot_presel, nPhot_gen;
+
+  float deltaRMatch_gen[10];
+  float iRecoPhotMatch_gen[10];
+  float ptTrueMatch_gen[10];
+  float ptRecoMatch_gen[10];
+  float etaMatch_gen[10];
+  float phiMatch_gen[10];
+
+  float iso02_gen[10];
+  float iso03_gen[10];
+  float iso04_gen[10];
+  float iso05_gen[10];
+
   float ptPhot_presel[10];
   float ePhot_presel[10];
   float phiPhot_presel[10];
   float etaPhot_presel[10];
 
-  float deltaRGenReco[10];
-  float deltaRGenReco_EB_nopresel[10], deltaRGenReco_EE_nopresel[10];
-  float eTrue_EB_nopresel[10], eTrue_EE_nopresel[10];
-  float eReco_EB_matched[10], eReco_EE_matched[10];
 
   int isMatchedPhot[10];
+  int iMatchedPhot[10];
+  int isTrig20CaloVLMatchedPhot[10];
+  int isTrig30CaloVLMatchedPhot[10];
+  int isTrig50CaloVLMatchedPhot[10];
+  int isTrig75CaloVLMatchedPhot[10];
+  int isTrig90CaloVLMatchedPhot[10];
 
   float pid_scetawid_presel[10];
   float pid_scphiwid_presel[10]; 
@@ -154,9 +168,12 @@ void SingleGammaTree_giulia::Loop() {
   float pid_pfIsoNeutrals04ForCiC_presel[10];
   float pid_pfIsoNeutrals05ForCiC_presel[10];
   float pid_pfIsoNeutrals06ForCiC_presel[10];
-  
 
-  
+
+  //Photon Trigger Objects
+
+
+
   ana_tree = new TTree ("AnaTree","Reduced tree for final analysis");
   //ana_tree = new TTree ("AnaTree","Reduced tree for final analysis, 2") ;
   // general
@@ -184,11 +201,21 @@ void SingleGammaTree_giulia::Loop() {
   
   // photons
   ana_tree->Branch("nPhot_gen",&nPhot_gen,"nPhot_gen/I");
+  ana_tree->Branch("deltaRMatch_gen", deltaRMatch_gen, "deltaRMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("ptTrueMatch_gen", ptTrueMatch_gen, "ptTrueMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("etaMatch_gen", etaMatch_gen, "etaMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("phiMatch_gen", phiMatch_gen, "phiMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("ptRecoMatch_gen", ptRecoMatch_gen, "ptRecoMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("iRecoPhotMatch_gen", iRecoPhotMatch_gen, "iRecoPhotMatch_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("iso02_gen", iso02_gen, "iso02_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("iso03_gen", iso03_gen, "iso03_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("iso04_gen", iso04_gen, "iso04_gen[nPhot_gen]/F"  );
+  ana_tree->Branch("iso05_gen", iso05_gen, "iso05_gen[nPhot_gen]/F"  );
+
   ana_tree->Branch("nPhot_presel",&nPhot_presel,"nPhot_presel/I");
   ana_tree->Branch("ptPhot_presel",ptPhot_presel,"ptPhot_presel[nPhot_presel]/F");
   ana_tree->Branch("ePhot_presel",ePhot_presel,"ePhot_presel[nPhot_presel]/F");
   ana_tree->Branch("etascPhot_presel  ",etascPhot_presel  ,"etascPhot_presel[nPhot_presel]/F");
-
 
   ana_tree->Branch("etaPhot_presel",etaPhot_presel,"etaPhot[nPhot_presel]/F");
   ana_tree->Branch("phiPhot_presel",phiPhot_presel,"phiPhot[nPhot_presel]/F");
@@ -234,19 +261,18 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("r9Phot_presel",r9Phot_presel,"r9Phot_presel[nPhot_presel]/F"); //new								
   ana_tree->Branch("rhoAllJets",&rhoAllJets,"rhoAllJets/F");												
   ana_tree->Branch("rhoPF",&rhoPF,"rhoPF/F");														
-		   																			
+
   ana_tree->Branch("rr_presel",rr_presel,"rr_presel[nPhot_presel]/F"); //new                                                                            
 
-
   ana_tree->Branch("isMatchedPhot", isMatchedPhot, "isMatchedPhot[nPhot_presel]/I"  );
-  ana_tree->Branch("deltaRGenReco", deltaRGenReco, "deltaRGenReco[nPhot_gen]/F"  );
+  ana_tree->Branch("iMatchedPhot", iMatchedPhot, "iMatchedPhot[nPhot_presel]/I"  );
+  ana_tree->Branch("isTrig20CaloVLMatchedPhot", isTrig20CaloVLMatchedPhot, "isTrig20CaloVLMatchedPhot[nPhot_presel]/I"  );
+  ana_tree->Branch("isTrig30CaloVLMatchedPhot", isTrig30CaloVLMatchedPhot, "isTrig30CaloVLMatchedPhot[nPhot_presel]/I"  );
+  ana_tree->Branch("isTrig50CaloVLMatchedPhot", isTrig50CaloVLMatchedPhot, "isTrig50CaloVLMatchedPhot[nPhot_presel]/I"  );
+  ana_tree->Branch("isTrig75CaloVLMatchedPhot", isTrig75CaloVLMatchedPhot, "isTrig75CaloVLMatchedPhot[nPhot_presel]/I"  );
+  ana_tree->Branch("isTrig90CaloVLMatchedPhot", isTrig90CaloVLMatchedPhot, "isTrig90CaloVLMatchedPhot[nPhot_presel]/I"  );
 
-  ana_tree->Branch("deltaRGenReco_EB_nopresel", deltaRGenReco_EB_nopresel, "deltaRGenReco_EB_nopresel[nPhot_gen]/F"  );
-  ana_tree->Branch("deltaRGenReco_EE_nopresel", deltaRGenReco_EE_nopresel, "deltaRGenReco_EE_nopresel[nPhot_gen]/F"  );
-  ana_tree->Branch("eTrue_EB_nopresel", eTrue_EB_nopresel, "eTrue_EB_nopresel[nPhot_gen]/F"  );
-  ana_tree->Branch("eTrue_EE_nopresel", eTrue_EE_nopresel, "eTrue_EE_nopresel[nPhot_gen]/F"  );
-  ana_tree->Branch("eReco_EB_matched", eReco_EB_matched, "eReco_EB_matched[nPhot_gen]/F"  );
-  ana_tree->Branch("eReco_EE_matched", eReco_EE_matched, "eReco_EE_matched[nPhot_gen]/F"  );
+
 
   // vertex
   ana_tree->Branch("vtxId",   &vtxId,   "vtxId/I");
@@ -312,24 +338,59 @@ void SingleGammaTree_giulia::Loop() {
     int nGenPhot(0);
     vector<bool> photassocMC;
     //    TVector3 recoPhot[nPhot_presel]; 
-    vector<TVector3> genPhot, recoPhot, recoPhot_nopresel;
-    TVector3 gen, reco, reco_nopresel;
-       
+    //    vector<TVector3> genPhot, recoPhot;
+    //, recoPhot_nopresel;
+    //    TVector3 gen, reco, reco_nopresel;
+
     /// init of mc related variables
-        
     for(int i=0; i<nMC; i++) {
       
-      if((pdgIdMC[i] == 22 && statusMC[i] == 3)
-	 || (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 ) )
-	 ){
+      if((pdgIdMC[i] == 22 && statusMC[i] == 3) //photon in the diagram
+	 || (pdgIdMC[i] == 22 && statusMC[i] == 1 && (TMath::Abs(pdgIdMC[motherIDMC[i]])<=10 ) ) //photon coming from a quark
+	 )
+	{
+	  
+	  photassocMC.push_back(1);	
+	  ptTrueMatch_gen[nGenPhot] =   ptMC[i];
+	  etaMatch_gen[nGenPhot] =   etaMC[i];
+	  phiMatch_gen[nGenPhot] =   phiMC[i];
 
-	photassocMC.push_back(1);	
-	
-	nGenPhot++;
-	gen.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
-	genPhot.push_back(gen);
-      }
-      else	photassocMC.push_back(0);
+	  iso02_gen[nGenPhot]=isoParticleChargedDR02MC[i]+isoParticleEMNeutralDR02MC[i]+isoParticleHADNeutralDR02MC[i];
+	  iso03_gen[nGenPhot]=isoParticleChargedDR03MC[i]+isoParticleEMNeutralDR03MC[i]+isoParticleHADNeutralDR03MC[i];
+	  iso04_gen[nGenPhot]=isoParticleChargedDR04MC[i]+isoParticleEMNeutralDR04MC[i]+isoParticleHADNeutralDR04MC[i];
+	  iso05_gen[nGenPhot]=isoParticleChargedDR05MC[i]+isoParticleEMNeutralDR05MC[i]+isoParticleHADNeutralDR05MC[i];
+
+	  TVector3 gen;
+	  gen.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
+	  float deltaRmin = 0.3;
+	  int i_nPhot=-1;
+	  for(int j=0; j<nPhot; j++)
+	    {
+	      TVector3 reco;
+	      reco.SetPtEtaPhi(ptPhot[j],etaPhot[j],phiPhot[j]);
+	      if(gen.DeltaR(reco) < deltaRmin) 
+		{
+		  deltaRmin = gen.DeltaR(reco);
+		  i_nPhot = j;
+		}
+	    }
+	  
+	  if (i_nPhot>-1)
+	    {
+	      deltaRMatch_gen[nGenPhot] = deltaRmin;
+	      ptRecoMatch_gen[nGenPhot] = ptPhot[i_nPhot];
+	      iRecoPhotMatch_gen[nGenPhot] = i_nPhot;
+	    }
+	  else
+	    {
+	      deltaRMatch_gen[nGenPhot] = -999.;
+	      ptRecoMatch_gen[nGenPhot] = -999.;
+	      iRecoPhotMatch_gen[nGenPhot] = -999;
+	    }
+	  nGenPhot++;
+	}
+      else
+	photassocMC.push_back(0);
          
       /// if there are photons coming not from a photon or a higgs
       //if(pdgIdMC[i] == 22 && statusMC[i] == 1 && TMath::Abs(pdgIdMC[motherIDMC[i]])<21) nGenPhot++;
@@ -338,86 +399,6 @@ void SingleGammaTree_giulia::Loop() {
     nPhot_gen = nGenPhot;
     //    if (nGenPhot != 1) cout << "nGenPhot:  " << nGenPhot << endl; 
 
-
-
-    //matching efficiency (before preselection)
-    vector<float> deltaR_gen_reco_nopresel_EB, deltaR_gen_reco_nopresel_EE;
-    vector<int> i_reco_nopresel_matched_EB, i_reco_nopresel_matched_EE;
-    vector<float> vec_eTrue_nopresel_EB, vec_eTrue_nopresel_EE;
-    vector<float> vec_eReco_matched_EB, vec_eReco_matched_EE;
-
-    float deltaRmin_nopresel_EB, deltaRmin_nopresel_EE;
-    int i_nPhot_nopresel_matched_EB, i_nPhot_nopresel_matched_EE;
-    float eTrue_nopresel_EB, eTrue_nopresel_EE;
-    float eReco_matched_EB, eReco_matched_EE;
-    TVector3 reco_nopresel_EB, reco_nopresel_EE, gen_presel;
-
-
-    for (int i=0; i<nMC; i++) {
-      deltaRmin_nopresel_EB = 0.3;
-      deltaRmin_nopresel_EE = 0.3;
-      i_nPhot_nopresel_matched_EB = -1;
-      i_nPhot_nopresel_matched_EE = -1;
-  
-      if(photassocMC[i] && ptMC[i]>30 && TMath::Abs(etaMC[i])<1.4442) {
-	gen_presel.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
-	for(int j=0; j<nPhot; j++){
-	  reco_nopresel_EB.SetPtEtaPhi(ptPhot[j],etaPhot[j],phiPhot[j]);
-	  if(gen_presel.DeltaR(reco_nopresel_EB) < deltaRmin_nopresel_EB) {
-	    deltaRmin_nopresel_EB = gen_presel.DeltaR(reco_nopresel_EB);
-	    i_nPhot_nopresel_matched_EB = j;
-	    eTrue_nopresel_EB = eMC[i];
-	    eReco_matched_EB = ePhot[j];
-	  }
-	}
-	
-	deltaR_gen_reco_nopresel_EB.push_back(deltaRmin_nopresel_EB);
-	i_reco_nopresel_matched_EB.push_back(i_nPhot_nopresel_matched_EB);
-	//etasc_reco_nopresel_EB.pushback(etascPhot[i_nPhot_nopresel_matched_EB]);
-	vec_eTrue_nopresel_EB.push_back(eTrue_nopresel_EB);
-	vec_eReco_matched_EB.push_back(eReco_matched_EB);
-      }
-    
-      else if(photassocMC[i] && ptMC[i]>30 && TMath::Abs(etaMC[i])>1.566 && TMath::Abs(etaMC[i])<2.5 ) {
-	gen_presel.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
-	for(int j=0; j<nPhot; j++){
-	  reco_nopresel_EE.SetPtEtaPhi(ptPhot[j],etaPhot[j],phiPhot[j]);
-	  if(gen_presel.DeltaR(reco_nopresel_EE) < deltaRmin_nopresel_EE) {
-	    deltaRmin_nopresel_EE = gen_presel.DeltaR(reco_nopresel_EE);
-	    i_nPhot_nopresel_matched_EE = j;
-	    eTrue_nopresel_EE = eMC[i];
-	    eReco_matched_EE = ePhot[j];
-	  }
-	}
-	
-	deltaR_gen_reco_nopresel_EE.push_back(deltaRmin_nopresel_EE);
-	i_reco_nopresel_matched_EE.push_back(i_nPhot_nopresel_matched_EE);
-	//	etasc_reco_nopresel_EE.pushback(etascPhot[i_nPhot_nopresel_matched_EE]);
-	vec_eTrue_nopresel_EE.push_back(eTrue_nopresel_EE);
-	vec_eReco_matched_EE.push_back(eReco_matched_EE);
-      }
-    }
-
-    for (int i=0; i<nGenPhot; i++) {
-      deltaRGenReco_EB_nopresel[i] = -999.;
-      deltaRGenReco_EE_nopresel[i] = -999.;
-      eTrue_EB_nopresel[i] = -999.;
-      eTrue_EE_nopresel[i] = -999.;
-      eReco_EB_matched[i] = -999.;
-      eReco_EE_matched[i] = -999.;
-    }
-
-    for (int i=0; i<deltaR_gen_reco_nopresel_EB.size(); i++) {
-      deltaRGenReco_EB_nopresel[i] = deltaR_gen_reco_nopresel_EB[i];
-      eTrue_EB_nopresel[i] =  vec_eTrue_nopresel_EB[i];
-      eReco_EB_matched[i] = vec_eReco_matched_EB[i];
-    }
-
-    for (int i=0; i<deltaR_gen_reco_nopresel_EE.size(); i++) {
-      deltaRGenReco_EE_nopresel[i] = deltaR_gen_reco_nopresel_EE[i];
-      eTrue_EE_nopresel[i] =  vec_eTrue_nopresel_EE[i];
-      eReco_EE_matched[i] = vec_eReco_matched_EE[i];
-    }
 
     /***************************************************
      *                                                 *
@@ -515,217 +496,220 @@ void SingleGammaTree_giulia::Loop() {
 
     for (int i=0; i<nPhot; i++) {
       
-      if( ptPhot[i] > 30 //eT threshold  
-	  && PhotonMITPreSelection(i,0,1)  //isolation (trigger level)    
-	  && ((TMath::Abs(etascPhot[i]) < 1.4442) || (TMath::Abs(etascPhot[i]) > 1.566 && TMath::Abs(etascPhot[i]) < 2.5)) )//ECAL
+      if( ! (ptPhot[i] > 30 //eT threshold  
+	     && PhotonMITPreSelection(i,0,1)  //isolation (trigger level)    
+	     && ((TMath::Abs(etascPhot[i]) < 1.4442) || (TMath::Abs(etascPhot[i]) > 1.566 && TMath::Abs(etascPhot[i]) < 2.5)) ) )//ECAL
 	{ 
-	  countPreselPhot++;
-	  preselPhot.push_back(1);
-	
-	} else{
-	preselPhot.push_back(0);
-      }
-    }
-
-    /****************************************************
-     *                                                  *
-     *        SAVING RECO VARIABLES IN TTREE    *
-     *                                                  *
-     ****************************************************/
-
-    nPhot_presel = countPreselPhot;
-    vector<float>  pt, energy, eta, phi, s4, r9, etasc, lambdaratio, scetawid, scphiwid, setaeta, setaphi, rr;
-
-    //photon id
-    vector<float> ecalIso03, hcalIso03, trackIso03, ecalIso04, hcalIso04, trackIso04, ecalIsoPf01, ecalIsoPf02, ecalIsoPf03, ecalIsoPf04, ecalIsoPf05, ecalIsoPf06,  hcalIsoPf01, hcalIsoPf02, hcalIsoPf03, hcalIsoPf04, hcalIsoPf05, hcalIsoPf06, hovere;
+	  preselPhot.push_back(0);
+	  continue;
+	}	  
     
-    vector<float> trackIsoPf01, trackIsoPf02, trackIsoPf03, trackIsoPf04, trackIsoPf05, trackIsoPf06;
-    
-    
-
-    if (countPreselPhot > 0) {
-
-      int j = 0;
-      for(int i=0; i<nPhot; i++) {
-	float rr2 = 0;
+      preselPhot.push_back(1);
+      
+      float rr2=0;
+      if (isEEPhot)
 	rr2=pid_esXwidth[i]*pid_esXwidth[i]+pid_esYwidth[i]*pid_esYwidth[i];
-	//tmva_photonid_ESEffSigmaRR = 0.0; 
+      float r9phot = E9Phot[i] / escRawPhot[i];
+      float s4phot = E4Phot[i] / E25Phot[i];
       
-	float r9phot = E9Phot[i] / escRawPhot[i];
-	float s4phot = E4Phot[i] / E25Phot[i];
-	
-	//cout << "setaeta before: " << pid_etawid[i] << "  " << endl;    
-	ClusterShape(&i, &pid_etawid[i], &pid_scetawid[i], &pid_scphiwid[i], &r9phot, &s4phot);
-	//cout << "setaeta after: " << pid_etawid[i] << "  " << endl << endl;    
-
-
-	if(preselPhot[i] ) {
-	  reco.SetPtEtaPhi(ptPhot[i],etaPhot[i],phiPhot[i]); 
-	  recoPhot.push_back(reco);
-	  pt.push_back(ptPhot[i]);
-	  energy.push_back(ePhot[i]);
-	  eta.push_back(etaPhot[i]);	 
-	  phi.push_back(phiPhot[i]); 
-	  s4.push_back(s4phot);
-	  r9.push_back(r9phot);
-	  etasc.push_back(etascPhot[i]);
-	  lambdaratio.push_back(pid_lambdaRatio[i]);
-	  scetawid.push_back(pid_scetawid[i]);
-	  scphiwid.push_back(pid_scphiwid[i]);
-	  setaeta.push_back(pid_etawid[i]);
-	  setaphi.push_back(sEtaPhiPhot[i]);
-	  rr.push_back(sqrt(rr2));
-
-	  hovere.push_back(pid_HoverE[i]);
-	  ecalIso03.push_back(pid_jurECAL03[i]);		  	   
-	  hcalIso03.push_back(pid_twrHCAL03[i]);		  	   
-	  trackIso03.push_back(pid_hlwTrack03[i]);
-	  ecalIso04.push_back(pid_jurECAL[i]);		  	   
-	  hcalIso04.push_back(pid_twrHCAL[i]);		  	   
-	  trackIso04.push_back(pid_hlwTrack[i]);	  	   
-
-	  ecalIsoPf01.push_back(pid_pfIsoPhotons01ForCiC[i]);	   
-	  ecalIsoPf02.push_back(pid_pfIsoPhotons02ForCiC[i]);	   
-	  ecalIsoPf03.push_back(pid_pfIsoPhotons03ForCiC[i]); 	   
-	  ecalIsoPf04.push_back(pid_pfIsoPhotons04ForCiC[i]);	   
-	  ecalIsoPf05.push_back(pid_pfIsoPhotons05ForCiC[i]);	   
-	  ecalIsoPf06.push_back(pid_pfIsoPhotons06ForCiC[i]); 	   
-	  hcalIsoPf01.push_back(pid_pfIsoNeutrals01ForCiC[i]);	   
-	  hcalIsoPf02.push_back(pid_pfIsoNeutrals02ForCiC[i]);	   
-	  hcalIsoPf03.push_back(pid_pfIsoNeutrals03ForCiC[i]);	   
-	  hcalIsoPf04.push_back(pid_pfIsoNeutrals04ForCiC[i]);	   
-	  hcalIsoPf05.push_back(pid_pfIsoNeutrals05ForCiC[i]);	   
-	  hcalIsoPf06.push_back(pid_pfIsoNeutrals06ForCiC[i]);	   
-	  
-          trackIsoPf01.push_back(pid_pfIsoCharged01ForCiC[i][0]);
-	  trackIsoPf02.push_back(pid_pfIsoCharged02ForCiC[i][0]);
-	  trackIsoPf03.push_back(pid_pfIsoCharged03ForCiC[i][0]);
-	  trackIsoPf04.push_back(pid_pfIsoCharged04ForCiC[i][0]);
-	  trackIsoPf05.push_back(pid_pfIsoCharged05ForCiC[i][0]);
-	  trackIsoPf06.push_back(pid_pfIsoCharged06ForCiC[i][0]);
-
-	}
-      } 
-      for(int i=0; i<nPhot_presel; i++) {
-	ptPhot_presel[i] = pt[i];
-	ePhot_presel[i] = energy[i];
-	etaPhot_presel[i] = eta[i];
-	phiPhot_presel[i] = phi[i];
-	//MVA variables
-	pid_scetawid_presel[i] = scetawid[i];
-	pid_scphiwid_presel[i] = scphiwid[i];
-	sEtaEtaPhot_presel[i] = setaeta[i];
-	sEtaPhiPhot_presel[i] = setaphi[i];
-
-	s4RatioPhot_presel[i] = s4[i]; 
-	r9Phot_presel[i] = r9[i];
-	etascPhot_presel[i] = etasc[i];
-
-	rr_presel[i] = rr[i];
-
-	pid_lambdaRatio_presel[i] = lambdaratio[i]; 
-	pid_HoverE_presel[i] = hovere[i];
-
-	//if (TMath::Abs(etasc[i])>1.566) cout << "pt[" << i <<"] = " << pt[i] << "    etasc[" << i << "] = " << etasc[i] << endl;
-	//iso variables
-	pid_jurECAL03_presel[i] = ecalIso03[i];
-	pid_twrHCAL03_presel[i] = hcalIso03[i];
-	pid_hlwTrack03_presel[i]= trackIso03[i];
-	pid_jurECAL04_presel[i] = ecalIso04[i];
-	pid_twrHCAL04_presel[i] = hcalIso04[i];
-	pid_hlwTrack04_presel[i]= trackIso04[i];
-
-	pid_pfIsoPhotons01ForCiC_presel[i] = ecalIsoPf01[i];	   
-	pid_pfIsoPhotons02ForCiC_presel[i] = ecalIsoPf02[i];	   
-	pid_pfIsoPhotons03ForCiC_presel[i] = ecalIsoPf03[i]; 	   
-	pid_pfIsoPhotons04ForCiC_presel[i] = ecalIsoPf04[i];	   
-	pid_pfIsoPhotons05ForCiC_presel[i] = ecalIsoPf05[i];	   
-	pid_pfIsoPhotons06ForCiC_presel[i] = ecalIsoPf06[i]; 	   
-	pid_pfIsoNeutrals01ForCiC_presel[i] =hcalIsoPf01[i] ;	   
-	pid_pfIsoNeutrals02ForCiC_presel[i] =hcalIsoPf02[i] ;	   
-	pid_pfIsoNeutrals03ForCiC_presel[i] =hcalIsoPf03[i] ;	   
-	pid_pfIsoNeutrals04ForCiC_presel[i] =hcalIsoPf04[i] ;	   
-	pid_pfIsoNeutrals05ForCiC_presel[i] =hcalIsoPf05[i] ;	   
-	pid_pfIsoNeutrals06ForCiC_presel[i] =hcalIsoPf06[i] ;	   
-	
-        pid_pfIsoCharged01ForCiC_presel[i] = trackIsoPf01[i];
-	pid_pfIsoCharged02ForCiC_presel[i] = trackIsoPf02[i];
-	pid_pfIsoCharged03ForCiC_presel[i] = trackIsoPf03[i];
-	pid_pfIsoCharged04ForCiC_presel[i] = trackIsoPf04[i];
-	pid_pfIsoCharged05ForCiC_presel[i] = trackIsoPf05[i];
-	pid_pfIsoCharged06ForCiC_presel[i] = trackIsoPf06[i];
-	
-	 
-      }
-
-
-      //matching with gen photon(s)    
-
-      vector<float> deltaR_gen_reco;
-      vector<int> i_reco_matched;
-
-
-      for(int i=0; i<nMC; i++){
-	float deltaRmin(0.3);
-	int i_nPhot_matched(-1);
-	if(photassocMC[i]) {
-	  gen.SetPtEtaPhi(ptMC[i], etaMC[i], phiMC[i]);
-	  for (int j=0; j<nPhot_presel; j++){
-	    if(gen.DeltaR(recoPhot[j]) < deltaRmin) {
-	      deltaRmin = gen.DeltaR(recoPhot[j]);
-	      i_nPhot_matched = j;   
-	    }
-	  }
-
-	  
-	  deltaR_gen_reco.push_back(deltaRmin);
-	  i_reco_matched.push_back(i_nPhot_matched);
-	  
-	}
-      }
-
-
-      /*
-      //find the minimum deltaR between couples gen-reco
-      deltaRmin=0.3; //reinitialization --> cambiare nomi!!
-      i_nPhot_matched = -1;
-      for (int i=0; i<deltaR_gen_reco.size(); i++) {
-	if(deltaR_gen_reco[i] <  deltaRmin) {
-	  deltaRmin = deltaR_gen_reco[i]; 
-	  i_nPhot_matched = i_reco_matched[i];
-	}
-      }
-      */
-
-      for(int i=0;  i<nPhot_presel; i++) isMatchedPhot[i] = 0;
-      for(int i=0; i<deltaR_gen_reco.size(); i++) {
-	if (i_reco_matched[i]>=0 ) isMatchedPhot[i_reco_matched[i]] = 1;
-	deltaRGenReco[i] = deltaR_gen_reco[i];
-      }
-      // various
-      nvtx = nvertex;
-      runRN = run;
-      eventRN = event;
-      lumi = lbn;
-
-      // check LO gammas - to remove duplicate events in different MC samples
-      LOGamma  = countLOGenGamma();
-      ISRGamma = countISRGenGamma();
-      FSRGamma = countFSRGenGamma();
-
-      // check if the first vertex is good
-      vtxId=0;
-      float rhoVtx=sqrt(vx[0]*vx[0]+vy[0]*vy[0]);
-      if (vndof[0]<4 || fabs(vz[0])>24. || rhoVtx>2.) vtxId=-555;
+      //cout << "setaeta before: " << pid_etawid[i] << "  " << endl;    
+      ClusterShape(&i, &pid_etawid[i], &pid_scetawid[i], &pid_scphiwid[i], &r9phot, &s4phot);
+      //cout << "setaeta after: " << pid_etawid[i] << "  " << endl << endl;    
       
-      ana_tree->Fill();
-    }
+      ptPhot_presel[countPreselPhot] = ptPhot[i];
+      ePhot_presel[countPreselPhot] = ePhot[i];
+      etaPhot_presel[countPreselPhot] = etaPhot[i];
+      phiPhot_presel[countPreselPhot] = phiPhot[i];
+      //MVA variables
+      pid_scetawid_presel[countPreselPhot] = pid_scetawid[i];
+      pid_scphiwid_presel[countPreselPhot] = pid_scphiwid[i];
+      sEtaEtaPhot_presel[countPreselPhot] = pid_etawid[i];
+      sEtaPhiPhot_presel[countPreselPhot] = sEtaPhiPhot[i];
+      
+      s4RatioPhot_presel[countPreselPhot] = s4phot; 
+      r9Phot_presel[countPreselPhot] = r9phot;
+      etascPhot_presel[countPreselPhot] = etascPhot[i];
+      
+      rr_presel[countPreselPhot] = sqrt(rr2);
+      
+      pid_lambdaRatio_presel[countPreselPhot] = pid_lambdaRatio[i]; 
+      pid_HoverE_presel[countPreselPhot] = pid_HoverE[i];
+      
+      //if (TMath::Abs(etasc[countPreselPhot])>1.566) cout << "pt[" << i <<"] = " << pt[i] << "    etasc[" << i << "] = " << etasc[countPreselPhot] << endl;
+      //iso variables
+
+      pid_jurECAL03_presel[countPreselPhot] = pid_jurECAL03[i];
+      pid_twrHCAL03_presel[countPreselPhot] = pid_twrHCAL03[i];
+      pid_hlwTrack03_presel[countPreselPhot]= pid_hlwTrack03[i];
+      pid_jurECAL04_presel[countPreselPhot] = pid_jurECAL[i];
+      pid_twrHCAL04_presel[countPreselPhot] = pid_twrHCAL[i];
+      pid_hlwTrack04_presel[countPreselPhot]= pid_hlwTrack[i];
+
+
+      pid_pfIsoPhotons01ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons01ForCiC[i];	   
+      pid_pfIsoPhotons02ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons02ForCiC[i];	   
+      pid_pfIsoPhotons03ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons03ForCiC[i]; 	   
+      pid_pfIsoPhotons04ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons04ForCiC[i];	   
+      pid_pfIsoPhotons05ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons05ForCiC[i];	   
+      pid_pfIsoPhotons06ForCiC_presel[countPreselPhot] = pid_pfIsoPhotons06ForCiC[i]; 	   
+      pid_pfIsoNeutrals01ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals01ForCiC[i] ;	   
+      pid_pfIsoNeutrals02ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals02ForCiC[i] ;	   
+      pid_pfIsoNeutrals03ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals03ForCiC[i] ;	   
+      pid_pfIsoNeutrals04ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals04ForCiC[i] ;	   
+      pid_pfIsoNeutrals05ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals05ForCiC[i] ;	   
+      pid_pfIsoNeutrals06ForCiC_presel[countPreselPhot] =pid_pfIsoNeutrals06ForCiC[i] ;	   
+      
+      pid_pfIsoCharged01ForCiC_presel[countPreselPhot] = pid_pfIsoCharged01ForCiC[i][0];
+      pid_pfIsoCharged02ForCiC_presel[countPreselPhot] = pid_pfIsoCharged02ForCiC[i][0];
+      pid_pfIsoCharged03ForCiC_presel[countPreselPhot] = pid_pfIsoCharged03ForCiC[i][0];
+      pid_pfIsoCharged04ForCiC_presel[countPreselPhot] = pid_pfIsoCharged04ForCiC[i][0];
+      pid_pfIsoCharged05ForCiC_presel[countPreselPhot] = pid_pfIsoCharged05ForCiC[i][0];
+      pid_pfIsoCharged06ForCiC_presel[countPreselPhot] = pid_pfIsoCharged06ForCiC[i][0];
+      
+      isMatchedPhot[countPreselPhot] = 0;
+      iMatchedPhot[countPreselPhot] = -1;
+      
+      for(int igen=0; igen<nPhot_gen; igen++) {
+	if (iRecoPhotMatch_gen[igen]==i ) 
+	  {
+	    isMatchedPhot[countPreselPhot] = 1;
+	    iMatchedPhot[countPreselPhot] = igen;
+	  }	
+      }
+
+
+   TVector3 reco;
+   reco.SetPtEtaPhi(ptPhot[i], etaPhot[i], phiPhot[i]);
+   float deltaRmin = 0.3;
+   int i_nPhot=-1;
+   for(int j=0; j<trg20_phoIDCaloVL_n; j++)
+     {
+       TVector3 trig;
+       if (trg20_phoIDCaloVL_et[j]<=0 || TMath::Abs(trg20_phoIDCaloVL_eta[j])>2.5 || TMath::Abs(trg20_phoIDCaloVL_phi[j])>TMath::Pi() )
+	 continue;
+       trig.SetPtEtaPhi(trg20_phoIDCaloVL_et[j],trg20_phoIDCaloVL_eta[j],trg20_phoIDCaloVL_phi[j]);
+       if(reco.DeltaR(trig) < deltaRmin) 
+	 {
+	   
+	   deltaRmin = reco.DeltaR(trig);
+	   i_nPhot = j;
+	 }
+     }
    
+   if (i_nPhot>-1)
+     isTrig20CaloVLMatchedPhot[countPreselPhot]=1;
+   else
+     isTrig20CaloVLMatchedPhot[countPreselPhot]=0;
+
+     deltaRmin = 0.3;
+     i_nPhot=-1;
+     for(int j=0; j<trg30_phoIDCaloVL_n; j++)
+       {
+         TVector3 trig;
+ 	if (trg30_phoIDCaloVL_et[j]<=0 || TMath::Abs(trg30_phoIDCaloVL_eta[j])>2.5 || TMath::Abs(trg30_phoIDCaloVL_phi[j])>TMath::Pi() )
+ 	  continue;
+         trig.SetPtEtaPhi(trg30_phoIDCaloVL_et[j],trg30_phoIDCaloVL_eta[j],trg30_phoIDCaloVL_phi[j]);
+         if(reco.DeltaR(trig) < deltaRmin) 
+  	 {
+  	   deltaRmin = reco.DeltaR(trig);
+  	   i_nPhot = j;
+  	 }
+       }
+
+     if (i_nPhot>-1)
+       isTrig30CaloVLMatchedPhot[countPreselPhot]=1;
+     else
+       isTrig30CaloVLMatchedPhot[countPreselPhot]=0;
+
+     deltaRmin = 0.3;
+     i_nPhot=-1;
+     for(int j=0; j<trg50_phoIDCaloVL_n; j++)
+       {
+         TVector3 trig;
+ 	if (trg50_phoIDCaloVL_et[j]<=0 || TMath::Abs(trg50_phoIDCaloVL_eta[j])>2.5 || TMath::Abs(trg50_phoIDCaloVL_phi[j])>TMath::Pi())
+ 	  continue;
+         trig.SetPtEtaPhi(trg50_phoIDCaloVL_et[j],trg50_phoIDCaloVL_eta[j],trg50_phoIDCaloVL_phi[j]);
+         if(reco.DeltaR(trig) < deltaRmin) 
+  	 {
+  	   deltaRmin = reco.DeltaR(trig);
+  	   i_nPhot = j;
+  	 }
+       }
+
+     if (i_nPhot>-1)
+       isTrig50CaloVLMatchedPhot[countPreselPhot]=1;
+     else
+       isTrig50CaloVLMatchedPhot[countPreselPhot]=0;
+
+     deltaRmin = 0.3;
+     i_nPhot=-1;
+     for(int j=0; j<trg75_phoIDCaloVL_n; j++)
+       {
+         TVector3 trig;
+ 	if (trg75_phoIDCaloVL_et[j]<=0 || TMath::Abs(trg75_phoIDCaloVL_eta[j])>2.5 || TMath::Abs(trg75_phoIDCaloVL_phi[j])>TMath::Pi())
+ 	  continue;
+         trig.SetPtEtaPhi(trg75_phoIDCaloVL_et[j],trg75_phoIDCaloVL_eta[j],trg75_phoIDCaloVL_phi[j]);
+         if(reco.DeltaR(trig) < deltaRmin) 
+  	 {
+  	   deltaRmin = reco.DeltaR(trig);
+  	   i_nPhot = j;
+  	 }
+       }
+
+     if (i_nPhot>-1)
+       isTrig75CaloVLMatchedPhot[countPreselPhot]=1;
+     else
+       isTrig75CaloVLMatchedPhot[countPreselPhot]=0;
+
+      deltaRmin = 0.3;
+      i_nPhot=-1;
+      for(int j=0; j<trg90_phoIDCaloVL_n; j++)
+        {
+          TVector3 trig;
+ 	 //	 std::cout << j << "," << trg90_phoIDCaloVL_et[j] << "," << trg90_phoIDCaloVL_eta[j] << "," << trg90_phoIDCaloVL_phi[j] << std::endl;
+  	if (trg90_phoIDCaloVL_et[j]<=0 || TMath::Abs(trg90_phoIDCaloVL_eta[j])>2.5 || TMath::Abs(trg90_phoIDCaloVL_phi[j])>TMath::Pi())
+  	  continue;
+          trig.SetPtEtaPhi(trg90_phoIDCaloVL_et[j],trg90_phoIDCaloVL_eta[j],trg90_phoIDCaloVL_phi[j]);
+          if(reco.DeltaR(trig) < deltaRmin) 
+   	 {
+   	   deltaRmin = reco.DeltaR(trig);
+   	   i_nPhot = j;
+   	 }
+        }
+
+      if (i_nPhot>-1)
+        isTrig90CaloVLMatchedPhot[countPreselPhot]=1;
+      else
+        isTrig90CaloVLMatchedPhot[countPreselPhot]=0;
+
+   countPreselPhot++;
+	 
+    }
+
+    nPhot_presel= countPreselPhot;
+
+    // various
+    nvtx = nvertex;
+    runRN = run;
+    eventRN = event;
+    lumi = lbn;
+    
+    // check LO gammas - to remove duplicate events in different MC samples
+    LOGamma  = countLOGenGamma();
+    ISRGamma = countISRGenGamma();
+    FSRGamma = countFSRGenGamma();
+    
+    // check if the first vertex is good
+    vtxId=0;
+    float rhoVtx=sqrt(vx[0]*vx[0]+vy[0]*vy[0]);
+    if (vndof[0]<4 || fabs(vz[0])>24. || rhoVtx>2.) vtxId=-555;
+    
+    ana_tree->Fill();
+  
     delete aHLTNames;
   }
   ptphotgen1.Write();
   ana_tree->Write();
-
 }
 
 bool SingleGammaTree_giulia::PhotonMITPreSelection( int photon_index, int vertex_index, bool electronVeto) {

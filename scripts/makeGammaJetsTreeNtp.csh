@@ -1,5 +1,5 @@
 #!/bin/tcsh
-# $Id: makeRedNtp.csh,v 1.34 2012/09/27 15:16:42 meridian Exp $
+# $Id: makeGammaJetsTreeNtp.csh,v 1.1 2013/01/17 14:13:25 crovelli Exp $
 
 # change if needed
 set castordir = /castor/cern.ch/user/c/crovelli/GammaJets/reduced

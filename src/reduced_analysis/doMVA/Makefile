@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.1 2013/02/05 18:03:02 gdimperi Exp $
+# $Id: Makefile,v 1.1 2013/03/07 16:26:07 gdimperi Exp $
 ROOTLIBS      = $(shell $(ROOTSYS)/bin/root-config --libs)
 ROOTGLIBS     = $(shell $(ROOTSYS)/bin/root-config --glibs)
 

@@ -15,7 +15,7 @@ set run = 0
 
 if($#argv == 0 || $#argv < 3 || $#argv > 11 ) then
   echo "usage:  makeSingleGammaTreeNtp.csh <location> <version> <run if 1> <jsonfile> <pureweight> <pureweight_HLT30> <pureweight_HLT50> <pureweight_HLT75> <pureweight_HLT90> <energy correction/smearing>"
-  echo "        locations: cern roma eth"
+  echo "        locations: cern roma eth fnal"
   echo "        version: version string for redntp"
   echo "        run: default=0  set to 1 to execute"
   echo "        jsonfile: optional json to select good RUN_LS used for data (full path is required)"
@@ -82,7 +82,7 @@ endif
 echo ""
 
 #foreach class ( 53xv2 )
-foreach class ( 53xv2 53xv2_data )
+foreach class ( 53xv4 )
 #foreach class ( 53xv2_data )
 #foreach class ( 53xv2_extra )
 #    foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
