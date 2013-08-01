@@ -8,3 +8,4 @@ cuts['hltiso']=0
 cuts['mvaIDWP']=2
 cuts['ptMin']=90
 cuts['ptMax']=9999999.
+cuts['selectionType']="efficiencyStudy"

@@ -12,3 +12,8 @@ Float_t         finalTree_etaPhot;
 Float_t         finalTree_mvaIdPhot;
 Float_t         finalTree_setaetaPhot;
 Float_t         finalTree_combinedPfIso03Phot;
+
+Float_t         finalTree_ptPhotGen;
+Float_t         finalTree_etaPhotGen;
+Float_t         finalTree_iso03PhotGen;
+Float_t         finalTree_iso04PhotGen;

@@ -4,34 +4,21 @@
 #include <TMath.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <TVector3.h>
 #include <TStopwatch.h>
 
 
 void GammaJetAnalysis::Loop()
 {
-//   In a ROOT session, you can do:
-//      Root > .L GammaJetAnalysis.C
-//      Root > GammaJetAnalysis t
-//      Root > t.GetEntry(12); // Fill t data members with entry number 12
-//      Root > t.Show();       // Show values of entry 12
-//      Root > t.Show(16);     // Read and show values of entry 16
-//      Root > t.Loop();       // Loop on all entries
-//
 
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
+  std::cout << "****** Running with the following cuts ******" << std::endl;
+  std::cout << "selectionType " << selectionType << std::endl;
+  std::cout << "ptphot1_mincut " << ptphot1_mincut << std::endl;
+  std::cout << "ptphot1_maxcut " << ptphot1_maxcut << std::endl;
+  std::cout << "hltcut " << hltcut << std::endl;
+  std::cout << "hltiso " << hltiso << std::endl;
+  std::cout << "mvaIDWP " << mvaIDWP << std::endl;
+  std::cout << "*********************************************" << std::endl;
 
    if (fChain == 0) return;
 
@@ -61,27 +48,61 @@ void GammaJetAnalysis::Loop()
       if (npu>=60) continue;    
 
       // first vertex must be good
-      if (vtxId<0) continue;
+      if (vtxId<0 && selectionType!="efficiencyStudy") continue;
       
-      if (!passHLT(hltiso)) continue;
+      if (!passHLT(hltiso) && selectionType!="efficiencyStudy") continue;
 
       std::vector<int> photons=sortedPtPhotons();
-      if (photons.size()<1)
+      if (photons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
 
       std::vector<int> preselectPhotons=preselectedPhotons(photons);
-      if (preselectPhotons.size()<1)
+      if (preselectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
       
       std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
-      if (selectPhotons.size()<1)
+      if (selectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
-
+      
       // ptcut to restrict to the wanted range - matching HLT
-      if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut) continue;	
-      if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut) continue;	
+      if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut && selectionType!="efficiencyStudy") continue;	
+      if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut && selectionType!="efficiencyStudy") continue;	
 
+      if (selectionType=="efficiencyStudy")
+	{
+	  //now matching with the selected photon
+	  if (nPhot_gen<1)
+	    continue;
 
+	  std::vector<int> genPhotons=sortedPtGenPhotons();
+
+	  TVector3 gen;
+	  gen.SetPtEtaPhi(ptTrueMatch_gen[genPhotons[0]], etaMatch_gen[genPhotons[0]], phiMatch_gen[genPhotons[0]]);
+	  float deltaRmin = 0.3;
+	  int i_nPhot=-1;
+	  for(int j=0; j<selectPhotons.size(); j++)
+	    {
+	      TVector3 reco;
+	      reco.SetPtEtaPhi(ptPhot_presel[selectPhotons[j]],etaPhot_presel[selectPhotons[j]],phiPhot_presel[selectPhotons[j]]);
+	      if(gen.DeltaR(reco) < deltaRmin) 
+		{
+		  deltaRmin = gen.DeltaR(reco);
+		  i_nPhot = j;
+		}
+	    }
+
+	  FillTreeGenPhot(genPhotons[0]);
+	  if (i_nPhot>-1)
+	    FillTreePhot(selectPhotons[i_nPhot]);
+	}
+      else
+	{
+	  FillTreePhot(selectPhotons[0]);
+	  if (iMatchedPhot[selectPhotons[0]]>-1)
+	    FillTreeGenPhot(iMatchedPhot[selectPhotons[0]]);
+	  else
+	    FillTreeGenPhot(-1);
+	}
       //////////// End selection //////////////
 
       ++npassing;
@@ -90,7 +111,6 @@ void GammaJetAnalysis::Loop()
       
       //Filling Tree
       FillTreeEvent(weight);
-      FillTreePhot(selectPhotons[0]);
       finalTree->Fill();
    }
    timer.Stop();   
@@ -362,6 +382,11 @@ void GammaJetAnalysis::BookFinalTree()
   finalTree->Branch("weight",&finalTree_weight,"weght/F");
   finalTree->Branch("rho",&finalTree_rho,"rho/F");
 
+  finalTree->Branch("ptPhotGen",&finalTree_ptPhotGen,"ptPhotGen/F");
+  finalTree->Branch("etaPhotGen",&finalTree_etaPhotGen,"etaPhotGen/F");
+  finalTree->Branch("iso03PhotGen",&finalTree_iso03PhotGen,"iso03PhotGen/F");
+  finalTree->Branch("iso04PhotGen",&finalTree_iso04PhotGen,"iso04PhotGen/F");
+
   finalTree->Branch("ptPhot",&finalTree_ptPhot,"ptPhot/F");
   finalTree->Branch("isMatchedPhot",&finalTree_isMatchedPhot,"isMatchedPhot/I");
   finalTree->Branch("etaPhot",&finalTree_etaPhot,"etaPhot/F");
@@ -450,6 +475,16 @@ std::vector<int> GammaJetAnalysis::sortedPtPhotons()
   return sortedPhotons;
 }
 
+std::vector<int> GammaJetAnalysis::sortedPtGenPhotons()
+{
+  std::vector<int> sortedGenPhotons;
+  int sorted_index[nPhot_gen];
+  TMath::Sort(nPhot_gen,ptTrueMatch_gen,sorted_index);
+  for (int ipho=0;ipho<nPhot_gen;++ipho)
+    sortedGenPhotons.push_back(sorted_index[ipho]);
+  return sortedGenPhotons;
+}
+
 bool GammaJetAnalysis::passHLT(bool isoCut)
 {
   // HLT selection - for data only
@@ -491,11 +526,44 @@ void GammaJetAnalysis::FillTreeEvent(float weight)
 
 void GammaJetAnalysis::FillTreePhot(const int& phot)
 {
-  finalTree_etaPhot=etascPhot_presel[phot];
-  finalTree_ptPhot=ptPhot_presel[phot];
-  finalTree_isMatchedPhot=isMatchedPhot[phot];  
-  finalTree_mvaIdPhot=PhotonIDMVA(phot);
-  finalTree_setaetaPhot=sEtaEtaPhot_presel[phot];
-  finalTree_combinedPfIso03Phot=combinedPfIso03(phot);
+  if (phot>-1)
+    {
+      finalTree_etaPhot=etascPhot_presel[phot];
+      finalTree_ptPhot=ptPhot_presel[phot];
+      finalTree_isMatchedPhot=isMatchedPhot[phot];  
+      finalTree_mvaIdPhot=PhotonIDMVA(phot);
+      finalTree_setaetaPhot=sEtaEtaPhot_presel[phot];
+      finalTree_combinedPfIso03Phot=combinedPfIso03(phot);
+    }
+  else
+    {
+      finalTree_etaPhot=-999;
+      finalTree_ptPhot=-999;
+      finalTree_isMatchedPhot=-999;
+      finalTree_mvaIdPhot=-999;
+      finalTree_setaetaPhot=-999;
+      finalTree_combinedPfIso03Phot=-999;
+    }
+  
+  return;
+}
+
+void GammaJetAnalysis::FillTreeGenPhot(const int& genphot)
+{
+  if (genphot>-1)
+    {
+      finalTree_etaPhotGen=etaMatch_gen[genphot];
+      finalTree_ptPhotGen=ptTrueMatch_gen[genphot];
+      finalTree_iso03PhotGen=iso03_gen[genphot];
+      finalTree_iso04PhotGen=iso04_gen[genphot];
+    }
+  else
+    {
+      finalTree_etaPhotGen=-1;
+      finalTree_ptPhotGen=-1;
+      finalTree_iso03PhotGen=-1;
+      finalTree_iso04PhotGen=-1;
+    }
+  
   return;
 }

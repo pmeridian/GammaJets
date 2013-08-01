@@ -34,6 +34,7 @@ public :
    float          normLumi;//pb^(-1)
 
 
+   TString       selectionType;
    // Cuts values                   
    float ptphot1_mincut;
    float ptphot1_maxcut;
@@ -63,6 +64,7 @@ public :
    float GetSampleWeight();
 
    std::vector<int> sortedPtPhotons();
+   std::vector<int> sortedPtGenPhotons();
    std::vector<int> preselectedPhotons(const std::vector<int>& photons);
    std::vector<int> selectedPhotons(const std::vector<int>& photons);
    float combinedPfIso03(const int& phot);
@@ -76,6 +78,7 @@ public :
 
    void FillTreeEvent(float weight);
    void FillTreePhot(const int& ipho);
+   void FillTreeGenPhot(const int& ipho);
 
    TMVA::Reader *tmvaReaderID_Single_Barrel, *tmvaReaderID_Single_Endcap;
    float tmva_photonid_etawidth, tmva_photonid_phiwidth;
@@ -176,6 +179,16 @@ void GammaJetAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("pu_weight75", &pu_weight75, &b_pu_weight75);
    fChain->SetBranchAddress("pu_weight90", &pu_weight90, &b_pu_weight90);
    fChain->SetBranchAddress("nPhot_gen", &nPhot_gen, &b_nPhot_gen);
+   fChain->SetBranchAddress("deltaRMatch_gen", deltaRMatch_gen, &b_deltaRMatch_gen);
+   fChain->SetBranchAddress("ptTrueMatch_gen", ptTrueMatch_gen, &b_ptTrueMatch_gen);
+   fChain->SetBranchAddress("etaMatch_gen", etaMatch_gen, &b_etaMatch_gen);
+   fChain->SetBranchAddress("phiMatch_gen", phiMatch_gen, &b_phiMatch_gen);
+   fChain->SetBranchAddress("ptRecoMatch_gen", ptRecoMatch_gen, &b_ptRecoMatch_gen);
+   fChain->SetBranchAddress("iRecoPhotMatch_gen", iRecoPhotMatch_gen, &b_iRecoPhotMatch_gen);
+   fChain->SetBranchAddress("iso02_gen", iso02_gen, &b_iso02_gen);
+   fChain->SetBranchAddress("iso03_gen", iso03_gen, &b_iso03_gen);
+   fChain->SetBranchAddress("iso04_gen", iso04_gen, &b_iso04_gen);
+   fChain->SetBranchAddress("iso05_gen", iso05_gen, &b_iso05_gen);
    fChain->SetBranchAddress("nPhot_presel", &nPhot_presel, &b_nPhot_presel);
    fChain->SetBranchAddress("ptPhot_presel", ptPhot_presel, &b_ptPhot_presel);
    fChain->SetBranchAddress("ePhot_presel", ePhot_presel, &b_ePhot_presel);
@@ -218,13 +231,12 @@ void GammaJetAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("rhoPF", &rhoPF, &b_rhoPF);
    fChain->SetBranchAddress("rr_presel", rr_presel, &b_rr_presel);
    fChain->SetBranchAddress("isMatchedPhot", isMatchedPhot, &b_isMatchedPhot);
-   fChain->SetBranchAddress("deltaRGenReco", deltaRGenReco, &b_deltaRGenReco);
-   fChain->SetBranchAddress("deltaRGenReco_EB_nopresel", deltaRGenReco_EB_nopresel, &b_deltaRGenReco_EB_nopresel);
-   fChain->SetBranchAddress("deltaRGenReco_EE_nopresel", deltaRGenReco_EE_nopresel, &b_deltaRGenReco_EE_nopresel);
-   fChain->SetBranchAddress("eTrue_EB_nopresel", eTrue_EB_nopresel, &b_eTrue_EB_nopresel);
-   fChain->SetBranchAddress("eTrue_EE_nopresel", eTrue_EE_nopresel, &b_eTrue_EE_nopresel);
-   fChain->SetBranchAddress("eReco_EB_matched", eReco_EB_matched, &b_eReco_EB_matched);
-   fChain->SetBranchAddress("eReco_EE_matched", eReco_EE_matched, &b_eReco_EE_matched);
+   fChain->SetBranchAddress("iMatchedPhot", iMatchedPhot, &b_iMatchedPhot);
+   fChain->SetBranchAddress("isTrig20CaloVLMatchedPhot", isTrig20CaloVLMatchedPhot, &b_isTrig20CaloVLMatchedPhot);
+   fChain->SetBranchAddress("isTrig30CaloVLMatchedPhot", isTrig30CaloVLMatchedPhot, &b_isTrig30CaloVLMatchedPhot);
+   fChain->SetBranchAddress("isTrig50CaloVLMatchedPhot", isTrig50CaloVLMatchedPhot, &b_isTrig50CaloVLMatchedPhot);
+   fChain->SetBranchAddress("isTrig75CaloVLMatchedPhot", isTrig75CaloVLMatchedPhot, &b_isTrig75CaloVLMatchedPhot);
+   fChain->SetBranchAddress("isTrig90CaloVLMatchedPhot", isTrig90CaloVLMatchedPhot, &b_isTrig90CaloVLMatchedPhot);
    fChain->SetBranchAddress("vtxId", &vtxId, &b_vtxId);
    fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
    Notify();
