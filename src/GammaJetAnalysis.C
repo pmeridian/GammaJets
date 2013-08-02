@@ -47,9 +47,10 @@ void GammaJetAnalysis::Loop()
       // patological events
       if (npu>=60) continue;    
 
+
       // first vertex must be good
       if (vtxId<0 && selectionType!="efficiencyStudy") continue;
-      
+
       if (!passHLT(hltiso) && selectionType!="efficiencyStudy") continue;
 
       std::vector<int> photons=sortedPtPhotons();
@@ -65,16 +66,20 @@ void GammaJetAnalysis::Loop()
 	continue;
       
       // ptcut to restrict to the wanted range - matching HLT
-      if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut && selectionType!="efficiencyStudy") continue;	
-      if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut && selectionType!="efficiencyStudy") continue;	
+      if (selectPhotons.size()>0)
+	{
+	  if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut && selectionType!="efficiencyStudy") continue;	
+	  if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut && selectionType!="efficiencyStudy") continue;	
+	}
+
 
       if (selectionType=="efficiencyStudy")
 	{
 	  //now matching with the selected photon
 	  if (nPhot_gen<1)
 	    continue;
-
 	  std::vector<int> genPhotons=sortedPtGenPhotons();
+	  
 
 	  TVector3 gen;
 	  gen.SetPtEtaPhi(ptTrueMatch_gen[genPhotons[0]], etaMatch_gen[genPhotons[0]], phiMatch_gen[genPhotons[0]]);
@@ -90,10 +95,12 @@ void GammaJetAnalysis::Loop()
 		  i_nPhot = j;
 		}
 	    }
-
+	  
 	  FillTreeGenPhot(genPhotons[0]);
 	  if (i_nPhot>-1)
 	    FillTreePhot(selectPhotons[i_nPhot]);
+	  else
+	    FillTreePhot(-1);
 	}
       else
 	{
@@ -105,13 +112,13 @@ void GammaJetAnalysis::Loop()
 	}
       //////////// End selection //////////////
 
-      ++npassing;
-      float weight(1);
-      weight *= GetPUWeight()*GetSampleWeight();
-      
-      //Filling Tree
-      FillTreeEvent(weight);
-      finalTree->Fill();
+       ++npassing;
+       float weight(1);
+       weight *= GetPUWeight()*GetSampleWeight();
+    
+       //Filling Tree
+       FillTreeEvent(weight);
+       finalTree->Fill();
    }
    timer.Stop();   
    std::cout << "Fraction of events passing the selection in sample " << sampleName <<  ":\t" <<  setprecision(4) << npassing*100./nentries*1. << "%" << std::endl;
@@ -206,10 +213,10 @@ void GammaJetAnalysis::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
 
-  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("GradBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
-  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("GradBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file " << mvaWeights_EB << std::endl; 
+  tmvaReaderID_Single_Barrel->BookMVA("GradBoost",mvaWeights_EB);
+  std::cout << "Booking PhotonID EE MVA with file " << mvaWeights_EE << std::endl;
+  tmvaReaderID_Single_Endcap->BookMVA("GradBoost",mvaWeights_EE);
 
   isMVAinitialized=true;
   return;
@@ -429,8 +436,8 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
 std::vector<int> GammaJetAnalysis::selectedPhotons(const std::vector<int>& photons)
 {
   std::vector<int> selPhotons;
-  double mva_cut_EB[3] = {0.892656, 0.844931, 0.766479};//corresponding to sig eff 0.80, 0.90, 0.95
-  double mva_cut_EE[3] = {0.871778, 0.778579, 0.601807};//corresponding to sig eff 0.80, 0.90, 0.95
+  double mva_cut_EB[4] = {0.892656, 0.844931, 0.766479, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
+  double mva_cut_EE[4] = {0.871778, 0.778579, 0.601807, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
 
   for (int ipho=0;ipho<photons.size();++ipho)
     {

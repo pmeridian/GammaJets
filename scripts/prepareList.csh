@@ -1,5 +1,5 @@
 #!/bin/csh
-# $Id: prepareList.csh,v 1.9 2012/06/24 10:31:18 meridian Exp $
+# $Id: prepareList.csh,v 1.2 2013/06/24 09:56:45 meridian Exp $
 
 if( $#argv<3  ) then
   echo "usage:  prepareList.csh  <inputfile> <listname> <location>  [run if 1]"
@@ -18,16 +18,18 @@ set listname = $2
 set location = $3
 
 # num of files per list file
-set filexlist  = 20
+set filexlist  = 10
 
 set prepend=""
 
 if ( $location == "cern" ) then
   set prepend=""
 else if ( $location == "xrootd" ) then
-  set prepend="root://pccmsrm23.cern.ch:1094/"
+  set prepend="root://pccmsrm27.cern.ch:1094/"
 else if ( $location == "eos" ) then
-  set prepend="root://eoscms//"
+  set prepend="root://eoscms.cern.ch/"
+else if ( $location == "eosfnal" ) then
+  set prepend="root://cmseos.fnal.gov/"
 else if ( $location == "eth" ) then
   set prepend="dcap://t3se01.psi.ch/"
 endif 
@@ -62,7 +64,7 @@ awk 'BEGIN{FS="output_"}{ split($2,jobId,"_"); sum[jobId[1]]++;line[jobId[1]]=$0
 #rm -Rf  ${unifile}.tmp
 #sort $tmpfile | uniq -w 4 | awk -F: '{print $2":"$3}' > ${unifile}.tmp
 
-set suffixlen = 2
+set suffixlen = 4
 
 split -l $filexlist -d -a $suffixlen  ${unifile}.tmp  ${listname}_
 
@@ -74,7 +76,7 @@ echo "# of root files in directory: $#files"
 echo "# of uniq files in directory: ${uniqfiles}"
 echo "# of files per list: $filexlist"
 
-foreach i ( ${listname}_?? )
+foreach i ( ${listname}_???? )
   mv $i ${i}.list
   echo "new list:   ${i}.list"
 end

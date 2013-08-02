@@ -33,9 +33,12 @@ public :
    float          xsec; //pb
    float          normLumi;//pb^(-1)
 
+   TString mvaWeights_EB;
+   TString mvaWeights_EE;
 
    TString       selectionType;
    // Cuts values                   
+
    float ptphot1_mincut;
    float ptphot1_maxcut;
 /*    int ebcat; */
