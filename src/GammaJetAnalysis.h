@@ -80,7 +80,7 @@ public :
    void BookFinalTree();
 
    void FillTreeEvent(float weight);
-   void FillTreePhot(const int& ipho);
+   void FillTreePhot(const int& ipho,bool isPreselected, bool isSelected);
    void FillTreeGenPhot(const int& ipho);
 
    TMVA::Reader *tmvaReaderID_Single_Barrel, *tmvaReaderID_Single_Endcap;
