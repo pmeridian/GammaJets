@@ -20,6 +20,17 @@ Float_t         pu_weight50;
 Float_t         pu_weight75;
 Float_t         pu_weight90;
 Int_t           nPhot_gen;
+Float_t         deltaRMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         ptTrueMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         etaMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         phiMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         ptRecoMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         iRecoPhotMatch_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         iso02_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         iso03_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         iso04_gen[NPHOTGENMAX]; //[nPhot_gen]
+Float_t         iso05_gen[NPHOTGENMAX]; //[nPhot_gen]
+
 Int_t           nPhot_presel;
 Float_t         ptPhot_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         ePhot_presel[NPHOTMAX];   //[nPhot_presel]
@@ -62,14 +73,12 @@ Float_t         rhoAllJets;
 Float_t         rhoPF;
 Float_t         rr_presel[NPHOTMAX];   //[nPhot_presel]
 Int_t           isMatchedPhot[NPHOTMAX];   //[nPhot_presel]
-
-Float_t         deltaRGenReco[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         deltaRGenReco_EB_nopresel[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         deltaRGenReco_EE_nopresel[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         eTrue_EB_nopresel[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         eTrue_EE_nopresel[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         eReco_EB_matched[NPHOTGENMAX];   //[nPhot_gen]
-Float_t         eReco_EE_matched[NPHOTGENMAX];   //[nPhot_gen]
+Int_t           iMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
+Int_t           isTrig20CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
+Int_t           isTrig30CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
+Int_t           isTrig50CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
+Int_t           isTrig75CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
+Int_t           isTrig90CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel]           
 Int_t           vtxId;
 
 std::vector<std::string>  *firedHLTNames;
@@ -94,6 +103,16 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_pu_weight75;   //!
    TBranch        *b_pu_weight90;   //!
    TBranch        *b_nPhot_gen;   //!
+   TBranch        *b_deltaRMatch_gen; //!
+   TBranch        *b_ptTrueMatch_gen; //!
+   TBranch        *b_etaMatch_gen; //!
+   TBranch        *b_phiMatch_gen; //!
+   TBranch        *b_ptRecoMatch_gen; //!
+   TBranch        *b_iRecoPhotMatch_gen; //!
+   TBranch        *b_iso02_gen; //!
+   TBranch        *b_iso03_gen; //!
+   TBranch        *b_iso04_gen; //!
+   TBranch        *b_iso05_gen; //!
    TBranch        *b_nPhot_presel;   //!
    TBranch        *b_ptPhot_presel;   //!
    TBranch        *b_ePhot_presel;   //!
@@ -136,12 +155,11 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_rhoPF;   //!
    TBranch        *b_rr_presel;   //!
    TBranch        *b_isMatchedPhot;   //!
-   TBranch        *b_deltaRGenReco;   //!
-   TBranch        *b_deltaRGenReco_EB_nopresel;   //!
-   TBranch        *b_deltaRGenReco_EE_nopresel;   //!
-   TBranch        *b_eTrue_EB_nopresel;   //!
-   TBranch        *b_eTrue_EE_nopresel;   //!
-   TBranch        *b_eReco_EB_matched;   //!
-   TBranch        *b_eReco_EE_matched;   //!
+   TBranch        *b_iMatchedPhot;   //! 
+   TBranch        *b_isTrig20CaloVLMatchedPhot;   //! 
+   TBranch        *b_isTrig30CaloVLMatchedPhot;   //! 
+   TBranch        *b_isTrig50CaloVLMatchedPhot;   //! 
+   TBranch        *b_isTrig75CaloVLMatchedPhot;   //! 
+   TBranch        *b_isTrig90CaloVLMatchedPhot;   //!    
    TBranch        *b_vtxId;   //!
    TBranch        *b_firedHLTNames;   //!

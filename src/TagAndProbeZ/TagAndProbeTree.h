@@ -1,7 +1,7 @@
 #ifndef TagAndProbeTree_h
 #define TagAndProbeTree_h
 
-#include "tree_reader_V8.h"
+#include "tree_reader_V9.h"
 #include "PhotonIdCuts.h"
 #include "LeptonIdCuts.h"
 #include "EnergyScaleCorrection.h"
@@ -36,7 +36,7 @@ using std::vector;
 #define NGENJETS 200
 #define NMC 150
 
-class TagAndProbeTree : public tree_reader_V8 {
+class TagAndProbeTree : public tree_reader_V9 {
 
 public:
   
@@ -250,6 +250,9 @@ private:
    Int_t           isTagTightEle[20];   //[nEle]
    Int_t           isTagMediumEle[20];   //[nEle]
    Int_t           isTagLooseEle[20];   //[nEle]
+   Int_t           isTrig17Mass50MatchedEle[20];   //[nEle]
+   Int_t           isTrig20Mass50MatchedEle[20];   //[nEle]
+
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
