@@ -2,11 +2,11 @@
     
 set data_json_   = "`pwd`/../../scripts/jsonFiles/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"
 
-set puweight_53x       = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/dataPU-22Jan2013ReReco.root"
-set puweight_53x_HLT30 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/dataPU-22Jan2013ReReco-HLT30_CaloIdVL_IsoL.root"    
-set puweight_53x_HLT50 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/dataPU-22Jan2013ReReco-HLT50_CaloIdVL_IsoL.root"    
-set puweight_53x_HLT75 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/dataPU-22Jan2013ReReco-HLT75_CaloIdVL_IsoL.root"    
-set puweight_53x_HLT90 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/dataPU-22Jan2013ReReco-HLT90_CaloIdVL_IsoL.root"    
+set puweight_53x       = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_allHLT.root"
+set puweight_53x_HLT30 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT30_CaloIdVL.root"
+set puweight_53x_HLT50 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT50_CaloIdVL.root"
+set puweight_53x_HLT75 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT75_CaloIdVL.root"
+set puweight_53x_HLT90 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT90_CaloIdVL.root"
 
 set r9weight_ = "/afs/cern.ch/user/m/meridian/public/R9Weights.root"
 
