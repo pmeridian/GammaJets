@@ -78,9 +78,81 @@ void GammaJetAnalysis::Loop()
 	continue;
 
       // ptcut to restrict to the wanted range - matching HLT
-      if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut) continue;	
-      if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut) continue;	
+      if (selectPhotons.size()>0)
+	{
+	  if (ptPhot_presel[selectPhotons[0]]<ptphot1_mincut && selectionType!="efficiencyStudy") continue;	
+	  if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut && selectionType!="efficiencyStudy") continue;	
+	}
 
+
+      if (selectionType=="efficiencyStudy")
+	{
+	  //now matching with the selected photon
+	  if (nPhot_gen<1)
+	    continue;
+	  std::vector<int> genPhotons=sortedPtGenPhotons();
+	  int i_nPhot=-1;
+
+	  FillTreeGenPhot(genPhotons[0]);
+
+	  TVector3 gen;
+	  gen.SetPtEtaPhi(ptTrueMatch_gen[genPhotons[0]], etaMatch_gen[genPhotons[0]], phiMatch_gen[genPhotons[0]]);
+	  float deltaRmin = 0.3;
+	  int i_nPhot=-1;
+	  for(int j=0; j<photons.size(); j++)
+	    {
+	      TVector3 reco;
+	      reco.SetPtEtaPhi(ptPhot[photons[j]],etaPhot[photons[j]],phiPhot[photons[j]]);
+	      if(gen.DeltaR(reco) < deltaRmin) 
+		{
+		  deltaRmin = gen.DeltaR(reco);
+		  i_nPhot = photons[j];
+		}
+	    }
+
+
+// 	  if (iRecoPhotMatch_gen[0]>-1)
+// 	    {
+// 	      for(int j=0; j<photons.size(); j++)
+// 		{
+// 		  if (photons[j]==iRecoPhotMatch_gen[0])
+// 		    {
+// 		      i_nPhot=j;
+// 		      break;
+// 		    }
+// 		}
+// 	    }
+
+	  bool isPresel=false;
+	  bool isSel=false;
+
+	  if (i_nPhot>-1)
+	    {
+	      for(int j=0; j<preselectPhotons.size(); j++)
+		if (preselectPhotons[j]==i_nPhot)
+		  {
+		    isPresel=true;
+		    break;
+		  }
+	      for(int j=0; j<selectPhotons.size(); j++)
+		if (selectPhotons[j]==i_nPhot)
+		  {
+		    isSel=true;
+		    break;
+		  }
+	    FillTreePhot(photons[i_nPhot],isPresel,isSel);
+	    }
+	  else
+	    FillTreePhot(-1,-1,-1);
+	}
+      else
+	{
+	  FillTreePhot(selectPhotons[0],1,1);
+	  if (iMatchedPhot[selectPhotons[0]]>-1)
+	    FillTreeGenPhot(iMatchedPhot[selectPhotons[0]]);
+	  else
+	    FillTreeGenPhot(-1);
+	}
 
       //////////// End selection //////////////
 
@@ -491,11 +563,49 @@ void GammaJetAnalysis::FillTreeEvent(float weight)
 
 void GammaJetAnalysis::FillTreePhot(const int& phot)
 {
-  finalTree_etaPhot=etascPhot_presel[phot];
-  finalTree_ptPhot=ptPhot_presel[phot];
-  finalTree_isMatchedPhot=isMatchedPhot[phot];  
-  finalTree_mvaIdPhot=PhotonIDMVA(phot);
-  finalTree_setaetaPhot=sEtaEtaPhot_presel[phot];
-  finalTree_combinedPfIso03Phot=combinedPfIso03(phot);
+  if (phot>-1)
+    {
+      finalTree_etaPhot=etascPhot_presel[phot];
+      finalTree_ptPhot=ptPhot_presel[phot];
+      finalTree_isMatchedPhot=isMatchedPhot[phot];  
+      finalTree_mvaIdPhot=PhotonIDMVA(phot);
+      finalTree_setaetaPhot=sEtaEtaPhot_presel[phot];
+      finalTree_combinedPfIso03Phot=combinedPfIso03(phot);
+      finalTree_isPreselectedPhot=isPresel;
+      finalTree_isSelectedPhot=isSel;
+    }
+  else
+    {
+      finalTree_etaPhot=-999;
+      finalTree_ptPhot=-999;
+      finalTree_isMatchedPhot=-999;
+      finalTree_mvaIdPhot=-999;
+      finalTree_setaetaPhot=-999;
+      finalTree_combinedPfIso03Phot=-999;
+      finalTree_isPreselectedPhot=-999;
+      finalTree_isSelectedPhot=-999;
+    }
+  
+  return;
+}
+
+void GammaJetAnalysis::FillTreeGenPhot(const int& genphot)
+{
+  if (genphot>-1)
+    {
+      finalTree_etaPhotGen=etaMatch_gen[genphot];
+      finalTree_ptPhotGen=ptTrueMatch_gen[genphot];
+      finalTree_iso03PhotGen=iso03_gen[genphot];
+      finalTree_iso04PhotGen=iso04_gen[genphot];
+      finalTree_isRecoMatchedPhotGen=(iRecoPhotMatch_gen[genphot]>-1);
+    }
+  else
+    {
+      finalTree_etaPhotGen=-1;
+      finalTree_ptPhotGen=-1;
+      finalTree_iso03PhotGen=-1;
+      finalTree_iso04PhotGen=-1;
+    }
+  
   return;
 }

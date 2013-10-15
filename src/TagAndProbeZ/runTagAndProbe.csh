@@ -1,23 +1,22 @@
 #!/bin/tcsh
     
-set data_json_    = "`pwd`/../../scripts/jsonFiles/ABCD_11DecExcluded.json" 
-#set data_json_    = "`pwd`/ABCD_11DecExcluded.json" 
-set puweight_53x = "`pwd`/../../scripts/puFiles/dataPU-RunABCD.root"
-set puweight_53x_HLT30 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT30_CaloIdVL_IsoL.root"
-set puweight_53x_HLT50 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT50_CaloIdVL_IsoL.root"
-set puweight_53x_HLT75 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT75_CaloIdVL_IsoL.root"
-set puweight_53x_HLT90 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT90_CaloIdVL_IsoL.root"
-set r9weight_ = "/afs/cern.ch/user/m/meridian/public/R9Weights.root"
+set data_json_   = "`pwd`/../../scripts/jsonFiles/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"
 
+set puweight_53x       = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_allHLT.root"
+set puweight_53x_HLT30 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT30_CaloIdVL.root"
+set puweight_53x_HLT50 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT50_CaloIdVL.root"
+set puweight_53x_HLT75 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT75_CaloIdVL.root"
+set puweight_53x_HLT90 = "/afs/cern.ch/user/c/crovelli/public/4GJ_sett2013/PUfiles/PileupWeights_HLT90_CaloIdVL.root"
+
+set r9weight_ = "/afs/cern.ch/user/m/meridian/public/R9Weights.root"
 
 set location = "eth"
 set version  = "v1"
 set run = 0
 
 if($#argv == 0 || $#argv < 3 || $#argv > 11 ) then
-#  echo "usage:  makeTagAndProbeTreeNtp.csh <location> <version> <run if 1> <jsonfile> <pureweight>  <energy correction/smearing> "
-  echo "usage:  makeTagAndProbeTreeNtp.csh <location> <version> <run if 1> <jsonfile> <pureweight> <pureweight_HLT30> <pureweight_HLT50> <pureweight_HLT75> <pureweight_HLT90> <energy correction/smearing>"
-  echo "        locations: cern roma eth"
+  echo "usage:  runTagAndProbe.csh <location> <version> <run if 1> <jsonfile> <pureweight> <pureweight_HLT30> <pureweight_HLT50> <pureweight_HLT75> <pureweight_HLT90> <R9weights> <energy correction/smearing>"
+  echo "        locations: cern roma eth fnal"
   echo "        version: version string for redntp"
   echo "        run: default=0  set to 1 to execute"
   echo "        jsonfile: optional json to select good RUN_LS used for data (full path is required)"
@@ -99,7 +98,8 @@ if ($#argv > 10) then
 endif 
 
 
-foreach class ( 53xv2_extra 53xv3_data )
+#foreach class ( 53xv2_extra 53xv3_data )
+foreach class ( 53xv4_DY 53xv4_data_DY )
 #foreach class ( 53xv3_data )
 #foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
 

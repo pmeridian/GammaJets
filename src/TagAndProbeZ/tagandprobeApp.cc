@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
   //================ Parameters 
   if(argc<2 || argc>11) {
     //    cout << "Usage:  ./tmp/tagandprobeApp listfile outputfile jsonfile(optional) puweight(optional) scaleCorrections(optional)\n" 
-     cout << "Usage:  ./tmp/singlegammaApp listfile outputfile jsonfile(optional) puweight(optional) puweight_HLT30(optional) puweight_HLT50(optional) puweight_HLT75(optional) puweight_HLT90(optional) scaleCorrections(optional)\n"
+    cout << "Usage:  ./tmp/tagandprobeApp listfile outputfile jsonfile(optional) puweight(optional) puweight_HLT30(optional) puweight_HLT50(optional) puweight_HLT75(optional) puweight_HLT90(optional) r9weight(optional) scaleCorrections(optional)\n"
 	 << "  listfile:    list of root files incusing protocol eg dcap:/// .....\n"
 	 << "  outputfile:  name of output root file  eg output.root\n"
 	 << "  jsonfile: jsonfile used to select RUN/LS when looping over data. -1 if not used\n"
@@ -43,8 +43,8 @@ int main(int argc, char* argv[]) {
          << "  r9weight: r9weight for MC and data reweighting. -1 if not used\n" 
 	 << "  scalCorrection: ....\n"
 	 << endl;
-    exit(-1);
-    }
+     exit(-1);
+  }
   
   // Input list
   char listName[500];
@@ -101,9 +101,9 @@ int main(int argc, char* argv[]) {
   //tool.SetNtotXsection( ntot, myxsec );
   //  tool.photonLevelNewIDMVA_EB=std::string(argv[4]);
   //  tool.photonLevelNewIDMVA_EE=std::string(argv[5]);
-
+  
   if (argc>3 && std::string(argv[3]) != "-1") {
-    cout << "SetR9Weights" << endl;
+    cout << "SetJsonFile" << endl;
     tool.SetJsonFile(argv[3]);
   }
   if (argc>4 && std::string(argv[4]) != "-1"){
