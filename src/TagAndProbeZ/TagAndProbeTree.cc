@@ -19,7 +19,7 @@ using std::cout;
 using std::endl;
 
 
-TagAndProbeTree::TagAndProbeTree(TTree *tree, const TString& outname) : tree_reader_V8(tree), jsonFile(0) //, scaleCorrections_(0)
+TagAndProbeTree::TagAndProbeTree(TTree *tree, const TString& outname) : tree_reader_V9(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
@@ -570,16 +570,53 @@ void TagAndProbeTree::Loop() {
     //cout << "saving variables in tree" << endl;
 
     bool atLeastOneTag=false;
-
+    
     for(int j=0; j<nEle; j++) 
       {
 	isTagTightEle[j]=leptonCutsEle2012(j, eletag_tight2012, &idpasseletag2012);
 	isTagMediumEle[j]=leptonCutsEle2012(j, eletag_medium2012, &idpasseletag2012);
 	isTagLooseEle[j]=leptonCutsEle2012(j, eletag_loose2012, &idpasseletag2012);
-	if (isTagLooseEle[j] || isTagMediumEle[j] || isTagTightEle[j])
-	  atLeastOneTag=true;
+	if (isTagLooseEle[j] || isTagMediumEle[j] || isTagTightEle[j]) atLeastOneTag=true;
+	
+	// match with HLt candidates 
+	TVector3 recoEle;
+	recoEle.SetPtEtaPhi(electron_pt[j],electron_eta[j],electron_phi[j]);
+
+	float deltaRmin17 = 0.3;
+	int i_nEle17=-1;
+	for(int jhlt=0; jhlt<trg17_mass50_ele_n; jhlt++) {
+	  TVector3 trig;
+	  if (trg17_mass50_ele_et[jhlt]<=0 || fabs(trg17_mass50_ele_eta[jhlt])>2.5 || fabs(trg17_mass50_ele_phi[jhlt])>TMath::Pi() ) continue;
+	  trig.SetPtEtaPhi(trg17_mass50_ele_et[jhlt], trg17_mass50_ele_eta[jhlt], trg17_mass50_ele_phi[jhlt]);
+	  if(recoEle.DeltaR(trig) < deltaRmin17) {
+	    deltaRmin17 = recoEle.DeltaR(trig);
+	    i_nEle17 = jhlt;
+	  }
+	}
+	
+	float deltaRmin20 = 0.3;
+	int i_nEle20=-1;
+	for(int jhlt=0; jhlt<trg20_mass50_ele_n; jhlt++) {
+	  TVector3 trig;
+	  if (trg20_mass50_ele_et[jhlt]<=0 || fabs(trg20_mass50_ele_eta[jhlt])>2.5 || fabs(trg20_mass50_ele_phi[jhlt])>TMath::Pi() ) continue;
+	  trig.SetPtEtaPhi(trg20_mass50_ele_et[jhlt], trg20_mass50_ele_eta[jhlt], trg20_mass50_ele_phi[jhlt]);
+	  if(recoEle.DeltaR(trig) < deltaRmin20) {
+	    deltaRmin20 = recoEle.DeltaR(trig);
+	    i_nEle20 = jhlt;
+	  }
+	}
+	
+	if (i_nEle17>-1)
+	  isTrig17Mass50MatchedEle[j]=1;
+	else
+	  isTrig17Mass50MatchedEle[j]=0;
+	
+	if (i_nEle20>-1)
+	  isTrig20Mass50MatchedEle[j]=1;
+	else
+	  isTrig20Mass50MatchedEle[j]=0;
       }
-    
+
     for(int j=0; j<nPhot; j++) 
       {
 	isProbePreselPhot[j]= (PhotonMITPreSelection(j,0,0) 
@@ -1245,11 +1282,8 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("isTagTightEle", isTagTightEle , "isTagTightEle[nEle]/I" );
   ana_tree->Branch("isTagMediumEle", isTagMediumEle , "isTagMediumEle[nEle]/I" );
   ana_tree->Branch("isTagLooseEle", isTagLooseEle , "isTagLooseEle[nEle]/I" );
-  
-
-
-
-
+  ana_tree->Branch("isTrig17Mass50MatchedEle", isTrig17Mass50MatchedEle, "isTrig17Mass50MatchedEle[nEle]/I");
+  ana_tree->Branch("isTrig20Mass50MatchedEle", isTrig20Mass50MatchedEle, "isTrig20Mass50MatchedEle[nEle]/I");
 
 
   // triggering paths      
