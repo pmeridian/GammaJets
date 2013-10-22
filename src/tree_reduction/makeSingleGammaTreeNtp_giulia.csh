@@ -124,8 +124,6 @@ if ($#argv > 11) then
   echo "energyCorrection: ${energyCorrection}"
 endif 
 
-
-
 echo "------   ready ro run at $location ------------------"
 
 # logfiles always stored locally

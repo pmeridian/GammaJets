@@ -112,13 +112,14 @@ private:
   TLorentzVector correctMet(TLorentzVector uncormet, bool smearing = 1, bool scale = 0, bool PUremoval = 0);
   TLorentzVector shiftMet(TLorentzVector uncormet);
 
-   Int_t           run;
-   Int_t           event;
-   Int_t           lumi;
-   Int_t           isMC;
-   Int_t           nvtx;
-   Int_t           vtxId;
-   Int_t           npu;
+/*    Int_t           run; */
+/*    Int_t           event; */
+/*    Int_t           lumi; */
+/*    Int_t           isMC; */
+/*    Int_t           nvtx; */
+    Int_t           vtxId; 
+/*    Int_t           npu; */
+
 
 
    Float_t         pu_weight;
@@ -129,6 +130,8 @@ private:
    Float_t         r9_weight[20]; //nPhot
    //Float_t         rhoAllJets;
    //Float_t         rhoPF;
+
+
    Int_t           nEleMC;
    Int_t           idEleMC[10];   //[nEleMC]
    Int_t           pdgIdEleMC[10];   //[nEleMC]
@@ -147,6 +150,7 @@ private:
    Int_t           isProbeMediumPhot[20];   //[nPhot]
    Int_t           isProbeLoosePhot[20];   //[nPhot]
    Float_t         mvaIDPhot[20];   //[nPhot]
+
    /*
    Float_t         ePhot[20];   //[nPhot]
    Float_t         escPhot[20];   //[nPhot]
@@ -253,8 +257,8 @@ private:
    Int_t           isTrig17Mass50MatchedEle[20];   //[nEle]
    Int_t           isTrig20Mass50MatchedEle[20];   //[nEle]
 
-   vector<string>  *firedHLTNames;
-   Float_t         epfMet;
+/*    vector<string>  *firedHLTNames; */
+/*    Float_t         epfMet; */
 
 
 //electrons
