@@ -120,7 +120,7 @@ fi
 
 echo dir is ${PWD}
 echo dir2 is ${CMSSW_BASE} 
-echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} 
+echo file is $1 $2 ${filename} $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
 list=$2
 if [ "$stagein" == "true" ] &&  [ "$domain" == "roma1.infn.it" ]; then
     modify_list $list $tempdir
@@ -129,7 +129,7 @@ fi
 
 
 echo dir is ${CMSSW_BASE} 
-echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11}
+echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
 # $1   --->   ${PWD} 
 # $2   --->   ${PWD}/${listfile} 
 # $3   --->   ${rootfile} 
@@ -146,7 +146,7 @@ echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11}
 # $13   --->   ${photonIDweights_EB} 
 # $14   --->   ${photonIDweights_EE}
 
-echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} #$4 ${8} ${9} $5 $6 $7
+echo file2 is ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
 
 #echo ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 
 #echo ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 ${8} ${9} $5 $6 $7 
@@ -156,7 +156,9 @@ if [ ! -f  ${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp ]; th
     exit -1
 fi
 
-${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11}
+pwd
+
+${CMSSW_BASE}/src/GammaJets/src/TagAndProbeZ/tmp/tagandprobeApp $2 ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13}
 #${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/tagandprobeApp_forMVA $2 ${filename} #$4 $8 $9 $5 $6 $7 
 
 exit_stat=$?
@@ -173,6 +175,7 @@ fi
 
 if [ "$domain" != "roma1.infn.it" ]; then
     if [ "${protocol}" == "root" ]; then
+	echo "xrdcp ${filename} root://${redirector}//${xrootdir}/${filename}"
 	xrdcp ${filename} root://${redirector}//${xrootdir}/${filename}
 	exit_stat1=$?
 	if [ ${exit_stat1} != 0 ]; then
@@ -181,7 +184,9 @@ if [ "$domain" != "roma1.infn.it" ]; then
 	    echo `date` `hostname` ${xrootdir}/${filename} >> $1/log/xrootcopysuccess.jobs
 	fi
     elif [ "${protocol}" == "sftp" ]; then
+	echo "ssh ${ssh_opts} ${redirector} rm -rf ${redirector}:${xrootdir}/${filename}"
 	ssh ${ssh_opts} ${redirector} rm -rf ${redirector}:${xrootdir}/${filename}
+	echo "scp ${scp_opts} ${filename} ${redirector}:${xrootdir}/${filename}"
 	scp ${scp_opts} ${filename} ${redirector}:${xrootdir}/${filename}
 	exit_stat1=$?
 	if [ ${exit_stat1} != 0 ]; then
@@ -191,6 +196,7 @@ if [ "$domain" != "roma1.infn.it" ]; then
 	fi
     fi
 else 
+    echo "cp ${filename} ${rootdir}/${filename}"
     cp ${filename} ${rootdir}/${filename}
     exit_stat1=$?
     if [ ${exit_stat1} != 0 ]; then
@@ -204,3 +210,4 @@ else
 	rm -rf ${tempdir}
     fi
 fi
+

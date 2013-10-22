@@ -21,6 +21,7 @@ using std::endl;
 
 TagAndProbeTree::TagAndProbeTree(TTree *tree, const TString& outname) : tree_reader_V9(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
+  std::cout << "Creating output file " << outname << std::endl;
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
   // must be set by the user 
@@ -1127,10 +1128,10 @@ void TagAndProbeTree::SetAllMVA() {
     tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
   */
   
-  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml");
-  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file " << photonLevelNewIDMVA_EB << endl;
+  tmvaReaderID_Single_Barrel->BookMVA("BDT",photonLevelNewIDMVA_EB);
+  std::cout << "Booking PhotonID EE MVA with file " << photonLevelNewIDMVA_EE  << endl;
+  tmvaReaderID_Single_Endcap->BookMVA("BDT",photonLevelNewIDMVA_EE);
   
 }
 
