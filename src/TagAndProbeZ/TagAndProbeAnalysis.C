@@ -4,6 +4,7 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <iostream>
+#include <string>
 #include <TLorentzVector.h>
 
 using namespace std;
@@ -45,7 +46,11 @@ void TagAndProbeAnalysis::Loop()
   int okTightElePtEta,  okTightEleID; 
   int okMVA_005, okMVA_01, okMVA_02;
   int hasPromptElectronMatched;
-  
+  float probe_pid_scetawid, probe_pid_scphiwid;
+  float probe_sEtaEta, probe_sEtaPhi;
+  float probe_s4Ratio, probe_etasc;
+  float probe_rr;
+  float probe_mvaId;
 
   for (int ii=0; ii<5; ii++) {
     myTree[ii] -> Branch("mass",&mass,"mass/F");
@@ -54,6 +59,14 @@ void TagAndProbeAnalysis::Loop()
     myTree[ii] -> Branch("probe_phi",&probe_phi,"probe_phi/F");
     myTree[ii] -> Branch("probe_pt",&probe_pt,"probe_pt/F");
     myTree[ii] -> Branch("probe_r9",&probe_r9,"probe_r9/F");
+    myTree[ii] -> Branch("probe_pid_scetawid",&probe_pid_scetawid,"probe_pid_scetawid/F");
+    myTree[ii] -> Branch("probe_pid_scphiwid",&probe_pid_scphiwid,"probe_pid_scphiwid/F");
+    myTree[ii] -> Branch("probe_sEtaEta",&probe_sEtaEta,"probe_sEtaEta/F");
+    myTree[ii] -> Branch("probe_sEtaPhi",&probe_sEtaPhi,"probe_sEtaPhi/F");
+    myTree[ii] -> Branch("probe_s4Ratio",&probe_s4Ratio,"probe_s4Ratio/F");
+    myTree[ii] -> Branch("probe_etasc",&probe_etasc,"probe_etasc/F");
+    myTree[ii] -> Branch("probe_rr",&probe_rr,"probe_rr/F");
+    myTree[ii] -> Branch("probe_mvaId",&probe_mvaId,"probe_mvaId/F"); 
     myTree[ii] -> Branch("numvtx",&numvtx,"numvtx/I");
     myTree[ii] -> Branch("rho",&rho,"rho/F");
     myTree[ii] -> Branch("puW",  &puW,  "puW/F");
@@ -115,6 +128,16 @@ void TagAndProbeAnalysis::Loop()
 	  exit(-1);
 	}
 
+      // in data we ask:
+      // the event to fire one of the two T&P HLT paths
+      // the tag electron to match the hard leg of the fired HLT path 
+      if (!isMC) {
+	bool hltMatch = false;
+	if (isHLT_TandP_Ele17() && isTrig17Mass50MatchedEle[iEle]) hltMatch = true;  
+	if (isHLT_TandP_Ele20() && isTrig20Mass50MatchedEle[iEle]) hltMatch = true;  
+	if (!hltMatch) continue;
+      }
+
       TLorentzVector theEle;
       //      theEle.SetPtEtaPhiE(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], electron_energy[iEle]);
       theEle.SetPtEtaPhiM(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], 0.);
@@ -146,6 +169,15 @@ void TagAndProbeAnalysis::Loop()
 	probe_pt     = ptPhot[iPho];
 	probe_r9     = r9Phot[iPho];
 	
+	probe_pid_scetawid = pid_scetawid[iPho];
+	probe_pid_scphiwid = pid_scphiwid[iPho];
+	probe_sEtaEta      = sEtaEtaPhot[iPho];
+	probe_sEtaPhi      = sEtaPhiPhot[iPho];
+	probe_s4Ratio      = s4RatioPhot[iPho];
+	probe_etasc        = etascPhot[iPho];
+	probe_rr           = sigmaRRPhot[iPho]; 
+	probe_mvaId        = mvaIDPhot[iPho]; 
+
 	numvtx = nvtx;
 	rho=rhoAllJets;
 
@@ -201,7 +233,7 @@ void TagAndProbeAnalysis::Loop()
 	
 	// check HLT and pT range
 	if (!isMC) {
-	  if ( isHLT_TandP() )                                           myTree[0]->Fill();
+	  if ( isHLT_TandP_Ele20() || isHLT_TandP_Ele17() )              myTree[0]->Fill();
 	  if ( isHLT_30() && ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
 	  if ( isHLT_50() && ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
 	  if ( isHLT_75() && ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
@@ -227,21 +259,39 @@ void TagAndProbeAnalysis::Loop()
   }
 }
 
-bool TagAndProbeAnalysis::isHLT_TandP() {
+bool TagAndProbeAnalysis::isHLT_TandP_Ele20() {  
 
-  bool isok = false;
+  bool isok = false;   
+
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
-    if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v3") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v4") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v5") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v6") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v7") isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v3")   isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v4")   isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v5")   isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v6")   isok=true;
-    if ( (*firedHLTNames)[ii]=="HLT_Ele32_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_SC17_Mass50_v7")   isok=true;
+    std::string input((*firedHLTNames)[ii]);
+    int thestr = 0;
+    for(thestr = input.find("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v", 0); 
+	thestr != string::npos; 
+	thestr = input.find("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v", thestr)) {
+      // cout << "eccolo: " << (*firedHLTNames)[ii] << endl;
+      return true;
+    }
   }
+
+  return isok;
+}
+
+bool TagAndProbeAnalysis::isHLT_TandP_Ele17() {  
+
+  bool isok = false;   
+
+  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+    std::string input((*firedHLTNames)[ii]);
+    int thestr = 0;
+    for(thestr = input.find("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v", 0); 
+	thestr != string::npos; 
+	thestr = input.find("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v", thestr)) {
+      // cout << "eccolo: " << (*firedHLTNames)[ii] << endl;
+      return true;
+    }
+  }
+
   return isok;
 }
 

@@ -169,6 +169,8 @@ public :
    Int_t           isTagTightEle[40];   //[nEle]
    Int_t           isTagMediumEle[40];   //[nEle]
    Int_t           isTagLooseEle[40];   //[nEle]
+   Int_t           isTrig17Mass50MatchedEle[8];   //[nEle]                                                                                        
+   Int_t           isTrig20Mass50MatchedEle[8];   //[nEle]                     
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
@@ -306,6 +308,8 @@ public :
    TBranch        *b_isTagTightEle;   //!
    TBranch        *b_isTagMediumEle;   //!
    TBranch        *b_isTagLooseEle;   //!
+   TBranch        *b_isTrig17Mass50MatchedEle;   //!                                                                                              
+   TBranch        *b_isTrig20Mass50MatchedEle;   //!            
    TBranch        *b_firedHLTNames;   //!
    TBranch        *b_epfMet;   //!
 
@@ -319,7 +323,8 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 
-   bool     isHLT_TandP();
+   bool     isHLT_TandP_Ele20();
+   bool     isHLT_TandP_Ele17();
    bool     isHLT_30();
    bool     isHLT_50();
    bool     isHLT_75();
@@ -334,17 +339,22 @@ public :
 #ifdef TagAndProbeAnalysis_cxx
 TagAndProbeAnalysis::TagAndProbeAnalysis(TTree *tree) : fChain(0), mcMatch(0), tagTightnessLevel("Tight"), DeltaMZ(30), outFileNamePrefix("tandp_ntuple"), r9Reweight(0), r9WeightsFile("R9Weights.root")
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-      }
-      f->GetObject("AnaTree",tree);
-
-   }
-   Init(tree);
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0) {
+    
+    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
+    //if (!f || !f->IsOpen()) {
+    // f = new TFile("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
+    //}
+    //f->GetObject("AnaTree",tree);
+    
+    TChain * chain = new TChain("AnaTree","");
+    chain->Add("/t3/users/meridian/GammaJets/TandP/reduced/redntp.53xv4_DY.tandp2012.noCorr.v1/redntp_*.root/AnaTree");
+    // chain->Add("/t3/users/meridian/GammaJets/TandP/reduced/redntp.53xv4_data_DY.tandp2012.noCorr.v1/redntp_DoubleElectron_Run2012*root");
+    tree = chain;
+  }
+  Init(tree);
 }
 
 TagAndProbeAnalysis::~TagAndProbeAnalysis()
@@ -523,6 +533,8 @@ void TagAndProbeAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("isTagTightEle", isTagTightEle, &b_isTagTightEle);
    fChain->SetBranchAddress("isTagMediumEle", isTagMediumEle, &b_isTagMediumEle);
    fChain->SetBranchAddress("isTagLooseEle", isTagLooseEle, &b_isTagLooseEle);
+   fChain->SetBranchAddress("isTrig17Mass50MatchedEle", isTrig17Mass50MatchedEle, &b_isTrig17Mass50MatchedEle);
+   fChain->SetBranchAddress("isTrig20Mass50MatchedEle", isTrig20Mass50MatchedEle, &b_isTrig20Mass50MatchedEle);
    fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
    fChain->SetBranchAddress("epfMet", &epfMet, &b_epfMet);
    Notify();
