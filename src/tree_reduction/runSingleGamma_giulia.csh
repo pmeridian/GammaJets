@@ -1,13 +1,12 @@
 #!/bin/tcsh
     
-set data_json    = "`pwd`/../../scripts/jsonFiles/ABCD_11DecExcluded.json" 
+set data_json_   = "`pwd`/../../scripts/jsonFiles/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"
 
-set puweight_53x = "`pwd`/../../scripts/puFiles/dataPU-RunABCD.root"
-
-set puweight_53x_HLT30 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT30_CaloIdVL_IsoL.root"
-set puweight_53x_HLT50 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT50_CaloIdVL_IsoL.root"
-set puweight_53x_HLT75 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT75_CaloIdVL_IsoL.root"
-set puweight_53x_HLT90 = "`pwd`/../../scripts/puFiles/dataPU-RunABCD--HLT90_CaloIdVL_IsoL.root"
+set puweight_53x       = "`pwd`/../../scripts/puFiles/PileupWeights_allHLT.root"
+set puweight_53x_HLT30 = "`pwd`/../../scripts/puFiles/PileupWeights_HLT30_CaloIdVL.root"
+set puweight_53x_HLT50 = "`pwd`/../../scripts/puFiles/PileupWeights_HLT50_CaloIdVL.root"
+set puweight_53x_HLT75 = "`pwd`/../../scripts/puFiles/PileupWeights_HLT75_CaloIdVL.root"
+set puweight_53x_HLT90 = "`pwd`/../../scripts/puFiles/PileupWeights_HLT90_CaloIdVL.root"
 
 set location = "eth"
 set version  = "v1"
@@ -82,7 +81,7 @@ endif
 echo ""
 
 #foreach class ( 53xv2 )
-foreach class ( 53xv4 )
+foreach class ( 53xv5 )
 #foreach class ( 53xv2_data )
 #foreach class ( 53xv2_extra )
 #    foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
