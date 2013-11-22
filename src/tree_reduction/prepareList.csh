@@ -25,13 +25,15 @@ set prepend=""
 if ( $location == "cern" ) then
   set prepend=""
 else if ( $location == "xrootd" ) then
-  set prepend="root://pccmsrm27.cern.ch:1094/"
+  set prepend="root://pccmsrm27.cern.ch:1094//"
 else if ( $location == "eos" ) then
-  set prepend="root://eoscms.cern.ch/"
+  set prepend="root://eoscms.cern.ch//"
 else if ( $location == "eosfnal" ) then
   set prepend="root://cmseos.fnal.gov/"
+else if ( $location == "fnal" ) then
+  set prepend="root://cmssrv32.fnal.gov//"
 else if ( $location == "eth" ) then
-  set prepend="dcap://t3se01.psi.ch/"
+  set prepend="dcap://t3se01.psi.ch//"
 endif 
 
 #set prepend="dcap://cmsrm-se01.roma1.infn.it"

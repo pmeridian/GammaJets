@@ -230,12 +230,13 @@ else if(-d $listdir) then
 universe = vanilla
 Executable = `pwd`/scriptTagAndProbe.sh
 Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
-#Should_Transfer_Files = NO
+Should_Transfer_Files = NO
 #WhenToTransferOutput = ON_EXIT
 Output = $logfile
 Error = $logerrfile
 Log = $logfile
-notify_user = ${LOGNAME}@FNAL.GOV
+#notify_user = ${LOGNAME}@FNAL.GOV
+notify_user = nobody
 Arguments =  ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90}  ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}
 #${photonIDweights_EB} ${photonIDweights_EE}
 Queue
