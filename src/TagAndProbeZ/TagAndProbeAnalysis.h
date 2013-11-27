@@ -55,120 +55,136 @@ public :
    Float_t         rhoAllJets;
    Float_t         rhoPF;
    Int_t           nEleMC;
-   Int_t           idEleMC[5];   //[nEleMC]
-   Int_t           pdgIdEleMC[5];   //[nEleMC]
-   Int_t           statusEleMC[5];   //[nEleMC]
-   Int_t           motherIDEleMC[5];   //[nEleMC]
-   Float_t         ptEleMC[5];   //[nEleMC]
-   Float_t         eEleMC[5];   //[nEleMC]
-   Float_t         etaEleMC[5];   //[nEleMC]
-   Float_t         phiEleMC[5];   //[nEleMC]
+   Int_t           idEleMC[50];   //[nEleMC]
+   Int_t           pdgIdEleMC[50];   //[nEleMC]
+   Int_t           statusEleMC[50];   //[nEleMC]
+   Int_t           motherIDEleMC[50];   //[nEleMC]
+   Float_t         ptEleMC[50];   //[nEleMC]
+   Float_t         eEleMC[50];   //[nEleMC]
+   Float_t         etaEleMC[50];   //[nEleMC]
+   Float_t         phiEleMC[50];   //[nEleMC]
    Int_t           nPhot;
-   Float_t         ptPhot[40];   //[nPhot]
-   Int_t           isGenMatchPhot[40];   //[nPhot]
-   Int_t           genMatchIndexPhot[40];   //[nPhot]
-   Int_t           isProbePreselPhot[40];   //[nPhot]
-   Int_t           isProbeTightPhot[40];   //[nPhot]
-   Int_t           isProbeMediumPhot[40];   //[nPhot]
-   Int_t           isProbeLoosePhot[40];   //[nPhot]
-   Float_t         mvaIDPhot[40];   //[nPhot]
-   Float_t         ePhot[40];   //[nPhot]
-   Float_t         escPhot[40];   //[nPhot]
-   Float_t         escRegrPhot[40];   //[nPhot]
-   Float_t         escRegrPhotError[40];   //[nPhot]
-   Float_t         escPhFixPhot[40];   //[nPhot]
-   Float_t         escPhFixPhotError[40];   //[nPhot]
-   Float_t         escRawPhot[40];   //[nPhot]
-   Float_t         etascPhot[40];   //[nPhot]
-   Float_t         phiscPhot[40];   //[nPhot]
-   Float_t         xscPhot[40];   //[nPhot]
-   Float_t         yscPhot[40];   //[nPhot]
-   Float_t         zscPhot[40];   //[nPhot]
-   Float_t         xcaloPhot[40];   //[nPhot]
-   Float_t         ycaloPhot[40];   //[nPhot]
-   Float_t         zcaloPhot[40];   //[nPhot]
-   Float_t         eseedPhot[40];   //[nPhot]
-   Float_t         etaPhot[40];   //[nPhot]
-   Float_t         phiPhot[40];   //[nPhot]
+   Float_t         ptPhot[80];   //[nPhot]
+   Int_t           isGenMatchPhot[80];   //[nPhot]
+   Int_t           genMatchIndexPhot[80];   //[nPhot]
+   Int_t           isProbePreselPhot[80];   //[nPhot]
+   Int_t           isProbeTightPhot[80];   //[nPhot]
+   Int_t           isProbeMediumPhot[80];   //[nPhot]
+   Int_t           isProbeLoosePhot[80];   //[nPhot]
+   Float_t         mvaIDPhot[80];   //[nPhot]
+   Float_t         ePhot[80];   //[nPhot]
+   Float_t         escPhot[80];   //[nPhot]
+   Float_t         escRegrPhot[80];   //[nPhot]
+   Float_t         escRegrPhotError[80];   //[nPhot]
+   Float_t         escPhFixPhot[80];   //[nPhot]
+   Float_t         escPhFixPhotError[80];   //[nPhot]
+   Float_t         escRawPhot[80];   //[nPhot]
+   Float_t         etascPhot[80];   //[nPhot]
+   Float_t         phiscPhot[80];   //[nPhot]
+   Float_t         xscPhot[80];   //[nPhot]
+   Float_t         yscPhot[80];   //[nPhot]
+   Float_t         zscPhot[80];   //[nPhot]
+   Float_t         xcaloPhot[80];   //[nPhot]
+   Float_t         ycaloPhot[80];   //[nPhot]
+   Float_t         zcaloPhot[80];   //[nPhot]
+   Float_t         eseedPhot[80];   //[nPhot]
+   Float_t         etaPhot[80];   //[nPhot]
+   Float_t         phiPhot[80];   //[nPhot]
    Float_t         timePhot;
-   Float_t         e4SwissCrossPhot[40];   //[nPhot]
-   Int_t           hasPixelSeedPhot[40];   //[nPhot]
-   Int_t           hasMatchedPromptElePhot[40];   //[nPhot]
-   Int_t           hasMatchedConvPhot[40];   //[nPhot]
-   Bool_t          isEBPhot[40];   //[nPhot]
-   Bool_t          isEEPhot[40];   //[nPhot]
-   Bool_t          isEBEEGapPhot[40];   //[nPhot]
-   Float_t         pid_scetawid[40];   //[nPhot]
-   Float_t         pid_scphiwid[40];   //[nPhot]
-   Float_t         pid_lambdaRatio[40];   //[nPhot]
-   Float_t         pid_esXwidth[40];   //[nPhot]
-   Float_t         pid_esYwidth[40];   //[nPhot]
-   Float_t         sMajMajPhot[40];   //[nPhot]
-   Float_t         sMinMinPhot[40];   //[nPhot]
-   Float_t         alphaPhot[40];   //[nPhot]
-   Float_t         sEtaEtaPhot[40];   //[nPhot]
-   Float_t         sEtaPhiPhot[40];   //[nPhot]
-   Float_t         sPhiPhiPhot[40];   //[nPhot]
-   Float_t         E1Phot[40];   //[nPhot]
-   Float_t         E2OverE9Phot[40];   //[nPhot]
-   Float_t         E4Phot[40];   //[nPhot]
-   Float_t         E9Phot[40];   //[nPhot]
-   Float_t         E25Phot[40];   //[nPhot]
-   Float_t         r9Phot[40];   //[nPhot]
-   Float_t         s4RatioPhot[40];   //[nPhot]
-   Float_t         sigmaRRPhot[40];   //[nPhot]
-   Float_t         pid_deltaRToTrackPhot[40];   //[nPhot]
-   Bool_t          pid_isEMPhot[40];   //[nPhot]
-   Bool_t          pid_isLoosePhot[40];   //[nPhot]
-   Bool_t          pid_isTightPhot[40];   //[nPhot]
-   Float_t         pid_jurECALPhot[40];   //[nPhot]
-   Float_t         pid_twrHCALPhot[40];   //[nPhot]
-   Float_t         pid_HoverE[40];   //[nPhot]
-   Float_t         pid_hlwTrackPhot[40];   //[nPhot]
-   Float_t         pid_hlwTrackNoDz[40];   //[nPhot]
-   Float_t         pid_etawid[40];   //[nPhot]
-   Float_t         pid_jurECAL03[40];   //[nPhot]
-   Float_t         pid_twrHCAL03[40];   //[nPhot]
-   Float_t         pid_hlwTrack03[40];   //[nPhot]
-   Float_t         pid_hlwTrack0oDz[40];   //[nPhot]
-   Float_t         pid_hlwTrack03NoDz[40];   //[nPhot]
-   Float_t         pid_hlwTrack03ForCiC[40];   //[nPhot]
-   Float_t         pid_hlwTrackForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged01ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged02ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged03ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged04ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged05ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoCharged06ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons01ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons02ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons03ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons04ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons05ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoPhotons06ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals01ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals02ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals03ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals04ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals05ForCiC[40];   //[nPhot]
-   Float_t         pid_pfIsoNeutrals06ForCiC[40];   //[nPhot]
-   Float_t         ptiso004Phot[40];   //[nPhot]
-   Int_t           ntrkiso004Phot[40];   //[nPhot]
-   Float_t         ptiso035Phot[40];   //[nPhot]
-   Int_t           ntrkiso035Phot[40];   //[nPhot]
-   Float_t         ptiso04Phot[40];   //[nPhot]
-   Int_t           ntrkiso04Phot[40];   //[nPhot]
-   Float_t         hcalovecal04Phot[40];   //[nPhot]
-   Float_t         ecaliso04Phot[40];   //[nPhot]
+   Float_t         e4SwissCrossPhot[80];   //[nPhot]
+   Int_t           hasPixelSeedPhot[80];   //[nPhot]
+   Int_t           hasMatchedPromptElePhot[80];   //[nPhot]
+   Int_t           hasMatchedConvPhot[80];   //[nPhot]
+   Bool_t          isEBPhot[80];   //[nPhot]
+   Bool_t          isEEPhot[80];   //[nPhot]
+   Bool_t          isEBEEGapPhot[80];   //[nPhot]
+   Float_t         pid_scetawid[80];   //[nPhot]
+   Float_t         pid_scphiwid[80];   //[nPhot]
+   Float_t         pid_lambdaRatio[80];   //[nPhot]
+   Float_t         pid_esXwidth[80];   //[nPhot]
+   Float_t         pid_esYwidth[80];   //[nPhot]
+   Float_t         sMajMajPhot[80];   //[nPhot]
+   Float_t         sMinMinPhot[80];   //[nPhot]
+   Float_t         alphaPhot[80];   //[nPhot]
+   Float_t         sEtaEtaPhot[80];   //[nPhot]
+   Float_t         sEtaPhiPhot[80];   //[nPhot]
+   Float_t         sPhiPhiPhot[80];   //[nPhot]
+   Float_t         E1Phot[80];   //[nPhot]
+   Float_t         E2OverE9Phot[80];   //[nPhot]
+   Float_t         E4Phot[80];   //[nPhot]
+   Float_t         E9Phot[80];   //[nPhot]
+   Float_t         E25Phot[80];   //[nPhot]
+   Float_t         r9Phot[80];   //[nPhot]
+   Float_t         s4RatioPhot[80];   //[nPhot]
+   Float_t         sigmaRRPhot[80];   //[nPhot]
+   Float_t         pid_deltaRToTrackPhot[80];   //[nPhot]
+   Bool_t          pid_isEMPhot[80];   //[nPhot]
+   Bool_t          pid_isLoosePhot[80];   //[nPhot]
+   Bool_t          pid_isTightPhot[80];   //[nPhot]
+   Float_t         pid_jurECALPhot[80];   //[nPhot]
+   Float_t         pid_twrHCALPhot[80];   //[nPhot]
+   Float_t         pid_HoverE[80];   //[nPhot]
+   Float_t         pid_hlwTrackPhot[80];   //[nPhot]
+   Float_t         pid_hlwTrackNoDz[80];   //[nPhot]
+   Float_t         pid_etawid[80];   //[nPhot]
+   Float_t         pid_jurECAL03[80];   //[nPhot]
+   Float_t         pid_twrHCAL03[80];   //[nPhot]
+   Float_t         pid_hlwTrack03[80];   //[nPhot]
+   Float_t         pid_hlwTrack0oDz[80];   //[nPhot]
+   Float_t         pid_hlwTrack03NoDz[80];   //[nPhot]
+   Float_t         pid_hlwTrack03ForCiC[80];   //[nPhot]
+   Float_t         pid_hlwTrackForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged01ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged02ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged03ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged04ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged05ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoCharged06ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons01ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons02ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons03ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons04ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons05ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoPhotons06ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals01ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals02ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals03ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals04ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals05ForCiC[80];   //[nPhot]
+   Float_t         pid_pfIsoNeutrals06ForCiC[80];   //[nPhot]
+   Float_t         ptiso004Phot[80];   //[nPhot]
+   Int_t           ntrkiso004Phot[80];   //[nPhot]
+   Float_t         ptiso035Phot[80];   //[nPhot]
+   Int_t           ntrkiso035Phot[80];   //[nPhot]
+   Float_t         ptiso04Phot[80];   //[nPhot]
+   Int_t           ntrkiso04Phot[80];   //[nPhot]
+   Float_t         hcalovecal04Phot[80];   //[nPhot]
+   Float_t         ecaliso04Phot[80];   //[nPhot]
+   Float_t         pid_pfIsoFPRCharged03[80];    //[nPhot]                                                                              
+   Float_t         pid_pfIsoFPRNeutral03[80];    //[nPhot]                                                                              
+   Float_t         pid_pfIsoFPRPhoton03[80];    //[nPhot]                                                                               
+   Float_t         pid_pfIsoFPRRandomConeCharged03[80];    //[nPhot]                                                                    
+   Float_t         pid_pfIsoFPRRandomConeNeutral03[80];    //[nPhot]                                                                    
+   Float_t         pid_pfIsoFPRRandomConePhoton03[80];    //[nPhot]                                                                     
+   Float_t         pid_pfIsoFPRCharged04[80];    //[nPhot]                                                                              
+   Float_t         pid_pfIsoFPRNeutral04[80];    //[nPhot]                                                                              
+   Float_t         pid_pfIsoFPRPhoton04[80];    //[nPhot]                                                                               
+   Float_t         pid_pfIsoFPRRandomConeCharged04[80];    //[nPhot]                                                                    
+   Float_t         pid_pfIsoFPRRandomConeNeutral04[80];    //[nPhot]                                                                    
+   Float_t         pid_pfIsoFPRRandomConePhoton04[80];    //[nPhot]                                                                     
+   Float_t         distOfMinimumApproachConvPhot[80];   //[nPhot]                                                                       
+   Float_t         dPhiTracksAtVtxConvPhot[80];   //[nPhot]     
    Int_t           nEle;
-   Int_t           isGenMatchEle[40];   //[nEle]
-   Int_t           genMatchIndexEle[40];   //[nEle]
-   Float_t         electron_pt[40];   //[nEle]
-   Float_t         electron_eta[40];   //[nEle]
-   Float_t         electron_phi[40];   //[nEle]
-   Int_t           isTagTightEle[40];   //[nEle]
-   Int_t           isTagMediumEle[40];   //[nEle]
-   Int_t           isTagLooseEle[40];   //[nEle]
+   Int_t           isGenMatchEle[80];   //[nEle]
+   Int_t           genMatchIndexEle[80];   //[nEle]
+   Float_t         electron_pt[80];   //[nEle]
+   Float_t         electron_eta[80];   //[nEle]
+   Float_t         electron_phi[80];   //[nEle]
+   Int_t           isTagTightEle[80];   //[nEle]
+   Int_t           isTagMediumEle[80];   //[nEle]
+   Int_t           isTagLooseEle[80];   //[nEle]
+   Int_t           isTrig17Mass50MatchedEle[30];   //[nEle]                                                                                        
+   Int_t           isTrig20Mass50MatchedEle[30];   //[nEle]                     
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
@@ -297,6 +313,18 @@ public :
    TBranch        *b_ntrkiso04Phot;   //!
    TBranch        *b_hcalovecal04Phot;   //!
    TBranch        *b_ecaliso04Phot;   //!
+   TBranch        *b_pid_pfIsoFPRCharged03;
+   TBranch        *b_pid_pfIsoFPRNeutral03;
+   TBranch        *b_pid_pfIsoFPRPhoton03;
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged03;
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral03;
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton03;
+   TBranch        *b_pid_pfIsoFPRCharged04;
+   TBranch        *b_pid_pfIsoFPRNeutral04;
+   TBranch        *b_pid_pfIsoFPRPhoton04;
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged04;
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral04;
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton04;
    TBranch        *b_nEle;   //!
    TBranch        *b_isGenMatchEle;   //!
    TBranch        *b_genMatchIndexEle;   //!
@@ -306,6 +334,8 @@ public :
    TBranch        *b_isTagTightEle;   //!
    TBranch        *b_isTagMediumEle;   //!
    TBranch        *b_isTagLooseEle;   //!
+   TBranch        *b_isTrig17Mass50MatchedEle;   //!                                                                                              
+   TBranch        *b_isTrig20Mass50MatchedEle;   //!            
    TBranch        *b_firedHLTNames;   //!
    TBranch        *b_epfMet;   //!
 
@@ -319,7 +349,8 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 
-   bool     isHLT_TandP();
+   bool     isHLT_TandP_Ele20();
+   bool     isHLT_TandP_Ele17();
    bool     isHLT_30();
    bool     isHLT_50();
    bool     isHLT_75();
@@ -334,17 +365,23 @@ public :
 #ifdef TagAndProbeAnalysis_cxx
 TagAndProbeAnalysis::TagAndProbeAnalysis(TTree *tree) : fChain(0), mcMatch(0), tagTightnessLevel("Tight"), DeltaMZ(30), outFileNamePrefix("tandp_ntuple"), r9Reweight(0), r9WeightsFile("R9Weights.root")
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-      }
-      f->GetObject("AnaTree",tree);
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0) {
+    
+    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
+    //if (!f || !f->IsOpen()) {
+    // f = new TFile("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
+    //}
+    //f->GetObject("AnaTree",tree);
+    
+    TChain * chain = new TChain("AnaTree","");
+    chain->Add("/t3/users/rovelch/GammaJets/reduced/redntp.53xv5_DY_CERN.tandp2012.noCorrections.53xv5/redntp_*.root/AnaTree");
+    // chain->Add("/t3/users/rovelch/GammaJets/reduced/redntp.53xv5_data_DY_CERN.tandp2012.noCorrections.53xv5/redntp_DoubleElectron_Run2012*.root/AnaTree");
 
-   }
-   Init(tree);
+    tree = chain;
+  }
+  Init(tree);
 }
 
 TagAndProbeAnalysis::~TagAndProbeAnalysis()
@@ -514,6 +551,18 @@ void TagAndProbeAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("ntrkiso04Phot", ntrkiso04Phot, &b_ntrkiso04Phot);
    fChain->SetBranchAddress("hcalovecal04Phot", hcalovecal04Phot, &b_hcalovecal04Phot);
    fChain->SetBranchAddress("ecaliso04Phot", ecaliso04Phot, &b_ecaliso04Phot);
+   fChain->SetBranchAddress("pid_pfIsoFPRCharged03", pid_pfIsoFPRCharged03, &b_pid_pfIsoFPRCharged03);
+   fChain->SetBranchAddress("pid_pfIsoFPRNeutral03", pid_pfIsoFPRNeutral03, &b_pid_pfIsoFPRNeutral03);
+   fChain->SetBranchAddress("pid_pfIsoFPRPhoton03",  pid_pfIsoFPRPhoton03,  &b_pid_pfIsoFPRPhoton03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeCharged03", pid_pfIsoFPRRandomConeCharged03, &b_pid_pfIsoFPRRandomConeCharged03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeNeutral03", pid_pfIsoFPRRandomConeNeutral03, &b_pid_pfIsoFPRRandomConeNeutral03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConePhoton03",  pid_pfIsoFPRRandomConePhoton03,  &b_pid_pfIsoFPRRandomConePhoton03);
+   fChain->SetBranchAddress("pid_pfIsoFPRCharged04", pid_pfIsoFPRCharged04, &b_pid_pfIsoFPRCharged04);
+   fChain->SetBranchAddress("pid_pfIsoFPRNeutral04", pid_pfIsoFPRNeutral04, &b_pid_pfIsoFPRNeutral04);
+   fChain->SetBranchAddress("pid_pfIsoFPRPhoton04",  pid_pfIsoFPRPhoton04,  &b_pid_pfIsoFPRPhoton04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeCharged04", pid_pfIsoFPRRandomConeCharged04, &b_pid_pfIsoFPRRandomConeCharged04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeNeutral04", pid_pfIsoFPRRandomConeNeutral04, &b_pid_pfIsoFPRRandomConeNeutral04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConePhoton04",  pid_pfIsoFPRRandomConePhoton04,  &b_pid_pfIsoFPRRandomConePhoton04);
    fChain->SetBranchAddress("nEle", &nEle, &b_nEle);
    fChain->SetBranchAddress("isGenMatchEle", isGenMatchEle, &b_isGenMatchEle);
    fChain->SetBranchAddress("genMatchIndexEle", genMatchIndexEle, &b_genMatchIndexEle);
@@ -523,6 +572,8 @@ void TagAndProbeAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("isTagTightEle", isTagTightEle, &b_isTagTightEle);
    fChain->SetBranchAddress("isTagMediumEle", isTagMediumEle, &b_isTagMediumEle);
    fChain->SetBranchAddress("isTagLooseEle", isTagLooseEle, &b_isTagLooseEle);
+   fChain->SetBranchAddress("isTrig17Mass50MatchedEle", isTrig17Mass50MatchedEle, &b_isTrig17Mass50MatchedEle);
+   fChain->SetBranchAddress("isTrig20Mass50MatchedEle", isTrig20Mass50MatchedEle, &b_isTrig20Mass50MatchedEle);
    fChain->SetBranchAddress("firedHLTNames", &firedHLTNames, &b_firedHLTNames);
    fChain->SetBranchAddress("epfMet", &epfMet, &b_epfMet);
    Notify();
