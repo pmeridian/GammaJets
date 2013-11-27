@@ -183,8 +183,8 @@ public :
    Int_t           isTagTightEle[80];   //[nEle]
    Int_t           isTagMediumEle[80];   //[nEle]
    Int_t           isTagLooseEle[80];   //[nEle]
-   Int_t           isTrig17Mass50MatchedEle[30];   //[nEle]                                                                                        
-   Int_t           isTrig20Mass50MatchedEle[30];   //[nEle]                     
+   Int_t           isTrig17Mass50MatchedEle[80];   //[nEle]                                                                                        
+   Int_t           isTrig20Mass50MatchedEle[80];   //[nEle]                     
    vector<string>  *firedHLTNames;
    Float_t         epfMet;
 
