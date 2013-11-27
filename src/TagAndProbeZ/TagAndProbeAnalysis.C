@@ -51,6 +51,10 @@ void TagAndProbeAnalysis::Loop()
   float probe_s4Ratio, probe_etasc;
   float probe_rr;
   float probe_mvaId;
+  float probe_fprCharged03,   probe_fprNeutral03,   probe_fprPhoton03;
+  float probe_fprRCCharged03, probe_fprRCNeutral03, probe_fprRCPhoton03;
+  // float probe_fprCharged04,   probe_fprNeutral04,   probe_fprPhoton04;
+  // float probe_fprRCCharged04, probe_fprRCNeutral04, probe_fprRCPhoton04;
 
   for (int ii=0; ii<5; ii++) {
     myTree[ii] -> Branch("mass",&mass,"mass/F");
@@ -67,6 +71,20 @@ void TagAndProbeAnalysis::Loop()
     myTree[ii] -> Branch("probe_etasc",&probe_etasc,"probe_etasc/F");
     myTree[ii] -> Branch("probe_rr",&probe_rr,"probe_rr/F");
     myTree[ii] -> Branch("probe_mvaId",&probe_mvaId,"probe_mvaId/F"); 
+    myTree[ii] -> Branch("probe_fprCharged03",&probe_fprCharged03,"probe_fprCharged03/F"); 
+    myTree[ii] -> Branch("probe_fprNeutral03",&probe_fprNeutral03,"probe_fprNeutral03/F"); 
+    myTree[ii] -> Branch("probe_fprPhoton03", &probe_fprPhoton03, "probe_fprPhoton03/F"); 
+    myTree[ii] -> Branch("probe_fprRCCharged03",&probe_fprRCCharged03,"probe_fprRCCharged03/F"); 
+    myTree[ii] -> Branch("probe_fprRCNeutral03",&probe_fprRCNeutral03,"probe_fprRCNeutral03/F"); 
+    myTree[ii] -> Branch("probe_fprRCPhoton03", &probe_fprRCPhoton03, "probe_fprRCPhoton03/F"); 
+    /*
+    myTree[ii] -> Branch("probe_fprCharged04",&probe_fprCharged04,"probe_fprCharged04/F"); 
+    myTree[ii] -> Branch("probe_fprNeutral04",&probe_fprNeutral04,"probe_fprNeutral04/F"); 
+    myTree[ii] -> Branch("probe_fprPhoton04", &probe_fprPhoton04, "probe_fprPhoton04/F"); 
+    myTree[ii] -> Branch("probe_fprRCCharged04",&probe_fprRCCharged04,"probe_fprRCCharged04/F"); 
+    myTree[ii] -> Branch("probe_fprRCNeutral04",&probe_fprRCNeutral04,"probe_fprRCNeutral04/F"); 
+    myTree[ii] -> Branch("probe_fprRCPhoton04", &probe_fprRCPhoton04, "probe_fprRCPhoton04/F"); 
+    */
     myTree[ii] -> Branch("numvtx",&numvtx,"numvtx/I");
     myTree[ii] -> Branch("rho",&rho,"rho/F");
     myTree[ii] -> Branch("puW",  &puW,  "puW/F");
@@ -103,6 +121,7 @@ void TagAndProbeAnalysis::Loop()
     if (jentry%5000==0) cout << "Read entry " << jentry << endl;
 
     for (int iEle=0; iEle<nEle; iEle++) {
+      
       if (isMC && mcMatch)
 	if (!isGenMatchEle[iEle])
 	  continue;
@@ -128,18 +147,17 @@ void TagAndProbeAnalysis::Loop()
 	  exit(-1);
 	}
 
-      // in data we ask:
+
+      // we ask:
       // the event to fire one of the two T&P HLT paths
       // the tag electron to match the hard leg of the fired HLT path 
-      if (!isMC) {
-	bool hltMatch = false;
-	if (isHLT_TandP_Ele17() && isTrig17Mass50MatchedEle[iEle]) hltMatch = true;  
-	if (isHLT_TandP_Ele20() && isTrig20Mass50MatchedEle[iEle]) hltMatch = true;  
-	if (!hltMatch) continue;
-      }
+      bool hltMatch = false;
+      if (isHLT_TandP_Ele17() && isTrig17Mass50MatchedEle[iEle]) hltMatch = true;  
+      if (isHLT_TandP_Ele20() && isTrig20Mass50MatchedEle[iEle]) hltMatch = true;  
+      if (!hltMatch) continue;
+
 
       TLorentzVector theEle;
-      //      theEle.SetPtEtaPhiE(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], electron_energy[iEle]);
       theEle.SetPtEtaPhiM(electron_pt[iEle], electron_eta[iEle], electron_phi[iEle], 0.);
 
       for (int iPho=0; iPho<nPhot; iPho++) {
@@ -177,6 +195,21 @@ void TagAndProbeAnalysis::Loop()
 	probe_etasc        = etascPhot[iPho];
 	probe_rr           = sigmaRRPhot[iPho]; 
 	probe_mvaId        = mvaIDPhot[iPho]; 
+
+	probe_fprCharged03   = pid_pfIsoFPRCharged03[iPho]; 
+	probe_fprNeutral03   = pid_pfIsoFPRNeutral03[iPho]; 
+	probe_fprPhoton03    = pid_pfIsoFPRPhoton03[iPho]; 
+	probe_fprRCCharged03 = pid_pfIsoFPRRandomConeCharged03[iPho]; 
+	probe_fprRCNeutral03 = pid_pfIsoFPRRandomConeNeutral03[iPho]; 
+	probe_fprRCPhoton03  = pid_pfIsoFPRRandomConePhoton03[iPho]; 
+	/*
+	probe_fprCharged04   = pid_pfIsoFPRCharged04[iPho]; 
+	probe_fprNeutral04   = pid_pfIsoFPRNeutral04[iPho]; 
+	probe_fprPhoton04    = pid_pfIsoFPRPhoton04[iPho]; 
+	probe_fprRCCharged04 = pid_pfIsoFPRRandomConeCharged04[iPho]; 
+	probe_fprRCNeutral04 = pid_pfIsoFPRRandomConeNeutral04[iPho]; 
+	probe_fprRCPhoton04  = pid_pfIsoFPRRandomConePhoton04[iPho]; 
+	*/
 
 	numvtx = nvtx;
 	rho=rhoAllJets;
@@ -233,22 +266,23 @@ void TagAndProbeAnalysis::Loop()
 	
 	// check HLT and pT range
 	if (!isMC) {
-	  if ( isHLT_TandP_Ele20() || isHLT_TandP_Ele17() )              myTree[0]->Fill();
+	  myTree[0]->Fill();
 	  if ( isHLT_30() && ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
 	  if ( isHLT_50() && ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
 	  if ( isHLT_75() && ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
 	  if ( isHLT_90() && ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )  myTree[4]->Fill();
 	}
+
 	if (isMC) {
 	  myTree[0]->Fill();
-	  if ( ptPhot[iPho]>=40 && ptPhot[iPho]<65 )       myTree[1]->Fill();
-	  if ( ptPhot[iPho]>=65 && ptPhot[iPho]<90 )       myTree[2]->Fill();
-	  if ( ptPhot[iPho]>=90 && ptPhot[iPho]<105 )      myTree[3]->Fill();
-	  if ( ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )  myTree[4]->Fill();
+	  if ( ptPhot[iPho]>=40 && ptPhot[iPho]<65 )         myTree[1]->Fill();
+	  if ( ptPhot[iPho]>=65 && ptPhot[iPho]<90 )         myTree[2]->Fill();
+	  if ( ptPhot[iPho]>=90 && ptPhot[iPho]<105 )        myTree[3]->Fill();
+	  if ( ptPhot[iPho]>=105 && ptPhot[iPho]<200000 )    myTree[4]->Fill();
 	}
-	
       
       } // loop over photons
+
     }   // loop over electrons
   }
 
@@ -263,7 +297,9 @@ bool TagAndProbeAnalysis::isHLT_TandP_Ele20() {
 
   bool isok = false;   
 
+
   for (int ii=0; ii<firedHLTNames->size(); ii++) {
+
     std::string input((*firedHLTNames)[ii]);
     int thestr = 0;
     for(thestr = input.find("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v", 0); 
@@ -273,6 +309,7 @@ bool TagAndProbeAnalysis::isHLT_TandP_Ele20() {
       return true;
     }
   }
+
 
   return isok;
 }

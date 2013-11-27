@@ -199,6 +199,18 @@ void tree_reader_V9::Init(TTree *tree)
    fChain->SetBranchAddress("convVxConvPhot", convVxConvPhot, &b_convVxConvPhot);
    fChain->SetBranchAddress("convVyConvPhot", convVyConvPhot, &b_convVyConvPhot);
    fChain->SetBranchAddress("convVzConvPhot", convVzConvPhot, &b_convVzConvPhot);
+   fChain->SetBranchAddress("pid_pfIsoFPRCharged03", pid_pfIsoFPRCharged03, &b_pid_pfIsoFPRCharged03);
+   fChain->SetBranchAddress("pid_pfIsoFPRNeutral03", pid_pfIsoFPRNeutral03, &b_pid_pfIsoFPRNeutral03);
+   fChain->SetBranchAddress("pid_pfIsoFPRPhoton03",  pid_pfIsoFPRPhoton03,  &b_pid_pfIsoFPRPhoton03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeCharged03", pid_pfIsoFPRRandomConeCharged03, &b_pid_pfIsoFPRRandomConeCharged03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeNeutral03", pid_pfIsoFPRRandomConeNeutral03, &b_pid_pfIsoFPRRandomConeNeutral03);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConePhoton03",  pid_pfIsoFPRRandomConePhoton03,  &b_pid_pfIsoFPRRandomConePhoton03);
+   fChain->SetBranchAddress("pid_pfIsoFPRCharged04", pid_pfIsoFPRCharged04, &b_pid_pfIsoFPRCharged04);
+   fChain->SetBranchAddress("pid_pfIsoFPRNeutral04", pid_pfIsoFPRNeutral04, &b_pid_pfIsoFPRNeutral04);
+   fChain->SetBranchAddress("pid_pfIsoFPRPhoton04",  pid_pfIsoFPRPhoton04,  &b_pid_pfIsoFPRPhoton04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeCharged04", pid_pfIsoFPRRandomConeCharged04, &b_pid_pfIsoFPRRandomConeCharged04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConeNeutral04", pid_pfIsoFPRRandomConeNeutral04, &b_pid_pfIsoFPRRandomConeNeutral04);
+   fChain->SetBranchAddress("pid_pfIsoFPRRandomConePhoton04",  pid_pfIsoFPRRandomConePhoton04,  &b_pid_pfIsoFPRRandomConePhoton04);
    fChain->SetBranchAddress("distOfMinimumApproachConvPhot", distOfMinimumApproachConvPhot, &b_distOfMinimumApproachConvPhot);
    fChain->SetBranchAddress("dPhiTracksAtVtxConvPhot", dPhiTracksAtVtxConvPhot, &b_dPhiTracksAtVtxConvPhot);
    fChain->SetBranchAddress("pid_isEM", pid_isEM, &b_pid_isEM);

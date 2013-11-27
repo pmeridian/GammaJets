@@ -120,6 +120,18 @@ public :
    Float_t         convVxConvPhot[40];   //[nPhot]
    Float_t         convVyConvPhot[40];   //[nPhot]
    Float_t         convVzConvPhot[40];   //[nPhot]
+   Float_t         pid_pfIsoFPRCharged03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRNeutral03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRPhoton03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConeCharged03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConeNeutral03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConePhoton03[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRCharged04[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRNeutral04[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRPhoton04[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConeCharged04[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConeNeutral04[40];    //[nPhot]
+   Float_t         pid_pfIsoFPRRandomConePhoton04[40];    //[nPhot]
    Float_t         distOfMinimumApproachConvPhot[40];   //[nPhot]
    Float_t         dPhiTracksAtVtxConvPhot[40];   //[nPhot]
    Bool_t          pid_isEM[40];   //[nPhot]
@@ -679,6 +691,18 @@ public :
    TBranch        *b_convVxConvPhot;   //!
    TBranch        *b_convVyConvPhot;   //!
    TBranch        *b_convVzConvPhot;   //!
+   TBranch        *b_pid_pfIsoFPRCharged03;
+   TBranch        *b_pid_pfIsoFPRNeutral03;
+   TBranch        *b_pid_pfIsoFPRPhoton03;
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged03;
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral03;
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton03;
+   TBranch        *b_pid_pfIsoFPRCharged04;
+   TBranch        *b_pid_pfIsoFPRNeutral04;
+   TBranch        *b_pid_pfIsoFPRPhoton04;
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged04;
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral04;
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton04;
    TBranch        *b_distOfMinimumApproachConvPhot;   //!
    TBranch        *b_dPhiTracksAtVtxConvPhot;   //!
    TBranch        *b_pid_isEM;   //!
