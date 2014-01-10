@@ -9,12 +9,11 @@
   gStyle->SetMarkerColor(1);
   
   // mc distributions
-  TFile* inFileMC=TFile::Open("tandp_ntuple_tagTight_HLT__mc_conRichiestaHLT_massW20.root");    
-  // TFile* inFileMC=TFile::Open("tandp_ntuple_tagTight_HLT__mc_senzaRichiestaHLT.root");    
+  TFile* inFileMC=TFile::Open("tandp_ntuple_tagTight_HLT__mc_conRichiestaHLT_xv6.root");    
   TTree* inTreeMC=(TTree*)inFileMC->Get("myTaPDir/myTree");
 
   // data distributions
-  TFile* inFileData=TFile::Open("tandp_ntuple_tagTight_HLT__data_massW20.root");  
+  TFile* inFileData=TFile::Open("tandp_ntuple_tagTight_HLT__data_xv6.root");  
   TTree* inTreeData=(TTree*)inFileData->Get("myTaPDir/myTree");
 
 
@@ -175,7 +174,6 @@
   h1_s4Ratio_EB_Data   -> Sumw2();     
   h1_BDToutput_EB_Data -> Sumw2();     
 
-
   h1_fprCh03_EB_Data    -> Sumw2();     
   h1_fprNeu03_EB_Data   -> Sumw2();     
   h1_fprPh03_EB_Data    -> Sumw2();     
@@ -203,7 +201,6 @@
   h1_BDToutput_EE_Mc -> Sumw2();     
   h1_rr_EE_Mc        -> Sumw2();   
 
-
   h1_fprCh03_EE_Mc    -> Sumw2();     
   h1_fprNeu03_EE_Mc   -> Sumw2();     
   h1_fprPh03_EE_Mc    -> Sumw2();     
@@ -230,7 +227,6 @@
   h1_s4Ratio_EE_Data   -> Sumw2();     
   h1_BDToutput_EE_Data -> Sumw2();     
   h1_rr_EE_Data        -> Sumw2();   
-
 
   h1_fprCh03_EE_Data    -> Sumw2();     
   h1_fprNeu03_EE_Data   -> Sumw2();     
@@ -264,7 +260,6 @@
   h1_s4Ratio_EB_Mc   -> GetXaxis()->SetTitle("S4");
   h1_BDToutput_EB_Mc -> GetXaxis()->SetTitle("BDT output");
 
-
   h1_fprCh03_EB_Mc    -> GetXaxis()->SetTitle("chargedIso03 (FPR)");     
   h1_fprNeu03_EB_Mc   -> GetXaxis()->SetTitle("neutralIso03 (FPR)");     
   h1_fprPh03_EB_Mc    -> GetXaxis()->SetTitle("photonIso03 (FPR)");     
@@ -280,7 +275,6 @@
   h1_fprRCPh04_EB_Mc  -> GetXaxis()->SetTitle("photonIso04 (FPR, RC)");     
   */
 
-
   h1_eta_EB_Data       -> GetXaxis()->SetTitle("#eta");
   h1_etasc_EB_Data     -> GetXaxis()->SetTitle("supercluster #eta");    
   h1_pt_EB_Data        -> GetXaxis()->SetTitle("p_{T} [GeV]");
@@ -291,7 +285,6 @@
   h1_sEtaPhi_EB_Data   -> GetXaxis()->SetTitle("#sigma(#eta#phi)");
   h1_s4Ratio_EB_Data   -> GetXaxis()->SetTitle("S4");
   h1_BDToutput_EB_Data -> GetXaxis()->SetTitle("BDT output");
-
 
   h1_fprCh03_EB_Data    -> GetXaxis()->SetTitle("chargedIso03 (FPR)");     
   h1_fprNeu03_EB_Data   -> GetXaxis()->SetTitle("neutralIso03 (FPR)");     
@@ -320,7 +313,6 @@
   h1_BDToutput_EE_Mc -> GetXaxis()->SetTitle("BDT output");
   h1_rr_EE_Mc        -> GetXaxis()->SetTitle("#sigmaRR");
 
-
   h1_fprCh03_EE_Mc    -> GetXaxis()->SetTitle("chargedIso03 (FPR)");     
   h1_fprNeu03_EE_Mc   -> GetXaxis()->SetTitle("neutralIso03 (FPR)");     
   h1_fprPh03_EE_Mc    -> GetXaxis()->SetTitle("photonIso03 (FPR)");     
@@ -347,7 +339,6 @@
   h1_s4Ratio_EE_Data   -> GetXaxis()->SetTitle("S4");
   h1_BDToutput_EE_Data -> GetXaxis()->SetTitle("BDT output");
   h1_rr_EE_Data        -> GetXaxis()->SetTitle("#sigmaRR");
-
 
   h1_fprCh03_EE_Data    -> GetXaxis()->SetTitle("chargedIso03 (FPR)");     
   h1_fprNeu03_EE_Data   -> GetXaxis()->SetTitle("neutralIso03 (FPR)");     
@@ -380,7 +371,6 @@
   h1_s4Ratio_EB_Mc   -> SetTitle();
   h1_BDToutput_EB_Mc -> SetTitle();
 
-
   h1_fprCh03_EB_Mc    -> SetTitle();
   h1_fprNeu03_EB_Mc   -> SetTitle();
   h1_fprPh03_EB_Mc    -> SetTitle();
@@ -406,7 +396,6 @@
   h1_sEtaPhi_EB_Data   -> SetTitle();
   h1_s4Ratio_EB_Data   -> SetTitle();
   h1_BDToutput_EB_Data -> SetTitle();
-
 
   h1_fprCh03_EB_Data    -> SetTitle();
   h1_fprNeu03_EB_Data   -> SetTitle();
@@ -435,7 +424,6 @@
   h1_BDToutput_EE_Mc -> SetTitle();
   h1_rr_EE_Mc        -> SetTitle();
 
-
   h1_fprCh03_EE_Mc    -> SetTitle();
   h1_fprNeu03_EE_Mc   -> SetTitle();
   h1_fprPh03_EE_Mc    -> SetTitle();
@@ -462,7 +450,6 @@
   h1_s4Ratio_EE_Data   -> SetTitle();
   h1_BDToutput_EE_Data -> SetTitle();
   h1_rr_EE_Data        -> SetTitle();
-
 
   h1_fprCh03_EE_Data    -> SetTitle();
   h1_fprNeu03_EE_Data   -> SetTitle();
@@ -495,7 +482,6 @@
   h1_s4Ratio_EB_Mc     -> SetFillColor(kBlue-9);
   h1_BDToutput_EB_Mc   -> SetFillColor(kBlue-9);
 
-
   h1_fprCh03_EB_Mc     -> SetFillColor(kBlue-9);
   h1_fprNeu03_EB_Mc    -> SetFillColor(kBlue-9);
   h1_fprPh03_EB_Mc     -> SetFillColor(kBlue-9); 
@@ -521,7 +507,6 @@
   h1_sEtaPhi_EB_Data   -> SetMarkerStyle(20);
   h1_s4Ratio_EB_Data   -> SetMarkerStyle(20);
   h1_BDToutput_EB_Data -> SetMarkerStyle(20);
-
 
   h1_fprCh03_EB_Data     -> SetMarkerStyle(20);
   h1_fprNeu03_EB_Data    -> SetMarkerStyle(20);
@@ -550,7 +535,6 @@
   h1_BDToutput_EE_Mc   -> SetFillColor(kBlue-9);
   h1_rr_EE_Mc          -> SetFillColor(kBlue-9);
 
-
   h1_fprCh03_EE_Mc     -> SetFillColor(kBlue-9);
   h1_fprNeu03_EE_Mc    -> SetFillColor(kBlue-9);
   h1_fprPh03_EE_Mc     -> SetFillColor(kBlue-9); 
@@ -577,7 +561,6 @@
   h1_s4Ratio_EE_Data   -> SetMarkerStyle(20);
   h1_BDToutput_EE_Data -> SetMarkerStyle(20);
   h1_rr_EE_Data        -> SetMarkerStyle(20);
-
 
   h1_fprCh03_EE_Data     -> SetMarkerStyle(20);
   h1_fprNeu03_EE_Data    -> SetMarkerStyle(20);
@@ -671,7 +654,6 @@
   leg->Draw();
   myCB.SaveAs("h1_BDToutput_EB.png");
   myCB.SaveAs("h1_BDToutput_EB.root");
-
 
   h1_fprCh03_EB_Mc   ->DrawNormalized("hist");
   h1_fprCh03_EB_Data ->DrawNormalized("sameEp");
@@ -815,7 +797,6 @@
   leg->Draw();
   myCE.SaveAs("h1_BDToutput_EE.png");
   myCE.SaveAs("h1_BDToutput_EE.root");
-
 
   h1_fprCh03_EE_Mc   ->DrawNormalized("hist");
   h1_fprCh03_EE_Data ->DrawNormalized("sameEp");
