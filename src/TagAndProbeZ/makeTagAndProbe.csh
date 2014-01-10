@@ -3,7 +3,8 @@
 
 # change if needed
 #set castordir = /castor/cern.ch/user/m/meridian/Higgs/reduced
-set castordir = /castor/cern.ch/user/g/gdimperi/Higgs/reduced
+#set castordir = /castor/cern.ch/user/g/gdimperi/Higgs/reduced
+set castordir = sftp://meridian@cmsrm-an.roma1.infn.it///t3/users/meridian/GammaJets/TandP/reduced
 
 set photonIDweights_EB = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EBpf_BDT.weights.xml
 set photonIDweights_EE = /afs/cern.ch/user/m/meridian/public/photonIDweights/TMVA_EEpf_BDT.weights.xml
@@ -67,7 +68,7 @@ set location = ""
 if ($#argv > 3) then
   set location = $4
   echo "location : $location "
-  if( $location != roma && $location != cern && $location != eth) then
+  if( $location != roma && $location != cern && $location != eth &&  $location != fnal) then
     echo "bad location. options: roma or cern or eth"
     exit -1
 endif 
@@ -130,24 +131,37 @@ echo "------   ready ro run at $location ------------------"
 
 # logfiles always stored locally
 set logdir = "$PWD/log/$outdir"
+set jobdir = "$PWD/jobs/$outdir"
 if($run == 1) mkdir -p $logdir
+mkdir -p $jobdir
 
 # choose queue, location based on location
 if ($location == "cern" ) then
-  set queue = 1nd
+  set photonIDweights_EB = /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml
+  set photonIDweights_EE = /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml
+  set queue = 8nh
   set outdir = $castordir/$outdir
   set prefix = ""
   echo "chiara: " $outdir
   #if($run == 1) rfmkdir $outdir  # chiara
   echo "$outdir created on castor"
 else if ($location == "roma" ) then
-  set queue = "cmsshort"
-  set outdir = ./$outdir
+  set photonIDweights_EB = /cmshome/meridian/photonIDweights/TMVA_EBpf_BDT.weights.xml
+  set photonIDweights_EE = /cmshome/meridian/photonIDweights/TMVA_EEpf_BDT.weights.xml
+  set queue = "cmsan"
+  set outdir = $castordir/$outdir
   set prefix = ""
   if($run == 1) mkdir -p $outdir
 else if ($location == "eth" ) then
   set queue = "short.q"
   set outdir = $outdir
+  set prefix = ""
+  if($run == 1) mkdir -p $outdir
+else if ($location == "fnal" ) then
+  set photonIDweights_EB = /uscms/home/meridian/photonIDWeights/TMVAClassification_BDTG.weights.EB.xml
+  set photonIDweights_EE = /uscms/home/meridian/photonIDWeights/TMVAClassification_BDTG.weights.EE.xml
+  set queue = "condor"
+  set outdir = $castordir/$outdir
   set prefix = ""
   if($run == 1) mkdir -p $outdir
 endif 
@@ -179,12 +193,10 @@ if(-f $listdir) then
    set listfile = "${listdir}/${sample}.list"
 
    if ($location == "cern" || $location == "roma") then  
-#     set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
-    set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${energyCorrection}"# ${photonIDweights_EB} ${photonIDweights_EE}" 
-  else if ($location == "eth" ) then
-#     set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
-    set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${energyCorrection} "#${photonIDweights_EB} ${photonIDweights_EE}" 
-  endif  
+     set command = "bsub -q ${queue} -o $logfile  -e $logerrfile -J ${jobname} `pwd`/scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}"# "
+   else if ($location == "eth" ) then
+     set command = "qsub -q ${queue} -o $logfile -e $logerrfile `pwd`/scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}"# ${photonIDweights_EB} ${photonIDweights_EE}"
+   endif  
 
    echo "---------------------------"
    echo "job name: ${jobname}"
@@ -211,11 +223,27 @@ else if(-d $listdir) then
    setenv listfile  "${listdir}/${sample}.list"
 
    if ($location == "cern" || $location == "roma") then  
-#     set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
-    set command = "bsub -q ${queue} -o $logfile -J ${jobname} scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${energyCorrection}"# ${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "bsub -q ${queue} -o $logfile -e $logerrfile -J ${jobname} `pwd`/scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}"# ${photonIDweights_EB} ${photonIDweights_EE}"
+   else if ($location == "fnal") then  
+#    echo "Creating  ${jobdir}/job_condor_${jobname}"
+     cat <<EOF >! ${jobdir}/job_condor_${jobname}
+universe = vanilla
+Executable = `pwd`/scriptTagAndProbe.sh
+Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
+Should_Transfer_Files = NO
+#WhenToTransferOutput = ON_EXIT
+Output = $logfile
+Error = $logerrfile
+Log = $logfile
+#notify_user = ${LOGNAME}@FNAL.GOV
+notify_user = nobody
+Arguments =  ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90}  ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}
+#${photonIDweights_EB} ${photonIDweights_EE}
+Queue
+EOF
+     set command = "condor_submit ${jobdir}/job_condor_${jobname}"
    else if ($location == "eth" ) then
-#     set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${energyCorrection} ${photonIDweights_EB} ${photonIDweights_EE}"
-    set command = "qsub -q ${queue} -o $logfile -e $logerrfile scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${energyCorrection} "#${photonIDweights_EB} ${photonIDweights_EE}"
+     set command = "qsub -q ${queue} -o $logfile -e $logerrfile  `pwd`/scriptTagAndProbe.sh ${PWD} ${PWD}/${listfile} ${rootfile} ${selection} ${json} ${puweight} ${puweight30} ${puweight50} ${puweight75} ${puweight90} ${r9weight} ${photonIDweights_EB} ${photonIDweights_EE} ${energyCorrection}"# ${photonIDweights_EB} ${photonIDweights_EE}"
    endif  
 
    echo "---------------------------"
@@ -224,8 +252,5 @@ else if(-d $listdir) then
    if($run == 1) then
      ${command}
    endif
-
-
   end
-
 endif

@@ -170,6 +170,18 @@ void SingleGammaTree_giulia::Loop() {
   float pid_pfIsoNeutrals06ForCiC_presel[10];
 
 
+  float pid_pfIsoFPRCharged03_presel[10];
+  float pid_pfIsoFPRNeutral03_presel[10];
+  float pid_pfIsoFPRPhoton03_presel[10];
+  float pid_pfIsoFPRRandomConeCharged03_presel[10];
+  float pid_pfIsoFPRRandomConeNeutral03_presel[10];
+  float pid_pfIsoFPRRandomConePhoton03_presel[10];
+  float pid_pfIsoFPRCharged04_presel[10];
+  float pid_pfIsoFPRNeutral04_presel[10];
+  float pid_pfIsoFPRPhoton04_presel[10];
+  float pid_pfIsoFPRRandomConeCharged04_presel[10];
+  float pid_pfIsoFPRRandomConeNeutral04_presel[10];
+  float pid_pfIsoFPRRandomConePhoton04_presel[10];
   //Photon Trigger Objects
 
 
@@ -248,7 +260,21 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("pid_pfIsoNeutrals04ForCiC_presel",pid_pfIsoNeutrals04ForCiC_presel,"pid_pfIsoNeutrals04ForCiC_presel[nPhot_presel]/F");		
   ana_tree->Branch("pid_pfIsoNeutrals05ForCiC_presel",pid_pfIsoNeutrals05ForCiC_presel,"pid_pfIsoNeutrals05ForCiC_presel[nPhot_presel]/F");		
   ana_tree->Branch("pid_pfIsoNeutrals06ForCiC_presel",pid_pfIsoNeutrals06ForCiC_presel,"pid_pfIsoNeutrals06ForCiC_presel[nPhot_presel]/F");		
-		   																			
+		   																	
+  ana_tree->Branch("pid_pfIsoFPRCharged03_presel",pid_pfIsoFPRCharged03_presel,"pid_pfIsoFPRCharged03_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRNeutral03_presel",pid_pfIsoFPRNeutral03_presel,"pid_pfIsoFPRNeutral03_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRPhoton03_presel",pid_pfIsoFPRPhoton03_presel,"pid_pfIsoFPRPhoton03_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConeCharged03_presel",pid_pfIsoFPRRandomConeCharged03_presel,"pid_pfIsoFPRRandomConeCharged03_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConeNeutral03_presel",pid_pfIsoFPRRandomConeNeutral03_presel,"pid_pfIsoFPRRandomConeNeutral03_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConePhoton03_presel",pid_pfIsoFPRRandomConePhoton03_presel,"pid_pfIsoFPRRandomConePhoton03_presel[nPhot_presel]/F");		
+
+  ana_tree->Branch("pid_pfIsoFPRCharged04_presel",pid_pfIsoFPRCharged04_presel,"pid_pfIsoFPRCharged04_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRNeutral04_presel",pid_pfIsoFPRNeutral04_presel,"pid_pfIsoFPRNeutral04_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRPhoton04_presel",pid_pfIsoFPRPhoton04_presel,"pid_pfIsoFPRPhoton04_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConeCharged04_presel",pid_pfIsoFPRRandomConeCharged04_presel,"pid_pfIsoFPRRandomConeCharged04_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConeNeutral04_presel",pid_pfIsoFPRRandomConeNeutral04_presel,"pid_pfIsoFPRRandomConeNeutral04_presel[nPhot_presel]/F");		
+  ana_tree->Branch("pid_pfIsoFPRRandomConePhoton04_presel",pid_pfIsoFPRRandomConePhoton04_presel,"pid_pfIsoFPRRandomConePhoton04_presel[nPhot_presel]/F");		
+		
   ana_tree->Branch("pid_scetawid_presel",pid_scetawid_presel,"pid_scetawid_presel[nPhot_presel]/F");							
   ana_tree->Branch("pid_scphiwid_presel",pid_scphiwid_presel,"pid_scphiwid_presel[nPhot_presel]/F");							
   ana_tree->Branch("pid_lambdaRatio_presel",pid_lambdaRatio_presel,"pid_lambdaRatio_presel[nPhot_presel]/F");						
@@ -565,7 +591,23 @@ void SingleGammaTree_giulia::Loop() {
       pid_pfIsoCharged04ForCiC_presel[countPreselPhot] = pid_pfIsoCharged04ForCiC[i][0];
       pid_pfIsoCharged05ForCiC_presel[countPreselPhot] = pid_pfIsoCharged05ForCiC[i][0];
       pid_pfIsoCharged06ForCiC_presel[countPreselPhot] = pid_pfIsoCharged06ForCiC[i][0];
-      
+
+      pid_pfIsoFPRCharged03_presel[countPreselPhot] = pid_pfIsoFPRCharged03[i];
+      pid_pfIsoFPRNeutral03_presel[countPreselPhot] = pid_pfIsoFPRNeutral03[i];
+      pid_pfIsoFPRPhoton03_presel[countPreselPhot] = pid_pfIsoFPRPhoton03[i];
+
+      pid_pfIsoFPRRandomConeCharged03_presel[countPreselPhot] = pid_pfIsoFPRRandomConeCharged03[i];
+      pid_pfIsoFPRRandomConeNeutral03_presel[countPreselPhot] = pid_pfIsoFPRRandomConeNeutral03[i];
+      pid_pfIsoFPRRandomConePhoton03_presel[countPreselPhot] = pid_pfIsoFPRRandomConePhoton03[i];
+
+      pid_pfIsoFPRCharged04_presel[countPreselPhot] = pid_pfIsoFPRCharged04[i];
+      pid_pfIsoFPRNeutral04_presel[countPreselPhot] = pid_pfIsoFPRNeutral04[i];
+      pid_pfIsoFPRPhoton04_presel[countPreselPhot] = pid_pfIsoFPRPhoton04[i];
+
+      pid_pfIsoFPRRandomConeCharged04_presel[countPreselPhot] = pid_pfIsoFPRRandomConeCharged04[i];
+      pid_pfIsoFPRRandomConeNeutral04_presel[countPreselPhot] = pid_pfIsoFPRRandomConeNeutral04[i];
+      pid_pfIsoFPRRandomConePhoton04_presel[countPreselPhot] = pid_pfIsoFPRRandomConePhoton04[i];
+
       isMatchedPhot[countPreselPhot] = 0;
       iMatchedPhot[countPreselPhot] = -1;
       

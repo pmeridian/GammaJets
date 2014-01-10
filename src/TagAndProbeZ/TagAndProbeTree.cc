@@ -21,6 +21,7 @@ using std::endl;
 
 TagAndProbeTree::TagAndProbeTree(TTree *tree, const TString& outname) : tree_reader_V9(tree), jsonFile(0) //, scaleCorrections_(0)
 {  
+  std::cout << "Creating output file " << outname << std::endl;
   hOutputFile = TFile::Open(outname, "RECREATE" ) ;
   
   // must be set by the user 
@@ -1127,10 +1128,10 @@ void TagAndProbeTree::SetAllMVA() {
     tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
   */
   
-  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml");
-  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("BDT","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file " << photonLevelNewIDMVA_EB << endl;
+  tmvaReaderID_Single_Barrel->BookMVA("BDT",photonLevelNewIDMVA_EB);
+  std::cout << "Booking PhotonID EE MVA with file " << photonLevelNewIDMVA_EE  << endl;
+  tmvaReaderID_Single_Endcap->BookMVA("BDT",photonLevelNewIDMVA_EE);
   
 }
 
@@ -1272,7 +1273,18 @@ void TagAndProbeTree::bookOutputTree()
   ana_tree->Branch("ntrkiso04Phot", ntrkiso04Phot, "ntrkiso04Phot[nPhot]/I");   //[nPhot]
   ana_tree->Branch("hcalovecal04Phot", hcalovecal04Phot, "hcalovecal04Phot[nPhot]/F");   //[nPhot]
   ana_tree->Branch("ecaliso04Phot", ecaliso04Phot, "ecaliso04Phot[nPhot]/F");   //[nPhot]
-
+  ana_tree->Branch("pid_pfIsoFPRCharged03", pid_pfIsoFPRCharged03, "pid_pfIsoFPRCharged03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRNeutral03", pid_pfIsoFPRNeutral03, "pid_pfIsoFPRNeutral03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRPhoton03",  pid_pfIsoFPRPhoton03,  "pid_pfIsoFPRPhoton03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConeCharged03", pid_pfIsoFPRRandomConeCharged03, "pid_pfIsoFPRRandomConeCharged03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConeNeutral03", pid_pfIsoFPRRandomConeNeutral03, "pid_pfIsoFPRRandomConeNeutral03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConePhoton03",  pid_pfIsoFPRRandomConePhoton03,  "pid_pfIsoFPRRandomConePhoton03[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRCharged04", pid_pfIsoFPRCharged04, "pid_pfIsoFPRCharged04[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRNeutral04", pid_pfIsoFPRNeutral04, "pid_pfIsoFPRNeutral04[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRPhoton04",  pid_pfIsoFPRPhoton04,  "pid_pfIsoFPRPhoton04[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConeCharged04", pid_pfIsoFPRRandomConeCharged04, "pid_pfIsoFPRRandomConeCharged04[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConeNeutral04", pid_pfIsoFPRRandomConeNeutral04, "pid_pfIsoFPRRandomConeNeutral04[nPhot]/F");   //[nPhot]
+  ana_tree->Branch("pid_pfIsoFPRRandomConePhoton04",  pid_pfIsoFPRRandomConePhoton04,  "pid_pfIsoFPRRandomConePhoton04[nPhot]/F");   //[nPhot]  
   ana_tree->Branch("nEle", &nEle, "nEle/I");
   ana_tree->Branch("isGenMatchEle", isGenMatchEle , "isGenMatchEle[nEle]/I" );
   ana_tree->Branch("genMatchIndexEle", genMatchIndexEle , "genMatchIndexEle[nEle]/I" );

@@ -124,8 +124,6 @@ if ($#argv > 11) then
   echo "energyCorrection: ${energyCorrection}"
 endif 
 
-
-
 echo "------   ready ro run at $location ------------------"
 
 # logfiles always stored locally
@@ -227,7 +225,7 @@ else if(-d $listdir) then
 universe = vanilla
 Executable = `pwd`/scriptSingleGamma_giulia.sh
 Requirements = Memory >= 199 &&OpSys == "LINUX"&& (Arch != "DUMMY" )&& Disk > 1000000
-#Should_Transfer_Files = NO
+Should_Transfer_Files = NO
 #WhenToTransferOutput = ON_EXIT
 Output = $logfile
 Error = $logerrfile
