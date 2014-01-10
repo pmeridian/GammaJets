@@ -81,7 +81,7 @@ endif
 echo ""
 
 #foreach class ( 53xv2 )
-foreach class ( 53xv5_data 53xv5 )
+foreach class ( 53xv6_data_CERN  53xv6_CERN)
 #foreach class ( 53xv2_data )
 #foreach class ( 53xv2_extra )
 #    foreach preseltype ( preselectionCS cicpfloose preselectionMVA cicpfloosenoeleveto )
