@@ -4,34 +4,21 @@
 #include <TMath.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <TVector3.h>
 #include <TStopwatch.h>
 
 
 void GammaJetAnalysis::Loop()
 {
-//   In a ROOT session, you can do:
-//      Root > .L GammaJetAnalysis.C
-//      Root > GammaJetAnalysis t
-//      Root > t.GetEntry(12); // Fill t data members with entry number 12
-//      Root > t.Show();       // Show values of entry 12
-//      Root > t.Show(16);     // Read and show values of entry 16
-//      Root > t.Loop();       // Loop on all entries
-//
 
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
+  std::cout << "****** Running with the following cuts ******" << std::endl;
+  std::cout << "selectionType " << selectionType << std::endl;
+  std::cout << "ptphot1_mincut " << ptphot1_mincut << std::endl;
+  std::cout << "ptphot1_maxcut " << ptphot1_maxcut << std::endl;
+  std::cout << "hltcut " << hltcut << std::endl;
+  std::cout << "hltiso " << hltiso << std::endl;
+  std::cout << "mvaIDWP " << mvaIDWP << std::endl;
+  std::cout << "*********************************************" << std::endl;
 
    if (fChain == 0) return;
 
@@ -60,23 +47,24 @@ void GammaJetAnalysis::Loop()
       // patological events
       if (npu>=60) continue;    
 
+
       // first vertex must be good
-      if (vtxId<0) continue;
-      
-      if (!passHLT(hltiso)) continue;
+      if (vtxId<0 && selectionType!="efficiencyStudy") continue;
+
+      if (!passHLT(hltiso) && selectionType!="efficiencyStudy") continue;
 
       std::vector<int> photons=sortedPtPhotons();
-      if (photons.size()<1)
+      if (photons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
 
       std::vector<int> preselectPhotons=preselectedPhotons(photons);
-      if (preselectPhotons.size()<1)
+      if (preselectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
       
       std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
-      if (selectPhotons.size()<1)
+      if (selectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
-
+      
       // ptcut to restrict to the wanted range - matching HLT
       if (selectPhotons.size()>0)
 	{
@@ -93,39 +81,22 @@ void GammaJetAnalysis::Loop()
 	  std::vector<int> genPhotons=sortedPtGenPhotons();
 	  int i_nPhot=-1;
 
-	  FillTreeGenPhot(genPhotons[0]);
-
-	  TVector3 gen;
-	  gen.SetPtEtaPhi(ptTrueMatch_gen[genPhotons[0]], etaMatch_gen[genPhotons[0]], phiMatch_gen[genPhotons[0]]);
-	  float deltaRmin = 0.3;
-	  int i_nPhot=-1;
-	  for(int j=0; j<photons.size(); j++)
+	  if (iRecoPhotMatch_gen[0]>-1)
 	    {
-	      TVector3 reco;
-	      reco.SetPtEtaPhi(ptPhot[photons[j]],etaPhot[photons[j]],phiPhot[photons[j]]);
-	      if(gen.DeltaR(reco) < deltaRmin) 
+	      for(int j=0; j<photons.size(); j++)
 		{
-		  deltaRmin = gen.DeltaR(reco);
-		  i_nPhot = photons[j];
+		  if (photons[j]==iRecoPhotMatch_gen[0])
+		    {
+		      i_nPhot=j;
+		      break;
+		    }
 		}
 	    }
-
-
-// 	  if (iRecoPhotMatch_gen[0]>-1)
-// 	    {
-// 	      for(int j=0; j<photons.size(); j++)
-// 		{
-// 		  if (photons[j]==iRecoPhotMatch_gen[0])
-// 		    {
-// 		      i_nPhot=j;
-// 		      break;
-// 		    }
-// 		}
-// 	    }
 
 	  bool isPresel=false;
 	  bool isSel=false;
 
+	  FillTreeGenPhot(genPhotons[0]);
 	  if (i_nPhot>-1)
 	    {
 	      for(int j=0; j<preselectPhotons.size(); j++)
@@ -153,17 +124,15 @@ void GammaJetAnalysis::Loop()
 	  else
 	    FillTreeGenPhot(-1);
 	}
-
       //////////// End selection //////////////
 
-      ++npassing;
-      float weight(1);
-      weight *= GetPUWeight()*GetSampleWeight();
-      
-      //Filling Tree
-      FillTreeEvent(weight);
-      FillTreePhot(selectPhotons[0]);
-      finalTree->Fill();
+       ++npassing;
+       float weight(1);
+       weight *= GetPUWeight()*GetSampleWeight();
+    
+       //Filling Tree
+       FillTreeEvent(weight);
+       finalTree->Fill();
    }
    timer.Stop();   
    std::cout << "Fraction of events passing the selection in sample " << sampleName <<  ":\t" <<  setprecision(4) << npassing*100./nentries*1. << "%" << std::endl;
@@ -258,10 +227,10 @@ void GammaJetAnalysis::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
 
-  std::cout << "Booking PhotonID EB MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Barrel->BookMVA("GradBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EB/TMVAClassification_BDT.weights.xml");
-  std::cout << "Booking PhotonID EE MVA with file /afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml" << endl;
-  tmvaReaderID_Single_Endcap->BookMVA("GradBoost","/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_gradBoost_EE/TMVAClassification_BDT.weights.xml");
+  std::cout << "Booking PhotonID EB MVA with file " << mvaWeights_EB << std::endl; 
+  tmvaReaderID_Single_Barrel->BookMVA("GradBoost",mvaWeights_EB);
+  std::cout << "Booking PhotonID EE MVA with file " << mvaWeights_EE << std::endl;
+  tmvaReaderID_Single_Endcap->BookMVA("GradBoost",mvaWeights_EE);
 
   isMVAinitialized=true;
   return;
@@ -434,8 +403,16 @@ void GammaJetAnalysis::BookFinalTree()
   finalTree->Branch("weight",&finalTree_weight,"weght/F");
   finalTree->Branch("rho",&finalTree_rho,"rho/F");
 
+  finalTree->Branch("ptPhotGen",&finalTree_ptPhotGen,"ptPhotGen/F");
+  finalTree->Branch("etaPhotGen",&finalTree_etaPhotGen,"etaPhotGen/F");
+  finalTree->Branch("iso03PhotGen",&finalTree_iso03PhotGen,"iso03PhotGen/F");
+  finalTree->Branch("iso04PhotGen",&finalTree_iso04PhotGen,"iso04PhotGen/F");
+  finalTree->Branch("isRecoMatchedPhotGen",&finalTree_isRecoMatchedPhotGen,"isRecoMatchedPhotGen/I");
+
   finalTree->Branch("ptPhot",&finalTree_ptPhot,"ptPhot/F");
   finalTree->Branch("isMatchedPhot",&finalTree_isMatchedPhot,"isMatchedPhot/I");
+  finalTree->Branch("isPreselectedPhot",&finalTree_isPreselectedPhot,"isPreselectedPhot/I");
+  finalTree->Branch("isSelectedPhot",&finalTree_isSelectedPhot,"isSelectedPhot/I");
   finalTree->Branch("etaPhot",&finalTree_etaPhot,"etaPhot/F");
   finalTree->Branch("mvaIdPhot",&finalTree_mvaIdPhot,"mvaIdPhot/F");
   finalTree->Branch("sEtaEtaPhot",&finalTree_setaetaPhot,"sEtaEtaPhot/F");
@@ -476,8 +453,8 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
 std::vector<int> GammaJetAnalysis::selectedPhotons(const std::vector<int>& photons)
 {
   std::vector<int> selPhotons;
-  double mva_cut_EB[3] = {0.892656, 0.844931, 0.766479};//corresponding to sig eff 0.80, 0.90, 0.95
-  double mva_cut_EE[3] = {0.871778, 0.778579, 0.601807};//corresponding to sig eff 0.80, 0.90, 0.95
+  double mva_cut_EB[4] = {0.892656, 0.844931, 0.766479, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
+  double mva_cut_EE[4] = {0.871778, 0.778579, 0.601807, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
 
   for (int ipho=0;ipho<photons.size();++ipho)
     {
@@ -522,6 +499,16 @@ std::vector<int> GammaJetAnalysis::sortedPtPhotons()
   return sortedPhotons;
 }
 
+std::vector<int> GammaJetAnalysis::sortedPtGenPhotons()
+{
+  std::vector<int> sortedGenPhotons;
+  int sorted_index[nPhot_gen];
+  TMath::Sort(nPhot_gen,ptTrueMatch_gen,sorted_index);
+  for (int ipho=0;ipho<nPhot_gen;++ipho)
+    sortedGenPhotons.push_back(sorted_index[ipho]);
+  return sortedGenPhotons;
+}
+
 bool GammaJetAnalysis::passHLT(bool isoCut)
 {
   // HLT selection - for data only
@@ -561,7 +548,7 @@ void GammaJetAnalysis::FillTreeEvent(float weight)
   return;
 }
 
-void GammaJetAnalysis::FillTreePhot(const int& phot)
+void GammaJetAnalysis::FillTreePhot(const int& phot,bool isPresel, bool isSel)
 {
   if (phot>-1)
     {
@@ -597,7 +584,7 @@ void GammaJetAnalysis::FillTreeGenPhot(const int& genphot)
       finalTree_ptPhotGen=ptTrueMatch_gen[genphot];
       finalTree_iso03PhotGen=iso03_gen[genphot];
       finalTree_iso04PhotGen=iso04_gen[genphot];
-      finalTree_isRecoMatchedPhotGen=(iRecoPhotMatch_gen[genphot]>-1);
+      finalTree_isRecoMatchedPhotGen=iRecoPhotMatch_gen[genphot];
     }
   else
     {
