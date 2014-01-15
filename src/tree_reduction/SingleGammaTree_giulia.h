@@ -219,6 +219,8 @@ private:
   std::vector<Double_t> puweights50_;
   std::vector<Double_t> puweights75_;
   std::vector<Double_t> puweights90_;
+  std::vector<Double_t> puweights135_;
+  std::vector<Double_t> puweights150_;
 
   EnergyScaleCorrection* scaleCorrections_;
  
@@ -233,6 +235,8 @@ private:
   Float_t pu_weight50;
   Float_t pu_weight75;
   Float_t pu_weight90;
+  Float_t pu_weight135;
+  Float_t pu_weight150;
   Int_t promptGamma;
   Int_t LOGamma;
   Int_t ISRGamma;

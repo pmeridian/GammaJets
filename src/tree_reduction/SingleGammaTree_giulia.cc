@@ -125,6 +125,12 @@ void SingleGammaTree_giulia::Loop() {
   int isTrig75CaloVLMatchedPhot[10];
   int isTrig90CaloVLMatchedPhot[10];
 
+  float hltCandPt20CaloVLPhot[10];
+  float hltCandPt30CaloVLPhot[10];
+  float hltCandPt50CaloVLPhot[10];
+  float hltCandPt75CaloVLPhot[10];
+  float hltCandPt90CaloVLPhot[10];
+
   float pid_scetawid_presel[10];
   float pid_scphiwid_presel[10]; 
   float sEtaEtaPhot_presel[10];
@@ -210,6 +216,8 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("pu_weight50",&pu_weight50,"pu_weight50/F");
   ana_tree->Branch("pu_weight75",&pu_weight75,"pu_weight75/F");
   ana_tree->Branch("pu_weight90",&pu_weight90,"pu_weight90/F");
+  ana_tree->Branch("pu_weight135",&pu_weight135,"pu_weight135/F");
+  ana_tree->Branch("pu_weight150",&pu_weight150,"pu_weight150/F");
   
   // photons
   ana_tree->Branch("nPhot_gen",&nPhot_gen,"nPhot_gen/I");
@@ -297,8 +305,11 @@ void SingleGammaTree_giulia::Loop() {
   ana_tree->Branch("isTrig50CaloVLMatchedPhot", isTrig50CaloVLMatchedPhot, "isTrig50CaloVLMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("isTrig75CaloVLMatchedPhot", isTrig75CaloVLMatchedPhot, "isTrig75CaloVLMatchedPhot[nPhot_presel]/I"  );
   ana_tree->Branch("isTrig90CaloVLMatchedPhot", isTrig90CaloVLMatchedPhot, "isTrig90CaloVLMatchedPhot[nPhot_presel]/I"  );
-
-
+  ana_tree->Branch("hltCandPt20CaloVLPhot", hltCandPt20CaloVLPhot, "hltCandPt20CaloVLPhot[nPhot_presel]/F"  );  
+  ana_tree->Branch("hltCandPt30CaloVLPhot", hltCandPt30CaloVLPhot, "hltCandPt30CaloVLPhot[nPhot_presel]/F"  );  
+  ana_tree->Branch("hltCandPt50CaloVLPhot", hltCandPt50CaloVLPhot, "hltCandPt50CaloVLPhot[nPhot_presel]/F"  );  
+  ana_tree->Branch("hltCandPt75CaloVLPhot", hltCandPt75CaloVLPhot, "hltCandPt75CaloVLPhot[nPhot_presel]/F"  );  
+  ana_tree->Branch("hltCandPt90CaloVLPhot", hltCandPt90CaloVLPhot, "hltCandPt90CaloVLPhot[nPhot_presel]/F"  );  
 
   // vertex
   ana_tree->Branch("vtxId",   &vtxId,   "vtxId/I");
@@ -474,6 +485,16 @@ void SingleGammaTree_giulia::Loop() {
 	pu_weight90 = puweights90_[npu];  
       else 
 	pu_weight90 = 1.;
+
+      if(puweights135_.size()>0) 
+	pu_weight135 = puweights135_[npu];  
+      else 
+	pu_weight135 = 1.;
+
+      if(puweights150_.size()>0) 
+	pu_weight150 = puweights150_[npu];  
+      else 
+	pu_weight150 = 1.;
     }
 
     // to be used after
@@ -623,6 +644,7 @@ void SingleGammaTree_giulia::Loop() {
    TVector3 reco;
    reco.SetPtEtaPhi(ptPhot[i], etaPhot[i], phiPhot[i]);
    float deltaRmin = 0.3;
+   float hltPtDRmin = -999.;    
    int i_nPhot=-1;
    for(int j=0; j<trg20_phoIDCaloVL_n; j++)
      {
@@ -634,16 +656,21 @@ void SingleGammaTree_giulia::Loop() {
 	 {
 	   
 	   deltaRmin = reco.DeltaR(trig);
+	   hltPtDRmin = trg20_phoIDCaloVL_et[j];
 	   i_nPhot = j;
 	 }
      }
    
-   if (i_nPhot>-1)
+   if (i_nPhot>-1) {
      isTrig20CaloVLMatchedPhot[countPreselPhot]=1;
-   else
+     hltCandPt20CaloVLPhot[countPreselPhot]=hltPtDRmin;
+   } else {
      isTrig20CaloVLMatchedPhot[countPreselPhot]=0;
+     hltCandPt20CaloVLPhot[countPreselPhot]=-999.;
+   }     
 
      deltaRmin = 0.3;
+     hltPtDRmin = -999.;
      i_nPhot=-1;
      for(int j=0; j<trg30_phoIDCaloVL_n; j++)
        {
@@ -654,16 +681,21 @@ void SingleGammaTree_giulia::Loop() {
          if(reco.DeltaR(trig) < deltaRmin) 
   	 {
   	   deltaRmin = reco.DeltaR(trig);
+	   hltPtDRmin = trg30_phoIDCaloVL_et[j];
   	   i_nPhot = j;
   	 }
        }
 
-     if (i_nPhot>-1)
+     if (i_nPhot>-1) {
        isTrig30CaloVLMatchedPhot[countPreselPhot]=1;
-     else
+       hltCandPt30CaloVLPhot[countPreselPhot]=hltPtDRmin;
+     } else {
        isTrig30CaloVLMatchedPhot[countPreselPhot]=0;
+       hltCandPt30CaloVLPhot[countPreselPhot]=-999.;
+     }
 
      deltaRmin = 0.3;
+     hltPtDRmin = -999.;
      i_nPhot=-1;
      for(int j=0; j<trg50_phoIDCaloVL_n; j++)
        {
@@ -674,16 +706,21 @@ void SingleGammaTree_giulia::Loop() {
          if(reco.DeltaR(trig) < deltaRmin) 
   	 {
   	   deltaRmin = reco.DeltaR(trig);
+	   hltPtDRmin = trg50_phoIDCaloVL_et[j];
   	   i_nPhot = j;
   	 }
        }
 
-     if (i_nPhot>-1)
+     if (i_nPhot>-1) {
        isTrig50CaloVLMatchedPhot[countPreselPhot]=1;
-     else
+       hltCandPt50CaloVLPhot[countPreselPhot]=hltPtDRmin;
+     } else {
        isTrig50CaloVLMatchedPhot[countPreselPhot]=0;
+       hltCandPt50CaloVLPhot[countPreselPhot]=-999.;
+     }
 
      deltaRmin = 0.3;
+     hltPtDRmin = -999.;
      i_nPhot=-1;
      for(int j=0; j<trg75_phoIDCaloVL_n; j++)
        {
@@ -694,16 +731,21 @@ void SingleGammaTree_giulia::Loop() {
          if(reco.DeltaR(trig) < deltaRmin) 
   	 {
   	   deltaRmin = reco.DeltaR(trig);
+	   hltPtDRmin = trg75_phoIDCaloVL_et[j];
   	   i_nPhot = j;
   	 }
        }
 
-     if (i_nPhot>-1)
+     if (i_nPhot>-1) {
        isTrig75CaloVLMatchedPhot[countPreselPhot]=1;
-     else
+       hltCandPt75CaloVLPhot[countPreselPhot]=hltPtDRmin;
+     } else {
        isTrig75CaloVLMatchedPhot[countPreselPhot]=0;
+       hltCandPt75CaloVLPhot[countPreselPhot]=-999.;
+     }
 
       deltaRmin = 0.3;
+      hltPtDRmin = -999.;
       i_nPhot=-1;
       for(int j=0; j<trg90_phoIDCaloVL_n; j++)
         {
@@ -715,16 +757,19 @@ void SingleGammaTree_giulia::Loop() {
           if(reco.DeltaR(trig) < deltaRmin) 
    	 {
    	   deltaRmin = reco.DeltaR(trig);
+	   hltPtDRmin = trg90_phoIDCaloVL_et[j];
    	   i_nPhot = j;
    	 }
         }
 
-      if (i_nPhot>-1)
+      if (i_nPhot>-1) {
         isTrig90CaloVLMatchedPhot[countPreselPhot]=1;
-      else
+	hltCandPt90CaloVLPhot[countPreselPhot]=hltPtDRmin;
+      } else {
         isTrig90CaloVLMatchedPhot[countPreselPhot]=0;
-
-   countPreselPhot++;
+	hltCandPt90CaloVLPhot[countPreselPhot]=-999.;
+      }
+      countPreselPhot++;
 	 
     }
 
@@ -882,6 +927,8 @@ void SingleGammaTree_giulia::SetPuWeightsHLT(std::string puWeightFileHLT, int hl
     if (hltThresh==50) puweights50_.push_back(weight);  
     if (hltThresh==75) puweights75_.push_back(weight);  
     if (hltThresh==90) puweights90_.push_back(weight);  
+    if (hltThresh==135) puweights135_.push_back(weight);  
+    if (hltThresh==150) puweights150_.push_back(weight);  
   }
 }
 
