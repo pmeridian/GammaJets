@@ -2,9 +2,12 @@
 
 cuts={}
 
-cuts['normLumi']=124.2
-cuts['hltcut']=75
-cuts['hltiso']=0
-cuts['mvaIDWP']=2
-cuts['ptMin']=90
-cuts['ptMax']=9999999.
+cuts['normLumi']=197.12
+cuts['hltcut']=0                      # 0, 30, 50, 75, 90
+cuts['hltiso']=0                      # 0 to use paths with ID only; 1 for ID+iso paths 
+cuts['mvaIDWP']=4                     # use 4 not to apply and ID
+cuts['ptMin']=0.                      # 40, 65, 90, 105  
+cuts['ptMax']=200000.                 # 65, 90, 105, 200000
+cuts['selectionType']='pippo'         # efficiencyStudy
+cuts['mvaWeights_EB']='/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EB/TMVAClassification_BDTG.weights.xml'
+cuts['mvaWeights_EE']='/afs/cern.ch/user/g/gdimperi/public/4Chiara/weights_withRho_EE/TMVAClassification_BDTG.weights.xml'
