@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Chiara: example, how to run it:
+#./analyzeGammaJet.py --samplesDat=samples_paolo.dat --cuts=cuts.dat --numberOfCPU=-1
+
 from optparse import OptionParser, make_option
 from ROOT import *
 import subprocess
@@ -9,12 +12,12 @@ import multiprocessing
 from itertools import repeat
 
 #Some global options
-xrootd_server="pccmsrm27.cern.ch"
-output_dir="/cms/local/meridian/GammaJets/output"
+xrootd_server="pccmsrm24.cern.ch"
+output_dir="/cmsrm/pc24/crovelli/GammaJets/ridottissime"
 tmp_dir="/tmp/"+str(os.environ['USER'])
 
-mc_dir="root://pccmsrm27.cern.ch///cms/local/crovelli/GammaJets/reduced/redntp.53xv2.cicpfloose.noCorrections.GammaJets_newNtuples_v5/merged2/"
-data_dir="root://pccmsrm27.cern.ch///cms/local/crovelli/GammaJets/reduced/redntp.53xv2_data.cicpfloose.noCorrections.GammaJets_newNtuples_v5/merged2"
+mc_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_CERN.gjetpresel.noCorr.v1"
+data_dir="root://pccmsrm24.cern.ch/cmsrm/pc24/crovelli/GammaJets/reduced/redntp.53xv6_data_CERN.gjetpresel.noCorr.v1"
 
 cuts={}
 #The cuts will be passed as parameters
@@ -80,6 +83,9 @@ def analyzeSample( (sample,mycuts,samples) ):
     analyzer.hltcut=mycuts['hltcut']
     analyzer.hltiso=mycuts['hltiso']
     analyzer.mvaIDWP=mycuts['mvaIDWP']
+    analyzer.mvaWeights_EB=mycuts['mvaWeights_EB']
+    analyzer.mvaWeights_EE=mycuts['mvaWeights_EE']
+    analyzer.selectionType=mycuts['selectionType']
     outfileName=str(sample)+"_hltcut"+str(analyzer.hltcut)+"_hltiso"+str(analyzer.hltiso)+"_mvaWP"+str(analyzer.mvaIDWP)+".root"
     analyzer.outputFile=tmp_dir+"/"+outfileName
     #to be linked to the hlt cut in the future
@@ -89,8 +95,9 @@ def analyzeSample( (sample,mycuts,samples) ):
     
     #Copying file towards final destination
     rm_command="xrd "+xrootd_server+" rm "+output_dir+"/"+outfileName
-    subprocess.call(rm_command,shell=True)
-    copy_command="xrdcp "+tmp_dir+"/"+outfileName+" root://"+xrootd_server+"//"+output_dir+"/"+outfileName 
+    # subprocess.call(rm_command,shell=True)    # chiara: questo e' temporaneo  
+    #copy_command="xrdcp "+tmp_dir+"/"+outfileName+" root://"+xrootd_server+"//"+output_dir+"/"+outfileName
+    copy_command="mv "+tmp_dir+"/"+outfileName+" "+output_dir+"/"+outfileName    # chiara: questo e' temporaneo 
     subprocess.check_call(copy_command,shell=True)
     print "Copied file into "+output_dir+"/"+outfileName
 
