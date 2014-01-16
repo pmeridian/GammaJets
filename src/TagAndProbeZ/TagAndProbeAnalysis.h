@@ -369,15 +369,9 @@ TagAndProbeAnalysis::TagAndProbeAnalysis(TTree *tree) : fChain(0), mcMatch(0), t
   // used to generate this class and read the Tree.
   if (tree == 0) {
     
-    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-    //if (!f || !f->IsOpen()) {
-    // f = new TFile("/xrootdfs/cms/local/meridian/Higgs/reduced/redntp.53xv2_extra.tandp2012.paolo.v2/redntp_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_00.root");
-    //}
-    //f->GetObject("AnaTree",tree);
-    
     TChain * chain = new TChain("AnaTree","");
-    chain->Add("/t3/users/rovelch/GammaJets/reduced/redntp.53xv5_DY_CERN.tandp2012.noCorrections.53xv5/redntp_*.root/AnaTree");
-    // chain->Add("/t3/users/rovelch/GammaJets/reduced/redntp.53xv5_data_DY_CERN.tandp2012.noCorrections.53xv5/redntp_DoubleElectron_Run2012*.root/AnaTree");
+    // chain->Add("/t3/users/meridian/GammaJets/TandP/reduced/redntp.53xv6_DY_CERN.tandp2012.noCorr.v1/redntp_*.root/AnaTree");
+    chain->Add("/t3/users/meridian/GammaJets/TandP/reduced/redntp.53xv6_data_DY_CERN.tandp2012.noCorr.v1/redntp_*.root/AnaTree");
 
     tree = chain;
   }

@@ -120,20 +120,20 @@ fi
 
 echo dir is ${PWD}
 echo dir2 is ${CMSSW_BASE} 
-echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 
+echo file is $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12}
 list=$2
 if [ "$stagein" == "true" ] &&  [ "$domain" == "roma1.infn.it" ]; then
     modify_list $list $tempdir
     list=`pwd`/`basename $list`.mod
 fi
-echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} #$4 ${8} ${9} $5 $6 $7 
+echo file2 is ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} #$4 ${8} ${9} $5 $6 $7 
 
 if [ ! -f  ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ]; then
     echo "Executable  ${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia not found. Exit"
     exit -1
 fi
 
-${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} #$4 $8 $9 $5 $6 $7 
+${CMSSW_BASE}/src/GammaJets/src/tree_reduction/tmp/singlegammaApp_giulia ${list} ${filename} $5 $6 $7 $8 $9 ${10} ${11} ${12} #$4 $8 $9 $5 $6 $7 
 exit_stat=$?
 
 #if [ "$domain" == "cern.ch" ]; then

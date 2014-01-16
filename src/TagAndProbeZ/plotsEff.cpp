@@ -7,167 +7,111 @@
 #include <iostream>
 
 void plotsEff() {
-  
-  // -------------------------------------
-  // hardcoded: efficiency on data (95%)
+
   /*
+  // hardcoded: efficiency on data, mva 005 - no R9 weights
   Float_t dataEffPtEB[4];
-  dataEffPtEB[0] = 0.788216;
-  dataEffPtEB[1] = 0.868873;
-  dataEffPtEB[2] = 0.909119;
-  dataEffPtEB[3] = 0.937142;
+  dataEffPtEB[0] = 0.787321;
+  dataEffPtEB[1] = 0.865828;
+  dataEffPtEB[2] = 0.907563;
+  dataEffPtEB[3] = 0.934763;
 
   Float_t dataErrPtEB[4];
-  dataErrPtEB[0] = 0.0022248;
-  dataErrPtEB[1] = 0.00557281;
-  dataErrPtEB[2] = 0.000410552;
-  dataErrPtEB[3] = 0.0317504;
+  dataErrPtEB[0] = 0.00147372;
+  dataErrPtEB[1] = 0.000507673;
+  dataErrPtEB[2] = 0.000371044;
+  dataErrPtEB[3] = 0.00104934;
   
   Float_t dataEffPtEE[4];
-  dataEffPtEE[0] = 0.667278;
-  dataEffPtEE[1] = 0.789731;
-  dataEffPtEE[2] = 0.861867;
-  dataEffPtEE[3] = 0.91869;
+  dataEffPtEE[0] = 0.717205;
+  dataEffPtEE[1] = 0.833808;
+  dataEffPtEE[2] = 0.902595;
+  dataEffPtEE[3] = 0.947531;
 
   Float_t dataErrPtEE[4];
-  dataErrPtEE[0] = 0.00288854;
-  dataErrPtEE[1] = 0.00113707;
-  dataErrPtEE[2] = 0.0008856;
-  dataErrPtEE[3] = 0.00125012;
+  dataErrPtEE[0] = 0.00215698;
+  dataErrPtEE[1] = 0.000966102;
+  dataErrPtEE[2] = 0.00031378;
+  dataErrPtEE[3] = 0.000974099;
   */
 
-  // hardcoded: efficiency on data (90%)
+  // hardcoded: efficiency on data, mva 005 - with R9 weights
   Float_t dataEffPtEB[4];
-  dataEffPtEB[0] = 0.6809;
-  dataEffPtEB[1] = 0.774901;
-  dataEffPtEB[2] = 0.826641;
-  dataEffPtEB[3] = 0.87309;
+  dataEffPtEB[0] = 0.851094;
+  dataEffPtEB[1] = 0.911409;
+  dataEffPtEB[2] = 0.942177;
+  dataEffPtEB[3] = 0.960729;
 
   Float_t dataErrPtEB[4];
-  dataErrPtEB[0] = 0.002289;
-  dataErrPtEB[1] = 0.0006833;
-  dataErrPtEB[2] = 0.085946;
-  dataErrPtEB[3] = 0.0004758;
+  dataErrPtEB[0] = 0.000877588;
+  dataErrPtEB[1] = 0.000284711;
+  dataErrPtEB[2] = 0.000193678;
+  dataErrPtEB[3] = 0.000351052;
   
   Float_t dataEffPtEE[4];
-  dataEffPtEE[0] = 0.547962;
-  dataEffPtEE[1] = 0.670435;
-  dataEffPtEE[2] = 0.753952;
-  dataEffPtEE[3] = 0.83594;
+  dataEffPtEE[0] = 0.823633;
+  dataEffPtEE[1] = 0.904294;
+  dataEffPtEE[2] = 0.945122;
+  dataEffPtEE[3] = 0.972123;
 
   Float_t dataErrPtEE[4];
-  dataErrPtEE[0] = 0.003029;
-  dataErrPtEE[1] = 0.0012858;
-  dataErrPtEE[2] = 0.001035;
-  dataErrPtEE[3] = 0.001670;
+  dataErrPtEE[0] = 0.00137336;
+  dataErrPtEE[1] = 0.000541285;
+  dataErrPtEE[2] = 0.000332841;
+  dataErrPtEE[3] = 0.000471213;
 
-  // -------------------------------------
-  // hardcoded: efficiency on mc (95%)
   /*
+  // hardcoded: efficiency on mc, mva 005  - no R9weights
   Float_t mcEffPtEB[4];
-  mcEffPtEB[0] = 0.806962;
-  mcEffPtEB[1] = 0.884942;
-  mcEffPtEB[2] = 0.921844;
-  mcEffPtEB[3] = 0.946614;
+  mcEffPtEB[0] = 0.809073;
+  mcEffPtEB[1] = 0.884915;
+  mcEffPtEB[2] = 0.921544;
+  mcEffPtEB[3] = 0.944102;
 
   Float_t mcErrPtEB[4];
-  mcErrPtEB[0] = 0.00183663;
-  mcErrPtEB[1] = 0.000726529;
-  mcErrPtEB[2] = 0.0005429;
-  mcErrPtEB[3] = 0.0008690;
+  mcErrPtEB[0] = 0.00107234;
+  mcErrPtEB[1] = 0.000362482;
+  mcErrPtEB[2] = 0.000269083;
+  mcErrPtEB[3] = 0.000583753;
   
   Float_t mcEffPtEE[4];
-  mcEffPtEE[0] = 0.740969;
-  mcEffPtEE[1] = 0.86685;
-  mcEffPtEE[2] = 0.924042;
-  mcEffPtEE[3] = 0.961009;
+  mcEffPtEE[0] = 0.745734;
+  mcEffPtEE[1] = 0.869638;
+  mcEffPtEE[2] = 0.92426;
+  mcEffPtEE[3] = 0.957486;
 
   Float_t mcErrPtEE[4];
-  mcErrPtEE[0] = 0.00258916;
-  mcErrPtEE[1] = 0.00123024;
-  mcErrPtEE[2] = 0.000874;
-  mcErrPtEE[3] = 0.00113995;
+  mcErrPtEE[0] = 0.00181754;
+  mcErrPtEE[1] = 0.000661643;
+  mcErrPtEE[2] = 0.0000115311;
+  mcErrPtEE[3] = 0.000633697;
   */
 
-  // hardcoded: efficiency on mc (90%)
+  // hardcoded: efficiency on mc, mva 005  - with R9weights
   Float_t mcEffPtEB[4];
-  mcEffPtEB[0] = 0.70395;
-  mcEffPtEB[1] = 0.796202;
-  mcEffPtEB[2] = 0.845931;
-  mcEffPtEB[3] = 0.886863;
+  mcEffPtEB[0] = 0.869367;
+  mcEffPtEB[1] = 0.925948;
+  mcEffPtEB[2] = 0.951753;
+  mcEffPtEB[3] = 0.967678;
 
   Float_t mcErrPtEB[4];
-  mcErrPtEB[0] = 0.00204;
-  mcErrPtEB[1] = 0.000917;
-  mcErrPtEB[2] = 0.000730;
-  mcErrPtEB[3] = 0.00119625;
+  mcErrPtEB[0] = 0.000681269;
+  mcErrPtEB[1] = 0.000197075;
+  mcErrPtEB[2] = 0.000132988;
+  mcErrPtEB[3] = 0.000269974;
   
   Float_t mcEffPtEE[4];
-  mcEffPtEE[0] = 0.626057;
-  mcEffPtEE[1] = 0.770266;
-  mcEffPtEE[2] = 0.846824;
-  mcEffPtEE[3] = 0.909447;
+  mcEffPtEE[0] = 0.843007;
+  mcEffPtEE[1] = 0.926918;
+  mcEffPtEE[2] = 0.958852;
+  mcEffPtEE[3] = 0.977944;
 
   Float_t mcErrPtEE[4];
-  mcErrPtEE[0] = 0.002778;
-  mcErrPtEE[1] = 0.001529;
-  mcErrPtEE[2] = 0.07719;
-  mcErrPtEE[3] = 0.001755;
+  mcErrPtEE[0] = 0.00111903;
+  mcErrPtEE[1] = 0.00017719;
+  mcErrPtEE[2] = 0.000208054;
+  mcErrPtEE[3] = 0.0111678;
 
-  // -------------------------------------
-  // hardcoded: efficiency on MC (90%), high R9 (nome misleading...)
-  /*
-  Float_t dataEffPtEB[4];
-  dataEffPtEB[0] = 0.933638;
-  dataEffPtEB[1] = 0.954063;
-  dataEffPtEB[2] = 0.964888;
-  dataEffPtEB[3] = 0.97694;
-
-  Float_t dataErrPtEB[4];
-  dataErrPtEB[0] = 0.002329;
-  dataErrPtEB[1] = 0.0009391;
-  dataErrPtEB[2] = 0.0006698;
-  dataErrPtEB[3] = 0.0120207;
-  
-  Float_t dataEffPtEE[4];
-  dataEffPtEE[0] = 0.930876;
-  dataEffPtEE[1] = 0.96969;
-  dataEffPtEE[2] = 0.980841;
-  dataEffPtEE[3] = 0.987945;
-
-  Float_t dataErrPtEE[4];
-  dataErrPtEE[0] = 0.002852;
-  dataErrPtEE[1] = 0.001196;
-  dataErrPtEE[2] = 0.0007996;
-  dataErrPtEE[3] = 0.00111779;
-  */
-
-  // hardcoded: efficiency on MC (90%), low R9 (nome misleading...)
-  /*
-  Float_t mcEffPtEB[4];
-  mcEffPtEB[0] = 0.64763;
-  mcEffPtEB[1] = 0.741015;
-  mcEffPtEB[2] = 0.792764;
-  mcEffPtEB[3] = 0.835521;
-
-  Float_t mcErrPtEB[4];
-  mcErrPtEB[0] = 0.002352;
-  mcErrPtEB[1] = 0.001158;
-  mcErrPtEB[2] = 0.000986;
-  mcErrPtEB[3] = 0.001738;
-  
-  Float_t mcEffPtEE[4];
-  mcEffPtEE[0] = 0.540286;
-  mcEffPtEE[1] = 0.694782;
-  mcEffPtEE[2] = 0.783672;
-  mcEffPtEE[3] = 0.861586;
-
-  Float_t mcErrPtEE[4];
-  mcErrPtEE[0] = 0.23148;
-  mcErrPtEE[1] = 0.001958;
-  mcErrPtEE[2] = 0.001649;
-  mcErrPtEE[3] = 0.002647;
-  */
 
   // -------------------------------------
   // histograms: 2D plots
