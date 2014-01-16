@@ -10,7 +10,6 @@
 
 void GammaJetAnalysis::Loop()
 {
-
   std::cout << "****** Running with the following cuts ******" << std::endl;
   std::cout << "selectionType " << selectionType << std::endl;
   std::cout << "ptphot1_mincut " << ptphot1_mincut << std::endl;
@@ -18,16 +17,16 @@ void GammaJetAnalysis::Loop()
   std::cout << "hltcut " << hltcut << std::endl;
   std::cout << "hltiso " << hltiso << std::endl;
   std::cout << "mvaIDWP " << mvaIDWP << std::endl;
+  std::cout << "mvaIDweights " << mvaWeights_EB << ", " << mvaWeights_EE << std::endl;
   std::cout << "*********************************************" << std::endl;
 
    if (fChain == 0) return;
 
    Long64_t nentries = fChain->GetEntriesFast();
-   //Long64_t nentries = 10000;
 
    //Initialize
    SetAllMVA();
-   BookFinalTree();
+   BookFinalTree();   
 
    Long64_t nbytes = 0, nb = 0;
    Long64_t npassing = 0; 
@@ -47,24 +46,29 @@ void GammaJetAnalysis::Loop()
       // patological events
       if (npu>=60) continue;    
 
-
       // first vertex must be good
       if (vtxId<0 && selectionType!="efficiencyStudy") continue;
 
+      // HLT
       if (!passHLT(hltiso) && selectionType!="efficiencyStudy") continue;
-
-      std::vector<int> photons=sortedPtPhotons();
+      
+      std::vector<int> photons=sortedPtPhotons();    
       if (photons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
-
+      
       std::vector<int> preselectPhotons=preselectedPhotons(photons);
       if (preselectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
+
+      if ( photons.size() != preselectPhotons.size() ) { 
+	cout << "chiara: secondo me c'e' un problema. I fotoni in photons devono essere gia' preselezionati" << endl;
+	continue;
+      }
       
       std::vector<int> selectPhotons=selectedPhotons(preselectPhotons);
       if (selectPhotons.size()<1 && selectionType!="efficiencyStudy")
 	continue;
-      
+
       // ptcut to restrict to the wanted range - matching HLT
       if (selectPhotons.size()>0)
 	{
@@ -72,7 +76,7 @@ void GammaJetAnalysis::Loop()
 	  if (ptPhot_presel[selectPhotons[0]]>ptphot1_maxcut && selectionType!="efficiencyStudy") continue;	
 	}
 
-
+      // ======================================================
       if (selectionType=="efficiencyStudy")
 	{
 	  //now matching with the selected photon
@@ -80,47 +84,47 @@ void GammaJetAnalysis::Loop()
 	    continue;
 	  std::vector<int> genPhotons=sortedPtGenPhotons();
 	  int i_nPhot=-1;
-
+	  
 	  if (iRecoPhotMatch_gen[0]>-1)
 	    {
-	      for(int j=0; j<photons.size(); j++)
+	      for(int j=0; j<(int)photons.size(); j++)
 		{
 		  if (photons[j]==iRecoPhotMatch_gen[0])
 		    {
-		      i_nPhot=j;
+		      i_nPhot=j;    
 		      break;
 		    }
 		}
 	    }
-
+	  
 	  bool isPresel=false;
 	  bool isSel=false;
-
-	  FillTreeGenPhot(genPhotons[0]);
+	  
+	  FillTreeGenPhot(genPhotons[0]); 
 	  if (i_nPhot>-1)
 	    {
-	      for(int j=0; j<preselectPhotons.size(); j++)
+	      for(int j=0; j<(int)preselectPhotons.size(); j++)
 		if (preselectPhotons[j]==i_nPhot)
 		  {
 		    isPresel=true;
 		    break;
 		  }
-	      for(int j=0; j<selectPhotons.size(); j++)
+	      for(int j=0; j<(int)selectPhotons.size(); j++)
 		if (selectPhotons[j]==i_nPhot)
 		  {
 		    isSel=true;
 		    break;
 		  }
-	    FillTreePhot(photons[i_nPhot],isPresel,isSel);
-	    }
+	      FillTreePhot(photons[i_nPhot],isPresel,isSel);   
+	    }                                                   
 	  else
 	    FillTreePhot(-1,-1,-1);
 	}
       else
 	{
-	  FillTreePhot(selectPhotons[0],1,1);
+	  FillTreePhot(selectPhotons[0],1,1);                // NB: mi pare che selectPhotons[0] sia l'indice nella collezione di _presel              
 	  if (iMatchedPhot[selectPhotons[0]]>-1)
-	    FillTreeGenPhot(iMatchedPhot[selectPhotons[0]]);
+	    FillTreeGenPhot(iMatchedPhot[selectPhotons[0]]);   
 	  else
 	    FillTreeGenPhot(-1);
 	}
@@ -129,7 +133,9 @@ void GammaJetAnalysis::Loop()
        ++npassing;
        float weight(1);
        weight *= GetPUWeight()*GetSampleWeight();
-    
+       if(weight==0)
+	 std::cout << "weightPU = " << GetPUWeight() << "  sampleWeight = " << GetSampleWeight() <<  endl;
+
        //Filling Tree
        FillTreeEvent(weight);
        finalTree->Fill();
@@ -141,7 +147,6 @@ void GammaJetAnalysis::Loop()
    std::cout << "Bandwidth used:\t" << setprecision(6) << (float) nbytes/(1024*1024)/timer.RealTime() << " MB/s" << std::endl; 
 
    //Write output
-   //finalTree->Print();
    finalTree->Write();
    outFile->Write();
    std::cout << "Written output into:\t" << outputFile << std::endl;
@@ -151,53 +156,35 @@ void GammaJetAnalysis::Loop()
 // to compute photonID MVA
 Float_t GammaJetAnalysis::PhotonIDMVA(Int_t iPhoton) 
 {
+
   Float_t mva = 999.;
   
   tmva_photonid_etawidth     = pid_scetawid_presel[iPhoton];
   tmva_photonid_phiwidth     = pid_scphiwid_presel[iPhoton];
-  tmva_photonid_sieie        = sEtaEtaPhot_presel[iPhoton];
+  tmva_photonid_sieie        = sEtaEtaPhot_presel[iPhoton];  
   tmva_photonid_sieip        = sEtaPhiPhot_presel[iPhoton];
   tmva_photonid_s4ratio      = s4RatioPhot_presel[iPhoton];
   tmva_photonid_r9           = r9Phot_presel[iPhoton];
   tmva_photonid_pt           = ptPhot_presel[iPhoton];
   tmva_photonid_sceta        = etascPhot_presel[iPhoton];
-  tmva_photonid_rr           = 0.0; 
-  if (rr_presel[iPhoton]>0. && rr_presel[iPhoton]<999999.) tmva_photonid_rr = rr_presel[iPhoton];
+  tmva_photonid_eventrho     = rhoAllJets;   
+  tmva_photonid_rr           = rr_presel[iPhoton];    
 
   bool isEBphot = true;
   if (fabs(etascPhot_presel[iPhoton])>1.479) isEBphot = false; 
 
-  //rescale MC to match data (Hgg analysis rescalings)
-//   if (sampleIndex>0)
-//     {
-//       if (isEBphot) {
-//         tmva_photonid_r9 = 1.0045*tmva_photonid_r9 + 0.0010;
-//         tmva_photonid_s4ratio = 1.01894*tmva_photonid_s4ratio - 0.01034;
-//         tmva_photonid_sieie = 0.891832*tmva_photonid_sieie + 0.0009133;
-//         tmva_photonid_etawidth =  1.04302*tmva_photonid_etawidth - 0.000618;
-//         tmva_photonid_phiwidth =  1.00002*tmva_photonid_phiwidth - 0.000371;
-//       } else {
-//         tmva_photonid_r9 = 1.0086*tmva_photonid_r9 - 0.0007;
-//         tmva_photonid_s4ratio = 1.04969*tmva_photonid_s4ratio - 0.03642;
-//         tmva_photonid_sieie = 0.99470*tmva_photonid_sieie + 0.00003;
-//         tmva_photonid_etawidth =  0.903254*tmva_photonid_etawidth + 0.001346;
-//         tmva_photonid_phiwidth =  0.99992*tmva_photonid_phiwidth - 0.00000048;
-//       }
-//     }
-
   if (isEBphot)
-    mva = tmvaReaderID_Single_Barrel->EvaluateMVA("GradBoost");
+    mva = tmvaReaderID_Single_Barrel->EvaluateMVA("BDT");   
   else
-    mva = tmvaReaderID_Single_Endcap->EvaluateMVA("GradBoost");
+    mva = tmvaReaderID_Single_Endcap->EvaluateMVA("BDT");
   
   return mva;
 }
 
 void GammaJetAnalysis::SetAllMVA() {
   
-  if (isMVAinitialized)
-    return;
-
+  if (isMVAinitialized) return;
+  
   tmvaReaderID_Single_Barrel = new TMVA::Reader("!Color:Silent");
 
   tmvaReaderID_Single_Barrel->AddVariable("pid_scetawid_presel", &tmva_photonid_etawidth );
@@ -206,11 +193,12 @@ void GammaJetAnalysis::SetAllMVA() {
   tmvaReaderID_Single_Barrel->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Barrel->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Barrel->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  tmvaReaderID_Single_Barrel->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Barrel->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Barrel->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Barrel->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
   tmvaReaderID_Single_Barrel->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Barrel->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+  tmvaReaderID_Single_Barrel->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
   tmvaReaderID_Single_Endcap = new TMVA::Reader("!Color:Silent");
 
@@ -220,17 +208,18 @@ void GammaJetAnalysis::SetAllMVA() {
   tmvaReaderID_Single_Endcap->AddVariable("sEtaPhiPhot_presel",  &tmva_photonid_sieip );
   tmvaReaderID_Single_Endcap->AddVariable("s4RatioPhot_presel",  &tmva_photonid_s4ratio );
   tmvaReaderID_Single_Endcap->AddVariable("r9Phot_presel",       &tmva_photonid_r9 );
-  tmvaReaderID_Single_Endcap->AddVariable("ptPhot_presel",       &tmva_photonid_pt );
   tmvaReaderID_Single_Endcap->AddVariable("etascPhot_presel",    &tmva_photonid_sceta );
+  tmvaReaderID_Single_Endcap->AddVariable("rhoAllJets",          &tmva_photonid_eventrho );
   tmvaReaderID_Single_Endcap->AddVariable("rr_presel",           &tmva_photonid_rr );
   tmvaReaderID_Single_Endcap->AddSpectator("nPhot_presel",       &tmva_photonid_nPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("isMatchedPhot",      &tmva_photonid_isMatchedPhot );
   tmvaReaderID_Single_Endcap->AddSpectator("ptWeight",           &tmva_photonid_ptWeight );
+  tmvaReaderID_Single_Endcap->AddSpectator("ptPhot_presel",      &tmva_photonid_pt );
 
   std::cout << "Booking PhotonID EB MVA with file " << mvaWeights_EB << std::endl; 
-  tmvaReaderID_Single_Barrel->BookMVA("GradBoost",mvaWeights_EB);
+  tmvaReaderID_Single_Barrel->BookMVA("BDT",mvaWeights_EB);
   std::cout << "Booking PhotonID EE MVA with file " << mvaWeights_EE << std::endl;
-  tmvaReaderID_Single_Endcap->BookMVA("GradBoost",mvaWeights_EE);
+  tmvaReaderID_Single_Endcap->BookMVA("BDT",mvaWeights_EE);
 
   isMVAinitialized=true;
   return;
@@ -239,7 +228,7 @@ void GammaJetAnalysis::SetAllMVA() {
 bool GammaJetAnalysis::isHLT_30(bool isoCut) {
 
   bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if (isoCut)
       {
 	if ( (*firedHLTNames)[ii]=="HLT_Photon30_CaloIdVL_IsoL_v16") isok=true;
@@ -260,7 +249,7 @@ bool GammaJetAnalysis::isHLT_30(bool isoCut) {
 
 bool GammaJetAnalysis::isHLT_50(bool isoCut) {
   bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if (isoCut)
       {
 	if ( (*firedHLTNames)[ii]=="HLT_Photon50_CaloIdVL_IsoL_v14") isok=true;
@@ -282,7 +271,7 @@ bool GammaJetAnalysis::isHLT_50(bool isoCut) {
 bool GammaJetAnalysis::isHLT_75(bool isoCut) {
   
   bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if (isoCut)
       {
 	if ( (*firedHLTNames)[ii]=="HLT_Photon75_CaloIdVL_IsoL_v15") isok=true;
@@ -304,7 +293,7 @@ bool GammaJetAnalysis::isHLT_75(bool isoCut) {
 bool GammaJetAnalysis::isHLT_90(bool isoCut) {
   
   bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if (isoCut)
       {
 	if ( (*firedHLTNames)[ii]=="HLT_Photon90_CaloIdVL_IsoL_v12") isok=true;
@@ -325,7 +314,7 @@ bool GammaJetAnalysis::isHLT_90(bool isoCut) {
 
 bool GammaJetAnalysis::isHLT_150() {
   bool isok = false;
-  for (int ii=0; ii<firedHLTNames->size(); ii++) {
+  for (int ii=0; ii<(int)firedHLTNames->size(); ii++) {
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v1") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v2") isok=true;
     if ( (*firedHLTNames)[ii]=="HLT_Photon150_v3") isok=true;
@@ -346,6 +335,29 @@ int GammaJetAnalysis::effectiveAreaRegion(float theEta) {
   if (fabs(theEta)>2.4) theEAregion = 6;
   return theEAregion;
 }
+
+// is isolated phot gen level                                                                                           
+int GammaJetAnalysis::isIsolatedGenPhot(const int& phot){
+
+  int isogen = 0;
+  if(nPhot_gen>0 && isMatchedPhot[phot]>0){ //isMC and the reco photon is matched with gen                             
+    if(iso03_gen[iMatchedPhot[phot]]<4.) isogen =1;
+  }
+  
+  return isogen;
+}
+
+// gen level photon isolation                                                                                          
+float GammaJetAnalysis::isoGen03(const int& phot){
+
+  float isogen03 = -999.;
+  if(nPhot_gen>0 && isMatchedPhot[phot]>0){ //isMC and the reco photon is matched with gen                             
+    isogen03 = iso03_gen[iMatchedPhot[phot]];
+  }
+
+  return isogen03;
+}
+
 
 // void GammaJetAnalysis::SetPuWeights(bool isData,std::string puWeightFile) {
 
@@ -418,14 +430,46 @@ void GammaJetAnalysis::BookFinalTree()
   finalTree->Branch("sEtaEtaPhot",&finalTree_setaetaPhot,"sEtaEtaPhot/F");
   finalTree->Branch("combinedPfIso03Phot",&finalTree_combinedPfIso03Phot,"combinedPfIso03Phot/F");
 
-}
+  finalTree->Branch("isIsolatedGenPhot",&finalTree_isIsolatedGenPhot,"isIsolatedGenPhot/I");
+  finalTree->Branch("iso03_gen", &finalTree_iso03_gen, "iso03_gen/F");
 
+  finalTree->Branch("pid_jurECAL03",&finalTree_pid_jurECAL03,"pid_jurECAL03/F");
+  finalTree->Branch("pid_twrHCAL03",&finalTree_pid_twrHCAL03,"pid_twrHCAL03/F");
+  finalTree->Branch("pid_hlwTrack03",&finalTree_pid_hlwTrack03,"pid_hlwTrack03/F");
+
+  finalTree->Branch("pid_pfIsoCharged03ForCiC",&finalTree_pid_pfIsoCharged03ForCiC,"pid_pfIsoCharged03ForCiC/F");
+  finalTree->Branch("pid_pfIsoPhotons03ForCiC",&finalTree_pid_pfIsoPhotons03ForCiC,"pid_pfIsoPhotons03ForCiC/F");
+  finalTree->Branch("pid_pfIsoNeutrals03ForCiC",&finalTree_pid_pfIsoNeutrals03ForCiC,"pid_pfIsoNeutrals03ForCiC/F");
+
+  finalTree->Branch("correctedPfIsoCharged03",&finalTree_correctedPfIsoCharged03,"correctedPfIsoCharged03/F");
+  finalTree->Branch("correctedPfIsoNeutrals03",&finalTree_correctedPfIsoNeutrals03,"correctedPfIsoNeutrals03/F");
+  finalTree->Branch("correctedPfIsoPhotons03",&finalTree_correctedPfIsoPhotons03,"correctedPfIsoPhotons03/F");
+
+  finalTree->Branch("pid_pfIsoFPRCharged03_presel",&finalTree_pid_pfIsoFPRCharged03,"pid_pfIsoFPRCharged03_presel/F");
+  finalTree->Branch("pid_pfIsoFPRNeutral03_presel",&finalTree_pid_pfIsoFPRNeutral03,"pid_pfIsoFPRNeutral03_presel/F");
+  finalTree->Branch("pid_pfIsoFPRPhoton03_presel",&finalTree_pid_pfIsoFPRPhoton03,"pid_pfIsoFPRPhoton03_presel/F");
+
+  finalTree->Branch("correctedPfIsoFPRCharged03",&finalTree_correctedPfIsoFPRCharged03,"correctedPfIsoFPRCharged03/F");
+  finalTree->Branch("correctedPfIsoFPRNeutrals03",&finalTree_correctedPfIsoFPRNeutrals03,"correctedPfIsoFPRNeutrals03/F");
+  finalTree->Branch("correctedPfIsoFPRPhotons03",&finalTree_correctedPfIsoFPRPhotons03,"correctedPfIsoFPRPhotons03/F");
+
+  finalTree->Branch("pid_pfIsoFPRRandomConeCharged03_presel",&finalTree_pid_pfIsoFPRRandomConeCharged03,"pid_pfIsoFPRRandomConeCharged03_presel/F");
+  finalTree->Branch("pid_pfIsoFPRRandomConeNeutral03_presel",&finalTree_pid_pfIsoFPRRandomConeNeutral03,"pid_pfIsoFPRRandomConeNeutral03_presel/F");
+  finalTree->Branch("pid_pfIsoFPRRandomConePhoton03_presel",&finalTree_pid_pfIsoFPRRandomConePhoton03,"pid_pfIsoFPRRandomConePhoton03_presel/F");
+
+  finalTree->Branch("correctedPfIsoFPRRandomConeCharged03",&finalTree_correctedPfIsoFPRRandomConeCharged03,"correctedPfIsoFPRRandomConeCharged03/F");
+  finalTree->Branch("correctedPfIsoFPRRandomConeNeutrals03",&finalTree_correctedPfIsoFPRRandomConeNeutrals03,"correctedPfIsoFPRRandomConeNeutrals03/F");
+  finalTree->Branch("correctedPfIsoFPRRandomConePhotons03",&finalTree_correctedPfIsoFPRRandomConePhotons03,"correctedPfIsoFPRRandomConePhotons03/F");
+
+  finalTree->Branch("combinedPfIsoFPR03Phot",&finalTree_combinedPfIsoFPR03,"combinedPfIsoFPR03Phot/F");
+  finalTree->Branch("combinedPfIsoFPRRandomCone03Phot",&finalTree_combinedPfIsoFPRRandomCone03,"combinedPfIsoFPRRandomCone03Phot/F");
+}
 
 std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& photons)
 {
   std::vector<int> selPhotons;
 
-  for (int ipho=0;ipho<photons.size();++ipho)
+  for (int ipho=0;ipho<(int)photons.size();++ipho)
     {
       int theEAregion = effectiveAreaRegion(etaPhot_presel[photons[ipho]]); 
       if (theEAregion>6) continue;
@@ -434,9 +478,9 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
       float preselHCAL    = pid_twrHCAL03_presel[photons[ipho]]  - 0.005*ptPhot_presel[photons[ipho]]; 
       float preselTracker = pid_hlwTrack03_presel[photons[ipho]] - 0.002*ptPhot_presel[photons[ipho]]; 
 
-      if ( preselECAL > 10.)    continue;
-      if ( preselHCAL > 10.)    continue;
-      if ( preselTracker > 10) continue;
+      if ( preselECAL > 50.)    continue;
+      if ( preselHCAL > 50.)    continue;
+      if ( preselTracker > 50.) continue;
 
       if ( theEAregion<2) {  // EB
 	if ( pid_HoverE_presel[photons[ipho]]>0.075 )   continue;
@@ -452,11 +496,12 @@ std::vector<int> GammaJetAnalysis::preselectedPhotons(const std::vector<int>& ph
 
 std::vector<int> GammaJetAnalysis::selectedPhotons(const std::vector<int>& photons)
 {
+
   std::vector<int> selPhotons;
   double mva_cut_EB[4] = {0.892656, 0.844931, 0.766479, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
   double mva_cut_EE[4] = {0.871778, 0.778579, 0.601807, -1.};//corresponding to sig eff 0.80, 0.90, 0.95, 1.
 
-  for (int ipho=0;ipho<photons.size();++ipho)
+  for (int ipho=0;ipho<(int)photons.size();++ipho)
     {
       int theEAregion = effectiveAreaRegion(etaPhot_presel[photons[ipho]]); 
       if (theEAregion>6) continue;
@@ -483,12 +528,43 @@ float GammaJetAnalysis::combinedPfIso03(const int& pho)
 {
   float EA_charged[7] = { 0.012, 0.010, 0.014, 0.012, 0.016, 0.020, 0.012};
   float EA_neutral[7] = { 0.030, 0.057, 0.039, 0.015, 0.024, 0.039, 0.072};
-  float EA_photons[7]  = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
+  float EA_photons[7] = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
 
-  int theEAregion_fG = effectiveAreaRegion(pho); 
+  int theEAregion_fG = effectiveAreaRegion(etascPhot_presel[pho]); 
   return pid_pfIsoCharged03ForCiC_presel[pho] - rhoAllJets*EA_charged[theEAregion_fG] + pid_pfIsoNeutrals03ForCiC_presel[pho] - rhoAllJets*EA_neutral[theEAregion_fG]  + pid_pfIsoPhotons03ForCiC_presel[pho] - rhoAllJets*EA_photons[theEAregion_fG];    
 }
-  
+
+float GammaJetAnalysis::combinedPfIso03(float isoCharged03, float isoNeutral03, float isoPhoton03, const int& pho)
+{
+  float EA_charged[7] = { 0.012, 0.010, 0.014, 0.012, 0.016, 0.020, 0.012};
+  float EA_neutral[7] = { 0.030, 0.057, 0.039, 0.015, 0.024, 0.039, 0.072};
+  float EA_photons[7] = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
+
+  int theEAregion_fG = effectiveAreaRegion(etascPhot_presel[pho]);
+  return isoCharged03 - rhoAllJets*EA_charged[theEAregion_fG] + isoNeutral03 - rhoAllJets*EA_neutral[theEAregion_fG]  + isoPhoton03 - rhoAllJets*EA_photons[theEAregion_fG];
+}
+
+float GammaJetAnalysis::correctedPfIsoCharged03(float* isoCharged03, const int& pho)
+{
+  float EA_charged[7] = { 0.012, 0.010, 0.014, 0.012, 0.016, 0.020, 0.012};
+  int theEAregion_fG  = effectiveAreaRegion(etascPhot_presel[pho]);    
+  return isoCharged03[pho] - rhoAllJets*EA_charged[theEAregion_fG];
+}
+
+float GammaJetAnalysis::correctedPfIsoNeutrals03(float* isoNeutrals03, const int& pho)
+{
+  float EA_neutral[7] = { 0.030, 0.057, 0.039, 0.015, 0.024, 0.039, 0.072};
+  int theEAregion_fG  = effectiveAreaRegion(etascPhot_presel[pho]);       
+  return isoNeutrals03[pho] - rhoAllJets*EA_neutral[theEAregion_fG];
+}
+
+float GammaJetAnalysis::correctedPfIsoPhotons03(float* isoPhotons03, const int& pho)
+{
+  float EA_photons[7] = { 0.148, 0.130, 0.112, 0.216, 0.262, 0.260, 0.266};
+  int theEAregion_fG  = effectiveAreaRegion(etascPhot_presel[pho]);      
+  return isoPhotons03[pho] - rhoAllJets*EA_photons[theEAregion_fG];
+}
+
 std::vector<int> GammaJetAnalysis::sortedPtPhotons()
 {
   std::vector<int> sortedPhotons;
@@ -522,6 +598,7 @@ bool GammaJetAnalysis::passHLT(bool isoCut)
 float GammaJetAnalysis::GetPUWeight()
 {
   float weight=1;
+  if (sampleIndex!=0 && dopureweight && hltcut==0)  weight *= pu_weight;        // inclusive weight
   if (sampleIndex!=0 && dopureweight && hltcut==30) weight *= pu_weight30;
   if (sampleIndex!=0 && dopureweight && hltcut==50) weight *= pu_weight50;
   if (sampleIndex!=0 && dopureweight && hltcut==75) weight *= pu_weight75;
@@ -554,12 +631,46 @@ void GammaJetAnalysis::FillTreePhot(const int& phot,bool isPresel, bool isSel)
     {
       finalTree_etaPhot=etascPhot_presel[phot];
       finalTree_ptPhot=ptPhot_presel[phot];
-      finalTree_isMatchedPhot=isMatchedPhot[phot];  
-      finalTree_mvaIdPhot=PhotonIDMVA(phot);
+      finalTree_isMatchedPhot=isMatchedPhot[phot];    
+      finalTree_mvaIdPhot=PhotonIDMVA(phot);          
       finalTree_setaetaPhot=sEtaEtaPhot_presel[phot];
-      finalTree_combinedPfIso03Phot=combinedPfIso03(phot);
+      finalTree_combinedPfIso03Phot=combinedPfIso03(phot);   
       finalTree_isPreselectedPhot=isPresel;
       finalTree_isSelectedPhot=isSel;
+
+      finalTree_isIsolatedGenPhot=isIsolatedGenPhot(phot);     
+      finalTree_iso03_gen=isoGen03(phot);                      
+
+      finalTree_pid_jurECAL03=pid_jurECAL03_presel[phot];
+      finalTree_pid_twrHCAL03=pid_twrHCAL03_presel[phot];
+      finalTree_pid_hlwTrack03=pid_hlwTrack03_presel[phot];
+
+      finalTree_pid_pfIsoCharged03ForCiC=pid_pfIsoCharged03ForCiC_presel[phot];
+      finalTree_pid_pfIsoPhotons03ForCiC=pid_pfIsoPhotons03ForCiC_presel[phot];
+      finalTree_pid_pfIsoNeutrals03ForCiC=pid_pfIsoNeutrals03ForCiC_presel[phot];
+
+      finalTree_pid_pfIsoFPRCharged03=pid_pfIsoFPRCharged03_presel[phot];
+      finalTree_pid_pfIsoFPRPhoton03 =pid_pfIsoFPRPhoton03_presel[phot] ;
+      finalTree_pid_pfIsoFPRNeutral03=pid_pfIsoFPRNeutral03_presel[phot];
+
+      finalTree_pid_pfIsoFPRRandomConeCharged03=pid_pfIsoFPRRandomConeCharged03_presel[phot];
+      finalTree_pid_pfIsoFPRRandomConePhoton03 =pid_pfIsoFPRRandomConePhoton03_presel[phot] ;
+      finalTree_pid_pfIsoFPRRandomConeNeutral03=pid_pfIsoFPRRandomConeNeutral03_presel[phot];
+
+      finalTree_correctedPfIsoCharged03  = correctedPfIsoCharged03(pid_pfIsoCharged03ForCiC_presel,phot);     
+      finalTree_correctedPfIsoNeutrals03 = correctedPfIsoNeutrals03(pid_pfIsoNeutrals03ForCiC_presel,phot);
+      finalTree_correctedPfIsoPhotons03  = correctedPfIsoPhotons03(pid_pfIsoPhotons03ForCiC_presel,phot);
+
+      finalTree_correctedPfIsoFPRCharged03  = correctedPfIsoCharged03(pid_pfIsoFPRCharged03_presel,phot);
+      finalTree_correctedPfIsoFPRNeutrals03 = correctedPfIsoNeutrals03(pid_pfIsoFPRNeutral03_presel,phot);
+      finalTree_correctedPfIsoFPRPhotons03  = correctedPfIsoPhotons03(pid_pfIsoFPRPhoton03_presel,phot);
+
+      finalTree_correctedPfIsoFPRRandomConeCharged03  = correctedPfIsoCharged03(pid_pfIsoFPRRandomConeCharged03_presel,phot);
+      finalTree_correctedPfIsoFPRRandomConeNeutrals03 = correctedPfIsoNeutrals03(pid_pfIsoFPRRandomConeNeutral03_presel,phot);
+      finalTree_correctedPfIsoFPRRandomConePhotons03  = correctedPfIsoPhotons03(pid_pfIsoFPRRandomConePhoton03_presel,phot);
+
+      finalTree_combinedPfIsoFPR03=combinedPfIso03(pid_pfIsoFPRCharged03_presel[phot],pid_pfIsoFPRNeutral03_presel[phot],pid_pfIsoFPRPhoton03_presel[phot],phot);        
+      finalTree_combinedPfIsoFPRRandomCone03=combinedPfIso03(pid_pfIsoFPRRandomConeCharged03_presel[phot],pid_pfIsoFPRRandomConeNeutral03_presel[phot],pid_pfIsoFPRRandomConePhoton03_presel[phot],phot);        
     }
   else
     {
@@ -571,6 +682,31 @@ void GammaJetAnalysis::FillTreePhot(const int& phot,bool isPresel, bool isSel)
       finalTree_combinedPfIso03Phot=-999;
       finalTree_isPreselectedPhot=-999;
       finalTree_isSelectedPhot=-999;
+      finalTree_isIsolatedGenPhot=-999;
+      finalTree_iso03_gen=-999.;
+      finalTree_pid_jurECAL03=-999.;
+      finalTree_pid_twrHCAL03=-999.;
+      finalTree_pid_hlwTrack03=-999.;
+      finalTree_pid_pfIsoCharged03ForCiC=-999.;
+      finalTree_pid_pfIsoPhotons03ForCiC=-999.;
+      finalTree_pid_pfIsoNeutrals03ForCiC=-999.;
+      finalTree_pid_pfIsoFPRCharged03=-999.;
+      finalTree_pid_pfIsoFPRPhoton03=-999.;
+      finalTree_pid_pfIsoFPRNeutral03=-999.;
+      finalTree_pid_pfIsoFPRRandomConeCharged03=-999.;
+      finalTree_pid_pfIsoFPRRandomConePhoton03=-999.;
+      finalTree_pid_pfIsoFPRRandomConeNeutral03=-999.;
+      finalTree_correctedPfIsoCharged03=-999.;
+      finalTree_correctedPfIsoNeutrals03=-999.;
+      finalTree_correctedPfIsoPhotons03=-999.;
+      finalTree_correctedPfIsoFPRCharged03=-999.;
+      finalTree_correctedPfIsoFPRNeutrals03=-999.;
+      finalTree_correctedPfIsoFPRPhotons03=-999.;
+      finalTree_correctedPfIsoFPRRandomConeCharged03=-999.;
+      finalTree_correctedPfIsoFPRRandomConeNeutrals03=-999.;
+      finalTree_correctedPfIsoFPRRandomConePhotons03=-999.;
+      finalTree_combinedPfIsoFPR03=-999.;
+      finalTree_combinedPfIsoFPRRandomCone03=-999.;
     }
   
   return;
