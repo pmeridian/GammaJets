@@ -91,6 +91,11 @@ Int_t           isTrig30CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel]
 Int_t           isTrig50CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
 Int_t           isTrig75CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
 Int_t           isTrig90CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel]           
+Float_t         hltCandPt20CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt30CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt50CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt75CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt90CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
 Int_t           vtxId;
 
 std::vector<std::string>  *firedHLTNames;
@@ -185,5 +190,10 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_isTrig50CaloVLMatchedPhot;   //! 
    TBranch        *b_isTrig75CaloVLMatchedPhot;   //! 
    TBranch        *b_isTrig90CaloVLMatchedPhot;   //!    
+   TBranch        *b_hltCandPt20CaloVLPhot;   //!
+   TBranch        *b_hltCandPt30CaloVLPhot;   //!
+   TBranch        *b_hltCandPt50CaloVLPhot;   //!
+   TBranch        *b_hltCandPt75CaloVLPhot;   //!
+   TBranch        *b_hltCandPt90CaloVLPhot;   //!
    TBranch        *b_vtxId;   //!
    TBranch        *b_firedHLTNames;   //!
