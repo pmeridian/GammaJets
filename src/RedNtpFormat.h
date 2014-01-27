@@ -61,6 +61,18 @@ Float_t         pid_pfIsoNeutrals03ForCiC_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         pid_pfIsoNeutrals04ForCiC_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         pid_pfIsoNeutrals05ForCiC_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         pid_pfIsoNeutrals06ForCiC_presel[NPHOTMAX];   //[nPhot_presel]
+Float_t         pid_pfIsoFPRCharged03_presel[NPHOTMAX];   //[nPhot_presel] 
+Float_t         pid_pfIsoFPRNeutral03_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRPhoton03_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConeCharged03_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConeNeutral03_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConePhoton03_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRCharged04_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRNeutral04_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRPhoton04_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConeCharged04_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConeNeutral04_presel[NPHOTMAX];   //[nPhot_presel]  
+Float_t         pid_pfIsoFPRRandomConePhoton04_presel[NPHOTMAX];   //[nPhot_presel]  
 Float_t         pid_scetawid_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         pid_scphiwid_presel[NPHOTMAX];   //[nPhot_presel]
 Float_t         pid_lambdaRatio_presel[NPHOTMAX];   //[nPhot_presel]
@@ -79,6 +91,11 @@ Int_t           isTrig30CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel]
 Int_t           isTrig50CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
 Int_t           isTrig75CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel] 
 Int_t           isTrig90CaloVLMatchedPhot[NPHOTMAX];   //[nPhot_presel]           
+Float_t         hltCandPt20CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt30CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt50CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt75CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
+Float_t         hltCandPt90CaloVLPhot[NPHOTMAX];   //[nPhot_presel]  
 Int_t           vtxId;
 
 std::vector<std::string>  *firedHLTNames;
@@ -143,6 +160,18 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_pid_pfIsoNeutrals04ForCiC_presel;   //!
    TBranch        *b_pid_pfIsoNeutrals05ForCiC_presel;   //!
    TBranch        *b_pid_pfIsoNeutrals06ForCiC_presel;   //!
+   TBranch        *b_pid_pfIsoFPRCharged03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRNeutral03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRPhoton03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton03_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRCharged04_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRNeutral04_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRPhoton04_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConeCharged04_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConeNeutral04_presel;   //! 
+   TBranch        *b_pid_pfIsoFPRRandomConePhoton04_presel;   //! 
    TBranch        *b_pid_scetawid_presel;   //!
    TBranch        *b_pid_scphiwid_presel;   //!
    TBranch        *b_pid_lambdaRatio_presel;   //!
@@ -161,5 +190,10 @@ std::vector<std::string>  *firedHLTNames;
    TBranch        *b_isTrig50CaloVLMatchedPhot;   //! 
    TBranch        *b_isTrig75CaloVLMatchedPhot;   //! 
    TBranch        *b_isTrig90CaloVLMatchedPhot;   //!    
+   TBranch        *b_hltCandPt20CaloVLPhot;   //!
+   TBranch        *b_hltCandPt30CaloVLPhot;   //!
+   TBranch        *b_hltCandPt50CaloVLPhot;   //!
+   TBranch        *b_hltCandPt75CaloVLPhot;   //!
+   TBranch        *b_hltCandPt90CaloVLPhot;   //!
    TBranch        *b_vtxId;   //!
    TBranch        *b_firedHLTNames;   //!
